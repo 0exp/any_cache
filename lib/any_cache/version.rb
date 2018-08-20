@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
 module AnyCache
-  VERSION = "0.0.0"
+  # @since 0.1.0
+  VERSION = '0.0.0'
 end
