@@ -13,3 +13,6 @@ AllCops:
     - Gemfile
     - Rakefile
     - any_cache.gemspec
+
+Layout/MultilineOperationIndentation:
+  Enabled: false
