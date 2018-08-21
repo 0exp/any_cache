@@ -5,16 +5,16 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'any_cache/version'
 
 Gem::Specification.new do |spec|
+  spec.required_ruby_version = '>= 2.3.7'
+
   spec.name          = 'any_cache'
   spec.version       = AnyCache::VERSION
-
   spec.authors       = ['Rustam Ibragimov']
   spec.email         = ['iamdaiver@icloud.com']
   spec.summary       = 'Soon'
   spec.description   = 'Soon'
   spec.homepage      = 'https://github.com/0exp/any_cache'
   spec.license       = 'MIT'
-
   spec.bindir        = 'bin'
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
