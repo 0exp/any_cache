@@ -2,6 +2,7 @@
 
 module SpecSupport
   module Helpers
+    # rubocop:disable Metrics/AbcSize
     def build_cache_store
       case
       when Testing.test_redis_cache?
@@ -20,5 +21,6 @@ module SpecSupport
         raise 'No cache :('
       end
     end
+    # rubocop:enable Metrics/AbcSize
   end
 end
