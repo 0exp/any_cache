@@ -1,0 +1,119 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'pathname'
+require 'optparse'
+
+module AnyCacheSpecRunner
+  extend self
+
+  def expand_gemfile_path(gemfile_name)
+    File.expand_path(
+      File.join('..', '..', 'gemfiles', gemfile_name),
+      Pathname.new(__FILE__).realpath
+    )
+  end
+
+  GEMFILES = {
+    redis:                     expand_gemfile_path('redis.gemfile'),
+    redis_store:               expand_gemfile_path('redis_store.gemfile'),
+    dalli:                     expand_gemfile_path('dalli.gemfile'),
+    active_support_with_redis: expand_gemfile_path('active_support_with_redis.gemfile'),
+    active_support:            expand_gemfile_path('active_support.gemfile')
+  }.freeze
+
+  # rubocop:disable Metrics/MethodLength, Metrics/BlockLength
+  def run!
+    OptionParser.new do |opts|
+      opts.banner = 'Usage: bin/rspec [options]'
+
+      opts.on(
+        '--test-redis',
+        'Run specs with Redis cache storage'
+      ) { run_redis_cache_specs! }
+
+      opts.on(
+        '--test-redis-store',
+        'Run specs with Redis::Store cache storage'
+      ) { run_redis_store_cache_specs! }
+
+      opts.on(
+        '--test-dalli',
+        'Run specs with Dalli spec storage'
+      ) { run_dalli_cache_specs! }
+
+      opts.on(
+        '--test-as-redis-cache-store',
+        'Run specs with ActiveSupport::Cache::RedisCacheStore cache storage'
+      ) { run_as_redis_cache_store_cache_specs! }
+
+      opts.on(
+        '--test-as-file-store',
+        'Run specs with ActiveSupport::Cache::FileStore cache storage'
+      ) { run_as_file_store_cache_specs! }
+
+      opts.on(
+        '--test-as-memory-store',
+        'Run specs with ActiveSupport::Cache::MemoryStore cache storage'
+      ) { run_as_memory_store_cache_specs! }
+
+      opts.on(
+        '-h', '--help',
+        'Show this message'
+      ) { puts opts }
+    end.parse!
+  end
+  # rubocop:enable Metrics/MethodLength, Metrics/BlockLength
+
+  private
+
+  def run_redis_cache_specs!
+    ENV['TEST_REDIS_CACHE'] = 'true'
+    ENV['BUNDLE_GEMFILE'] = GEMFILES[:redis]
+
+    run_tests!
+  end
+
+  def run_redis_store_cache_specs!
+    ENV['TEST_REDIS_STORE_CACHE'] = 'true'
+    ENV['BUNDLE_GEMFILE'] = GEMFILES[:redis_store]
+
+    run_tests!
+  end
+
+  def run_dalli_cache_specs!
+    ENV['TEST_DALLI_CACHE'] = 'true'
+    ENV['BUNDLE_GEMFILE'] = GEMFILES[:dalli]
+
+    run_tests!
+  end
+
+  def run_as_redis_cache_store_cache_specs!
+    ENV['TEST_AS_REDIS_CACHE_STORE_CACHE'] = 'true'
+    ENV['BUNDLE_GEMFILE'] = GEMFILES[:active_support_with_redis]
+
+    run_tests!
+  end
+
+  def run_as_file_store_cache_specs!
+    ENV['TEST_AS_FILE_STORE_CACHE'] = 'true'
+    ENV['BUNDLE_GEMFILE'] = GEMFILES[:active_support]
+
+    run_tests!
+  end
+
+  def run_as_memory_store_cache_specs!
+    ENV['TEST_AS_MEMORY_STORE_CACHE'] = 'true'
+    ENV['BUNDLE_GEMFILE'] = GEMFILES[:active_support]
+
+    run_tests!
+  end
+
+  def run_tests!
+    require 'rubygems'
+    require 'bundler/setup'
+    load Gem.bin_path('rspec-core', 'rspec')
+  end
+end
+
+AnyCacheSpecRunner.run!
