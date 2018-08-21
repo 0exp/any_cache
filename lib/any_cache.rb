@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+require 'securerandom'
+require 'qonfig'
+require 'concurrent/atomic/reentrant_read_write_lock'
+
 # @api public
 # @since 0.1.0
 class AnyCache

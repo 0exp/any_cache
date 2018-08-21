@@ -14,11 +14,13 @@ require 'bundler/setup'
 require 'any_cache'
 require 'pry'
 
+require_relative 'support/spec_support'
+
 RSpec.configure do |config|
   config.shared_context_metadata_behavior = :apply_to_host_groups
   config.expect_with(:rspec) { |c| c.syntax = :expect }
   config.order = :random
   Kernel.srand config.seed
 
-  config.disable_monkey_patching!
+  config.include SpecSupport::Helpers
 end
