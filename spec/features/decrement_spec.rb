@@ -54,12 +54,12 @@ describe 'Operation: #decrement' do
     context 'without re-expiration' do
       specify 'entry dies when expiration time coming; creates new permanent entry' do
         cache_store.decrement(entry[:key], 2)
-        sleep(expiration_time) # NOTE: remaining time: 0 seconds, old value: -1; new: nothing
+        sleep(expiration_time + 1) # NOTE: remaining time: -1 seconds, old value: -1; new: nothing
 
         new_amount = cache_store.decrement(entry[:key], 2)
         # NOTE: new amount: -2, old entry is dead, new entry is permanent
         expect(new_amount).to eq(-2) | eq(0)
-        sleep(expiration_time) # NOTE: remaining time: 0 esconds, current value: -2
+        sleep(expiration_time + 1) # NOTE: remaining time: -1 esconds, current value: -2
         expect(cache_store.read(entry[:key]).to_i).to eq(-2) | eq(0)
       end
     end
