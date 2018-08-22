@@ -93,7 +93,7 @@ describe 'Operation: #decrement' do
         new_amount = cache_store.decrement(entry[:key], 3)
         expect(new_amount).to eq(-3) | eq(0)
 
-        sleep(expiration_time)
+        sleep(expiration_time + 1)
 
         new_amount = cache_store.decrement(entry[:key], 5)
         expect(new_amount).to eq(-8) | eq(0)
@@ -109,7 +109,7 @@ describe 'Operation: #decrement' do
         new_amount = cache_store.decrement(entry[:key], ini_value, expires_in: expiration_time)
         expect(new_amount).to eq(-ini_value) | eq(0)
 
-        sleep(expiration_time) # NOTE: expire current entry
+        sleep(expiration_time + 1) # NOTE: expire current entry
 
         # NOTE: create new entry without initial value
         new_amount = cache_store.decrement(entry[:key], expires_in: expiration_time)
@@ -123,7 +123,7 @@ describe 'Operation: #decrement' do
         new_amount = cache_store.decrement(entry[:key], ini_value)
         expect(new_amount).to eq(-ini_value) | eq(0)
 
-        sleep(expiration_time) # NOTE: try to expire current entry
+        sleep(expiration_time + 1) # NOTE: try to expire current entry
 
         # NOTE: increase entry by default value
         new_amount = cache_store.decrement(entry[:key])
