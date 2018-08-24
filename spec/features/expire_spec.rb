@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'Operation: #re_expire' do
+describe 'Operation: #expire' do
   after { cache_store.clear }
 
   let(:cache_store) { build_cache_store }
@@ -15,7 +15,7 @@ describe 'Operation: #re_expire' do
     sleep(4)
 
     # NOTE: remaining time: 8 seconds again
-    cache_store.re_expire(pair[:key], expires_in: 8)
+    cache_store.expire(pair[:key], expires_in: 8)
 
     # NOTE: remaining time: 4 seconds
     sleep(4)

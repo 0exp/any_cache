@@ -3,7 +3,7 @@
 class AnyCache::Adapters::ActiveSupportNaiveStore
   # @api private
   # @since 0.1.0
-  class ReExpire < Operation
+  class Expire < Operation
     # @param key [String]
     # @option expires_in [Integer, NilClass]
     # @return [void]

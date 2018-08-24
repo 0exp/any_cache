@@ -25,7 +25,7 @@ class AnyCache
   end
 
   # @since 0.1.0
-  def_delegators :adapter, :read, :write, :delete, :increment, :decrement, :re_expire, :clear
+  def_delegators :adapter, :read, :write, :delete, :increment, :decrement, :expire, :clear
 
   # @return [AnyCache::Adapters::Basic]
   #

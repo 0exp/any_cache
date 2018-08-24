@@ -36,7 +36,6 @@ module AnyCache::Adapters
                    :incrby,
                    :decrby,
                    :pipelined,
-                   :expire,
                    :flushdb
 
     # @param key [String]
@@ -85,7 +84,7 @@ module AnyCache::Adapters
 
       pipelined do
         new_amount = incrby(key, amount)
-        expire(key, expires_in) if expires_in
+        expire(key, expires_in: expires_in) if expires_in
       end
 
       new_amount&.value
@@ -104,7 +103,7 @@ module AnyCache::Adapters
 
       pipelined do
         new_amount = decrby(key, amount)
-        expire(key, expires_in) if expires_in
+        expire(key, expires_in: expires_in) if expires_in
       end
 
       new_amount&.value
@@ -116,8 +115,8 @@ module AnyCache::Adapters
     #
     # @api private
     # @since 0.1.0
-    def re_expire(key, expires_in: NO_EXPIRATION_TTL)
-      expire(key, expires_in)
+    def expire(key, expires_in: NO_EXPIRATION_TTL)
+      driver.expire(key, expires_in)
     end
 
     # @param options [Hash]

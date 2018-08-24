@@ -7,7 +7,7 @@ module AnyCache::Adapters
     require_relative 'active_support_naive_store/operation'
     require_relative 'active_support_naive_store/increment'
     require_relative 'active_support_naive_store/decrement'
-    require_relative 'active_support_naive_store/re_expire'
+    require_relative 'active_support_naive_store/expire'
 
     # @param driver [Object]
     # @return [void]
@@ -19,7 +19,7 @@ module AnyCache::Adapters
       @lock = Concurrent::ReentrantReadWriteLock.new
       @incr_operation = self.class::Increment.new(driver)
       @decr_operation = self.class::Decrement.new(driver)
-      @rexp_operation = self.class::ReExpire.new(driver)
+      @expr_operation = self.class::Expire.new(driver)
     end
 
     # @param key [String]
@@ -102,8 +102,8 @@ module AnyCache::Adapters
     #
     # @api private
     # @since 0.1.0
-    def re_expire(key, expires_in: self.class::Operation::NO_EXPIRATION_TTL)
-      lock.with_write_lock { rexp_operation.call(key, expires_in: expires_in) }
+    def expire(key, expires_in: self.class::Operation::NO_EXPIRATION_TTL)
+      lock.with_write_lock { expr_operation.call(key, expires_in: expires_in) }
     end
 
     private
@@ -130,6 +130,6 @@ module AnyCache::Adapters
     #
     # @api private
     # @since 0.1.0
-    attr_reader :rexp_operation
+    attr_reader :expr_operation
   end
 end

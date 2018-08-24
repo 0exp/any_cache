@@ -101,7 +101,7 @@ module AnyCache::Adapters
     #
     # @api private
     # @since 0.1.0
-    def re_expire(key, expires_in: NO_EXPIRATION_TTL)
+    def expire(key, expires_in: NO_EXPIRATION_TTL)
       read(key).tap { |value| write(key, value, expires_in: expires_in) }
     end
   end
