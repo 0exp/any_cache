@@ -1,6 +1,6 @@
 # AnyCache &middot; [![Gem Version](https://badge.fury.io/rb/any_cache.svg)](https://badge.fury.io/rb/any_cache) [![Build Status](https://travis-ci.org/0exp/any_cache.svg?branch=master)](https://travis-ci.org/0exp/any_cache) [![Coverage Status](https://coveralls.io/repos/github/0exp/any_cache/badge.svg)](https://coveralls.io/github/0exp/any_cache)
 
-AnyCache - a cache-wrapper that provides a minimalistic generic interface for all well-known cache storages and includes the minimal set of necessary operations:
+AnyCache - the simplest cache wrapper that provides a minimalistic generic interface for all well-known cache storages and includes the minimal set of necessary operations:
 `read`, `write`, `delete`, `expire`, `persist`, `clear`, `increment`, `decrement`.
 
 Supported clients:

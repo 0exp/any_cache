@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['iamdaiver@icloud.com']
 
   spec.summary       = 'AnyCache - the simplest cache wrapper'
-  spec.description   = 'AnyCache - the simplest cache-wrapper that provides ' \
+  spec.description   = 'AnyCache - the simplest cache wrapper that provides ' \
                        'a minimalistic generic interface for the all well-known ' \
                        'cache storages and includes a minimal set of necessary operations.'
 
