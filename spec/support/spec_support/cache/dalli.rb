@@ -10,10 +10,6 @@ module SpecSupport::Cache::Dalli
   end
 
   class << self
-    def load_dependencies!
-      require 'dalli'
-    end
-
     def connect
       load_dependencies!
 
@@ -21,6 +17,12 @@ module SpecSupport::Cache::Dalli
       options = { namespace: config[:namespace] }
 
       ::Dalli::Client.new(address, options)
+    end
+
+    private
+
+    def load_dependencies!
+      require 'dalli'
     end
   end
 end

@@ -124,7 +124,7 @@ module AnyCache::Adapters
     # @api private
     # @since 0.1.0
     def expire(key, expires_in: DEAD_TTL)
-      expires_in = DEAD_TTL unless expires_in
+      expires_in ||= DEAD_TTL unless expires_in
 
       driver.expire(key, expires_in)
     end

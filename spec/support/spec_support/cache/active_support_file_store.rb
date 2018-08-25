@@ -11,14 +11,16 @@ module SpecSupport::Cache::ActiveSupportFileStore
   end
 
   class << self
-    def load_dependencies!
-      require 'active_support'
-    end
-
     def connect
       load_dependencies!
 
       ::ActiveSupport::Cache::FileStore.new(config[:file_path])
+    end
+
+    private
+
+    def load_dependencies!
+      require 'active_support'
     end
   end
 end

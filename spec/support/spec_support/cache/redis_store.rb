@@ -9,14 +9,16 @@ module SpecSupport::Cache::RedisStore
   end
 
   class << self
-    def load_dependencies!
-      require 'redis-store'
-    end
-
     def connect
       load_dependencies!
 
       ::Redis::Store.new(host: config[:host], port: config[:port])
+    end
+
+    private
+
+    def load_dependencies!
+      require 'redis-store'
     end
   end
 end
