@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'Operation: #expire', :focus do
+describe 'Operation: #expire' do
   after { cache_store.clear }
 
   let(:cache_store)  { build_cache_store }
