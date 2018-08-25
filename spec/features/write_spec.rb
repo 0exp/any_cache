@@ -8,7 +8,7 @@ describe 'Operation: #write' do
   let(:first_pair)      { { key: SecureRandom.hex, value: SecureRandom.hex(4) } }
   let(:second_pair)     { { key: SecureRandom.hex, value: SecureRandom.hex(4) } }
 
-  context 'with expiration' do
+  context 'without expiration' do
     it 'writes permanent entry' do
       # NOTE: permanent entries
       cache_store.write(first_pair[:key], first_pair[:value])
@@ -25,7 +25,7 @@ describe 'Operation: #write' do
     end
   end
 
-  context 'without expiration' do
+  context 'with expiration' do
     it 'writes temporal entry' do
       # NOTE: temporal entry
       cache_store.write(first_pair[:key], first_pair[:value], expires_in: expiration_time)

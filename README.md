@@ -228,6 +228,21 @@ any_cache.read("another_data") # => nil
 
 ---
 
+## Tests
+
+- see [bin/rspec](bin/rspec)
+
+```shell
+bin/rspec --test-redis # run specs with Redis
+bin/rspec --test-redis-store # run specs with Redis::Store
+bin/rspec --test-dalli # run specs with Dalli::Client
+bin/rspec --test-as-file-store # run specs with ActiveSupport::Cache::FileStore
+bin/rspec --test-as-memory-store # run specs with ActiveSupport::Cache::MemoryStore
+bin/rspec --test-as-redis-cache-store # run specs with ActiveSupport::Cache::RedisCacheStore
+```
+
+---
+
 ## Roadmap
 
 - configuration layer with ability to instantiate cache clients implicitly
