@@ -11,10 +11,12 @@ Gem::Specification.new do |spec|
   spec.version       = AnyCache::VERSION
   spec.authors       = ['Rustam Ibragimov']
   spec.email         = ['iamdaiver@icloud.com']
+
   spec.summary       = 'AnyCache - the simplest cache wrapper'
   spec.description   = 'AnyCache - the simplest cache-wrapper that provides ' \
                        'a minimalistic generic interface for the all well-known ' \
                        'cache storages and includes a minimal set of necessary operations.'
+
   spec.homepage      = 'https://github.com/0exp/any_cache'
   spec.license       = 'MIT'
   spec.bindir        = 'bin'

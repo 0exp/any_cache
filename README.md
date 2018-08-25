@@ -1,6 +1,6 @@
 # AnyCache &middot; [![Gem Version](https://badge.fury.io/rb/any_cache.svg)](https://badge.fury.io/rb/any_cache) [![Build Status](https://travis-ci.org/0exp/any_cache.svg?branch=master)](https://travis-ci.org/0exp/any_cache) [![Coverage Status](https://coveralls.io/repos/github/0exp/any_cache/badge.svg)](https://coveralls.io/github/0exp/any_cache)
 
-AnyCache - a cache-wrapper that provides the minimalistic generic interface for the all well-known cache storages and includes the minimal set of necessary operations:
+AnyCache - a cache-wrapper that provides a minimalistic generic interface for all well-known cache storages and includes the minimal set of necessary operations:
 `read`, `write`, `delete`, `expire`, `persist`, `clear`, `increment`, `decrement`.
 
 Supported clients:
@@ -8,9 +8,9 @@ Supported clients:
 - `Redis` ([gem redis](https://github.com/redis/redis-rb)) ([redis storage](https://redis.io/))
 - `Redis::Store` ([gem redis-store](https://github.com/redis-store/redis-store)) ([redis storage](https://redis.io/))
 - `Dalli::Client` ([gem dalli](https://github.com/petergoldstein/dalli)) ([memcached storage](https://memcached.org/))
-- `ActiveSupport::Cache::FileStore` ([gem activesupport](https://github.com/rails/rails/blob/master/activesupport/lib/active_support/cache/file_store.rb)) (file storage)
-- `ActiveSupport::Cache::MemoryStore` ([gem activesupport](https://github.com/rails/rails/blob/master/activesupport/lib/active_support/cache/memory_store.rb)) (in memory storage)
-- `ActiveSupport::Cache::RedisCacheStore` ([gem activesupport](https://github.com/rails/rails/blob/master/activesupport/lib/active_support/cache/redis_cache_store.rb)) ([redis storage](https://redis.io/))
+- `ActiveSupport::Cache::FileStore` ([gem activesupport](https://github.com/rails/rails/blob/master/activesupport/lib/active_support/cache/file_store.rb)) ([file storage](https://api.rubyonrails.org/classes/ActiveSupport/Cache/FileStore.html))
+- `ActiveSupport::Cache::MemoryStore` ([gem activesupport](https://github.com/rails/rails/blob/master/activesupport/lib/active_support/cache/memory_store.rb)) ([in memory storage](https://api.rubyonrails.org/classes/ActiveSupport/Cache/MemoryStore.html))
+- `ActiveSupport::Cache::RedisCacheStore` ([gem activesupport](https://github.com/rails/rails/blob/master/activesupport/lib/active_support/cache/redis_cache_store.rb)) ([redis cache storage](https://api.rubyonrails.org/classes/ActiveSupport/Cache/RedisCacheStore.html))
 
 ---
 
@@ -49,7 +49,7 @@ require 'any_cache'
 
 ### Creation
 
-To instantiate a cache wrapper you have to provide a client.
+To instantiate AnyCache instance you have to provide a client.
 Client - an independent driver that works with a corresponding cache storage (external dependency).
 Supported clients:
 
@@ -63,7 +63,7 @@ Supported clients:
 `AnyCache` instantiation:
 
 ```ruby
-# 1) create a client object
+# 1) create client object
 client = Redis.new(...)
 # -- or --
 client = Redis::Store.new(...)
@@ -187,7 +187,7 @@ any_cache.decrememnt("another_data", 2, expires_in: 10) # => -2 (or 0 for Dalli:
 # --- expire immediately ---
 any_cache.expire("data")
 
-# --- set custom expiration time (in seconds) --
+# --- set new expiration time (in seconds) --
 any_cache.expire("data", expires_in: 36)
 ```
 
