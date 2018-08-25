@@ -21,6 +21,12 @@ module AnyCache::Adapters
     # @since 0.1.0
     NO_EXPIRATION_TTL = 0
 
+    # @return [NilClass]
+    #
+    # @api private
+    # @since 0.1.0
+    DEAD_TTL = nil
+
     # @return [Integer]
     #
     # @api private
@@ -107,8 +113,19 @@ module AnyCache::Adapters
     #
     # @api private
     # @since 0.1.0
-    def expire(key, expires_in: NO_EXPIRATION_TTL)
-      touch(key, expires_in)
+    def expire(key, expires_in: DEAD_TTL)
+      is_alive = expires_in ? expires_in.positive? : false
+      expires_in ? touch(key, expires_in) : driver.delete(key)
+    end
+
+    # @param key [String]
+    # @param options [Hash]
+    # @return [void]
+    #
+    # @api private
+    # @since 0.1.0
+    def persist(key, **options)
+      touch(key, NO_EXPIRATION_TTL)
     end
 
     # @param options [Hash]

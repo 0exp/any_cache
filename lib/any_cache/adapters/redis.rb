@@ -25,6 +25,12 @@ module AnyCache::Adapters
     #
     # @api private
     # @since 0.1.0
+    DEAD_TTL = 0
+
+    # @return [Integer]
+    #
+    # @api private
+    # @since 0.1.0
     DEFAULT_INCR_DECR_AMOUNT = 1
 
     # @since 0.1.0
@@ -82,6 +88,7 @@ module AnyCache::Adapters
       expires_in = options.fetch(:expires_in, NO_EXPIRATION_TTL)
       new_amount = nil
 
+      # TODO: think about Redis#multi
       pipelined do
         new_amount = incrby(key, amount)
         expire(key, expires_in: expires_in) if expires_in
@@ -101,6 +108,7 @@ module AnyCache::Adapters
       expires_in = options.fetch(:expires_in, NO_EXPIRATION_TTL)
       new_amount = nil
 
+      # TODO: think about Redis#multi
       pipelined do
         new_amount = decrby(key, amount)
         expire(key, expires_in: expires_in) if expires_in
@@ -115,8 +123,20 @@ module AnyCache::Adapters
     #
     # @api private
     # @since 0.1.0
-    def expire(key, expires_in: NO_EXPIRATION_TTL)
+    def expire(key, expires_in: DEAD_TTL)
+      expires_in = DEAD_TTL unless expires_in
+
       driver.expire(key, expires_in)
+    end
+
+    # @param key [String]
+    # @param options [Hash]
+    # @return [void]
+    #
+    # @api private
+    # @since 0.1.0
+    def persist(key, **options)
+      driver.persist(key)
     end
 
     # @param options [Hash]

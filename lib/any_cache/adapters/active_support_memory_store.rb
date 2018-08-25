@@ -9,6 +9,7 @@ module AnyCache::Adapters
     require_relative 'active_support_memory_store/increment'
     require_relative 'active_support_memory_store/decrement'
     require_relative 'active_support_memory_store/expire'
+    require_relative 'active_support_memory_store/persist'
 
     class << self
       # @param driver [Object]

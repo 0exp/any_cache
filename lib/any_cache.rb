@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'securerandom'
-require 'qonfig'
 require 'concurrent/atomic/reentrant_read_write_lock'
 
 # @api public
@@ -25,7 +24,15 @@ class AnyCache
   end
 
   # @since 0.1.0
-  def_delegators :adapter, :read, :write, :delete, :increment, :decrement, :expire, :clear
+  def_delegators :adapter,
+                 :read,
+                 :write,
+                 :delete,
+                 :increment,
+                 :decrement,
+                 :expire,
+                 :persist,
+                 :clear
 
   # @return [AnyCache::Adapters::Basic]
   #

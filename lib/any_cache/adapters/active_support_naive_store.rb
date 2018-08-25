@@ -8,6 +8,7 @@ module AnyCache::Adapters
     require_relative 'active_support_naive_store/increment'
     require_relative 'active_support_naive_store/decrement'
     require_relative 'active_support_naive_store/expire'
+    require_relative 'active_support_naive_store/persist'
 
     # @param driver [Object]
     # @return [void]
@@ -20,6 +21,7 @@ module AnyCache::Adapters
       @incr_operation = self.class::Increment.new(driver)
       @decr_operation = self.class::Decrement.new(driver)
       @expr_operation = self.class::Expire.new(driver)
+      @pers_operation = self.class::Persist.new(driver)
     end
 
     # @param key [String]
@@ -102,8 +104,18 @@ module AnyCache::Adapters
     #
     # @api private
     # @since 0.1.0
-    def expire(key, expires_in: self.class::Operation::NO_EXPIRATION_TTL)
+    def expire(key, expires_in: self.class::Operation::DEAD_TTL)
       lock.with_write_lock { expr_operation.call(key, expires_in: expires_in) }
+    end
+
+    # @param key [String]
+    # @param options [Hash]
+    # @return [void]
+    #
+    # @api private
+    # @since 0.1.0
+    def persist(key, **options)
+      lock.with_write_lock { pers_operation.call(key) }
     end
 
     private
@@ -126,10 +138,13 @@ module AnyCache::Adapters
     # @since 0.1.0
     attr_reader :decr_operation
 
-    # @return [Operation::ReExpire]
+    # @return [Operation::Expire]
     #
     # @api private
     # @since 0.1.0
     attr_reader :expr_operation
+
+    # @return [Operation::Persist]
+    attr_reader :pers_operation
   end
 end

@@ -13,8 +13,14 @@ class AnyCache::Adapters::ActiveSupportNaiveStore
     # @since 0.1.0
     NO_EXPIRATION_TTL = nil
 
+    # @return [Integer]
+    #
+    # @api private
     # @since 0.1.0
-    def_delegators :driver, :read, :write
+    DEAD_TTL = 0
+
+    # @since 0.1.0
+    def_delegators :driver, :read, :write, :delete
 
     # @param driver [Object]
     # @return [void]

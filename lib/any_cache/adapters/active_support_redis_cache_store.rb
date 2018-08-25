@@ -30,6 +30,12 @@ module AnyCache::Adapters
     #
     # @api private
     # @since 0.1.0
+    DEAD_TTL = 0
+
+    # @return [Integer]
+    #
+    # @api private
+    # @since 0.1.0
     DEFAULT_INCR_DECR_AMOUNT = 1
 
     # @param key
@@ -70,7 +76,7 @@ module AnyCache::Adapters
         write(key, amount, expires_in: expires_in) && amount
       else
         driver.increment(key, amount).tap do
-          driver.redis.expire(key, expires_in) if expires_in
+          expire(key, expires_in: expires_in) if expires_in
         end
       end
     end
@@ -90,7 +96,7 @@ module AnyCache::Adapters
         write(key, -amount, expires_in: expires_in) && -amount
       else
         driver.decrement(key, amount).tap do
-          driver.redis.expire(key, expires_in) if expires_in
+          expire(key, expires_in: expires_in) if expires_in
         end
       end
     end
@@ -101,8 +107,18 @@ module AnyCache::Adapters
     #
     # @api private
     # @since 0.1.0
-    def expire(key, expires_in: NO_EXPIRATION_TTL)
+    def expire(key, expires_in: DEAD_TTL)
       read(key).tap { |value| write(key, value, expires_in: expires_in) }
+    end
+
+    # @param key [String]
+    # @param options [Hash]
+    # @return [void]
+    #
+    # @api private
+    # @since 0.1.0
+    def persist(key, **options)
+      read(key).tap { |value| write(key, value) }
     end
   end
 end

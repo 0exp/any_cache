@@ -17,6 +17,7 @@ module AnyCache::Adapters
         driver.respond_to?(:increment) &&
         driver.respond_to?(:decrement) &&
         driver.respond_to?(:expire) &&
+        driver.respond_to?(:persist) &&
         driver.respond_to?(:clear)
       end
     end
@@ -29,6 +30,7 @@ module AnyCache::Adapters
                    :increment,
                    :decrement,
                    :expire,
+                   :persist,
                    :clear
   end
 end

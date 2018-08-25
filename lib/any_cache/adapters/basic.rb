@@ -96,6 +96,16 @@ module AnyCache::Adapters
       raise NotImplementedError
     end
 
+    # @param key [String]
+    # @param options [Hash]
+    # @return [void]
+    #
+    # @api private
+    # @since 0.1.0
+    def persist(key, **options)
+      raise NotImplementedError
+    end
+
     # @param options [Hash]
     # @return [void]
     #
