@@ -115,7 +115,7 @@ module AnyCache::Adapters
     # @since 0.1.0
     def expire(key, expires_in: DEAD_TTL)
       is_alive = expires_in ? expires_in.positive? : false
-      expires_in ? touch(key, expires_in) : driver.delete(key)
+      is_alive ? touch(key, expires_in) : driver.delete(key)
     end
 
     # @param key [String]

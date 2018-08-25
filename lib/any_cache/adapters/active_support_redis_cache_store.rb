@@ -4,6 +4,8 @@ module AnyCache::Adapters
   # @api private
   # @since 0.1.0
   class ActiveSupportRedisCacheStore < Basic
+    # TODO: think about locks
+
     class << self
       # @param driver [Object]
       # @return [Boolean]
@@ -108,7 +110,10 @@ module AnyCache::Adapters
     # @api private
     # @since 0.1.0
     def expire(key, expires_in: DEAD_TTL)
-      read(key).tap { |value| write(key, value, expires_in: expires_in) }
+      read(key).tap do |value|
+        is_alive = expires_in ? expires_in.positive? : false
+        is_alive ? write(key, value, expires_in: expires_in) : delete(key)
+      end
     end
 
     # @param key [String]
