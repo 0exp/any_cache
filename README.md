@@ -95,7 +95,7 @@ If you want to use your own cache client implementation, you should provide an o
 
 ### Read
 
-- `AnyCache#read(key, [**options])` - get entry value from cache storage
+- `AnyCache#read(key)` - get entry value from cache storage
 
 ```ruby
 # --- entry exists ---
@@ -123,7 +123,7 @@ any_cache.write("data", 123, expires_in: 60)
 
 ### Delete
 
-- `AnyCache#delete(key, [**options])` - remove entry from cache storage
+- `AnyCache#delete(key)` - remove entry from cache storage
 
 ```ruby
 any_cache.delete("data")
@@ -209,7 +209,7 @@ any_cache.persist("data")
 
 ### Clear
 
-- `AnyCache#clear(**options)` - clear cache database
+- `AnyCache#clear()` - clear cache database
 
 ```ruby
 # --- prepare cache data ---
@@ -228,7 +228,7 @@ any_cache.read("another_data") # => nil
 
 ---
 
-## Tests
+## Build
 
 - see [bin/rspec](bin/rspec)
 
