@@ -5,7 +5,7 @@ module SpecSupport::Cache::ActiveSupportFileStore
 
   configuration do
     setting :file_path, File.expand_path(
-      File.join('..', '..', 'artifacts', SecureRandom.hex),
+      File.join('..', '..', '..', 'artifacts', SecureRandom.hex),
       Pathname.new(__FILE__).realpath
     )
   end

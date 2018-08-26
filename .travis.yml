@@ -3,11 +3,10 @@ sudo: false
 before_install: gem install bundler
 cache: bundler
 script:
-- bundle exec rake rubocop
-- bundle exec rake rspec
+- bundle exec rspec
 services:
-  - redis-server
-  - memcached
+- redis-server
+- memcached
 matrix:
   fast_finish: true
   include:
