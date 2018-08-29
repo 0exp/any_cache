@@ -12,6 +12,7 @@ module AnyCache::Adapters
   require_relative 'adapters/active_support_file_store'
   require_relative 'adapters/active_support_redis_cache_store'
   require_relative 'adapters/active_support_memory_store'
+  require_relative 'adapters/active_support_mem_cache_store'
 
   class << self
     # @param driver [Object]
@@ -30,6 +31,7 @@ module AnyCache::Adapters
       when ActiveSupportRedisCacheStore.supported_driver?(driver) then ActiveSupportRedisCacheStore.new(driver)
       when ActiveSupportMemoryStore.supported_driver?(driver)     then ActiveSupportMemoryStore.new(driver)
       when ActiveSupportFileStore.supported_driver?(driver)       then ActiveSupportFileStore.new(driver)
+      when ActiveSupportMemCacheStore.supported_driver?(driver)   then ActiveSupportMemCacheStore.new(driver)
       when Delegator.supported_driver?(driver)                    then Delegator.new(driver)
       else
         raise AnyCache::UnsupportedCacheDriverError
