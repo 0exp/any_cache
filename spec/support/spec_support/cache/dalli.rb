@@ -1,28 +1,28 @@
 # frozen_string_literal: true
 
 module SpecSupport::Cache::Dalli
-  include Qonfig::Configurable
-
-  configuration do
-    setting :host, '127.0.0.1'
-    setting :port, 11211
-    setting :namespace, 'blastwave'
+  class CacheStore < AnyCache
+    configure do |conf|
+      conf.driver = :dalli
+      conf.dalli.servers = '127.0.0.1:11211'
+      conf.dalli.options = { namespace: 'blastwave' }
+    end
   end
 
   class << self
-    def connect
+    def build
       load_dependencies!
-
-      address = "#{config[:host]}:#{config[:port]}"
-      options = { namespace: config[:namespace] }
-
-      ::Dalli::Client.new(address, options)
+      build_cache_store
     end
 
     private
 
     def load_dependencies!
       require 'dalli'
+    end
+
+    def build_cache_store
+      CacheStore.build
     end
   end
 end

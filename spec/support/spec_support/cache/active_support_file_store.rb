@@ -1,26 +1,33 @@
 # frozen_string_literal: true
 
 module SpecSupport::Cache::ActiveSupportFileStore
-  include Qonfig::Configurable
+  class CacheStore < AnyCache
+    configure do |conf|
+      conf.driver = :as_file_store
 
-  configuration do
-    setting :file_path, File.expand_path(
-      File.join('..', '..', '..', 'artifacts', SecureRandom.hex),
-      Pathname.new(__FILE__).realpath
-    )
+      conf.as_file_store.options = {
+        file_path: File.expand_path(
+          File.join('..', '..', '..', 'artifacts', SecureRandom.hex),
+          Pathname.new(__FILE__).realpath
+        )
+      }
+    end
   end
 
   class << self
     def connect
       load_dependencies!
-
-      ::ActiveSupport::Cache::FileStore.new(config[:file_path])
+      build_cache_store
     end
 
     private
 
     def load_dependencies!
       require 'active_support'
+    end
+
+    def build_cache_store
+      CacheStore.build
     end
   end
 end

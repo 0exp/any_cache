@@ -1,17 +1,26 @@
 # frozen_string_literal: true
 
 module SpecSupport::Cache::ActiveSupportMemoryStore
-  class << self
-    def connect
-      load_dependencies!
+  class CacheStore < AnyCache
+    configure do |conf|
+      conf.driver = :as_memory_store
+    end
+  end
 
-      ::ActiveSupport::Cache::MemoryStore.new
+  class << self
+    def build
+      load_dependencies!
+      build_cache_store
     end
 
     private
 
     def load_dependencies!
       require 'active_support'
+    end
+
+    def build_cache_store
+      CacheStore.build
     end
   end
 end

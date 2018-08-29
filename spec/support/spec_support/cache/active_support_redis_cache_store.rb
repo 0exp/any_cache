@@ -1,19 +1,16 @@
 # frozen_string_literal: true
 
 module SpecSupport::Cache::ActiveSupportRedisCacheStore
-  include Qonfig::Configurable
-
-  configuration do
-    setting :host, '127.0.0.1'
-    setting :port, 6379
+  class CacheStore < AnyCache
+    configure do |conf|
+      conf.driver = :as_redis_cache_store
+    end
   end
 
   class << self
-    def connect
+    def build
       load_dependencies!
-
-      redis_client = ::Redis.new(host: config[:host], port: config[:port])
-      ::ActiveSupport::Cache::RedisCacheStore.new(redis: redis_client)
+      build_cache_store
     end
 
     private
@@ -21,6 +18,19 @@ module SpecSupport::Cache::ActiveSupportRedisCacheStore
     def load_dependencies!
       require 'redis'
       require 'active_support'
+    end
+
+    def build_cache_store
+      CacheStore.configure do |conf|
+        conf.as_redis_cache_store.options = {
+          redis: ::Redis.new(
+            host: '127.0.0.1',
+            port: 6379
+          )
+        }
+      end
+
+      CacheStore.build
     end
   end
 end
