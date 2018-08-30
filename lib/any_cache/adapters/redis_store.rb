@@ -11,7 +11,7 @@ module AnyCache::Adapters
       # @api private
       # @since 0.1.0
       def supported_driver?(driver)
-        defined?(::Redis::Store) && driver.is_a?(::Redis::Store)
+        AnyCache::Drivers::RedisStore.supported_source?(driver)
       end
     end
 

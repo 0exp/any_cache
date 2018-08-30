@@ -8,10 +8,7 @@ module AnyCacheSpecRunner
   extend self
 
   def expand_gemfile_path(gemfile_name)
-    File.expand_path(
-      File.join('..', '..', 'gemfiles', gemfile_name),
-      Pathname.new(__FILE__).realpath
-    )
+    File.expand_path(File.join('..', 'gemfiles', gemfile_name), __dir__)
   end
 
   GEMFILES = {

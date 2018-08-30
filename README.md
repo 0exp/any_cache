@@ -35,7 +35,17 @@ require 'any_cache'
 ## Usage / Table of Contents
 
 - [Creation](#creation)
-- **Operations**
+    - [Manual creation](#manual-creation)
+    - [Config-based creation](#config-based-creation)
+        - [AnyCache with Redis](#anycache-with-redis)
+        - [AnyCache with Redis::Store](#anycache-with-redisstore)
+        - [AnyCache with Dalli::Client](#anycache-with-dalliclient)
+        - [AnyCache with ActiveSupport::Cache::FileStore](#anycache-with-activesupportcachefilestore)
+        - [AnyCache with ActiveSupport::Cache::MemoryStore](#anycache-with-activesupportcachememorystore)
+        - [AnyCache with ActiveSupport::Cache::RedisCacheStore](#anycache-with-activesupportcacherediscachestore)
+    - [Many cache storages](#many-cache-storages)
+    - [Custom cache clients](#custom-cache-clients)
+- [Operations](#operations)
     - [Read](#read)
     - [Write](#write)
     - [Delete](#delete)
@@ -51,6 +61,7 @@ require 'any_cache'
 
 To instantiate AnyCache instance you have to provide a client.
 Client - an independent driver that works with a corresponding cache storage (external dependency).
+
 Supported clients:
 
 - `Redis`
@@ -60,7 +71,14 @@ Supported clients:
 - `ActiveSupport::Cache::FileStore`
 - `ActiveSupport::Cache::MemoryStore`
 
-`AnyCache` instantiation:
+`AnyCache` can be instantiated by two ways:
+
+- with explicit client object instantiated manually;
+- via configuration;
+
+#### Manual creation
+
+Custom instantiation with explicit client objects:
 
 ```ruby
 # 1) create client object
@@ -80,6 +98,114 @@ client = ActiveSupport::Cache::MemoryStore.new(...)
 any_cache = AnyCache.build(client) # => <AnyCache:0x00007f990527f268 ...>
 ```
 
+#### Config-based creation
+
+You can configure `AnyCache` globally or create subclasses and configure each of them. After that
+storage instantiation works via `.build` method without explicit attributes.
+
+- `AnyCache.configure` is used for configuration;
+- `config.driver` is used for determine which client should be used;
+- `config.__driver_name__.options` stores client-related options;
+
+Supported drivers:
+
+- `:redis` - Redis;
+- `:redis_tore` - Redis::Client;
+- `:dalli` - Dalli::Client
+- `:as_redis_cache_store` - ActiveSupport::Cache::RedisCacheStore;
+- `:as_file_store` - ActiveSupport::Cache::FileStore;
+- `:as_memory_store` - ActiveSupport::Cache::MemoryStore;
+
+##### `AnyCache` with `Redis`:
+
+```ruby
+AnyCache.configure do |conf|
+  conf.driver = :redis
+  conf.redis.options = { ... } # Redis-related options
+end
+
+AnyCache.build
+```
+
+##### `AnyCache` with `Redis::Store`:
+
+```ruby
+AnyCache.configure do |conf|
+  conf.driver = :redis_store
+  conf.redis_store.options = { ... } # Redis::Store-related options
+end
+
+AnyCache.build
+```
+
+##### `AnyCache` with `Dalli::Client`:
+
+```ruby
+AnyCache.configure do |conf|
+  conf.driver = :dalli
+  conf.dalli.options = { ... } # Dalli::Client-related options
+end
+
+AnyCache.build
+```
+
+##### `AnyCache` with `ActiveSupport::Cache::FileStore`:
+
+```ruby
+AnyCache.configure do |conf|
+  conf.driver = :as_file_store
+  conf.as_file_store.cache_path = '/path/to/cache'
+  conf.as_file_store.options = { ... } # ActiveSupport::Cache::FileStore-related options
+end
+
+AnyCache.build
+```
+
+##### `AnyCache` with `ActiveSupport::Cache::MemoryStore`:
+
+```ruby
+AnyCache.configure do |conf|
+  conf.driver = :as_memory_store
+  conf.as_memory_store.options = { ... } # ActiveSupport::Cache::MemoryStore-related options
+end
+
+AnyCache.build
+```
+
+##### `AnyCache` with `ActiveSupport::Cache::RedisCacheStore`:
+
+```ruby
+AnyCache.configure do |conf|
+  conf.driver = :as_redis_cache_store
+  conf.as_redis_cache_store.options = { ... } # ActiveSupport::Cache::RedisCacheStore-related options
+end
+
+AnyCache.build
+```
+
+#### Many cache storages
+
+You can inherit `AnyCache` class and create and configure as many cache storages as you want:
+
+```ruby
+class RedisCache < AnyCache
+  configure do |conf|
+    conf.driver = :redis
+  end
+end
+
+class DalliCache < AnyCache
+  configure do |conf|
+    conf.driver = :dalli
+  end
+end
+
+redis_cache = RedisCache.build
+dalli_cache = DalliCache.build
+```
+
+#### Custom cache clients
+
 If you want to use your own cache client implementation, you should provide an object that responds to:
 
 - `#read(key, [**options])` ([doc](#read))
@@ -90,6 +216,37 @@ If you want to use your own cache client implementation, you should provide an o
 - `#expire(key, [**options])` ([doc](#expire))
 - `#persist(key, [**options])` ([doc](#persist))
 - `#clear([**options])` ([doc](#clear))
+
+```ruby
+class MyCacheClient
+  # ...
+
+  def read
+    # ...
+  end
+
+  def write
+    # ...
+  end
+
+  # ...
+end
+
+AnyCache.build(MyCacheClient.new)
+```
+
+## Operations
+
+`AnyCache` provides a following operation set:
+
+- [read](#read)
+- [write](#write)
+- [delete](#delete)
+- [increment](#increment)
+- [decrement](#decrement)
+- [expire](#expire)
+- [persist](#persist)
+- [clear](#clear)
 
 ---
 

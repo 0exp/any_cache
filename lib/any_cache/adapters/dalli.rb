@@ -11,7 +11,7 @@ module AnyCache::Adapters
       # @api private
       # @since 0.1.0
       def supported_driver?(driver)
-        defined?(::Dalli::Client) && driver.is_a?(::Dalli::Client)
+        AnyCache::Drivers::Dalli.supported_source?(driver)
       end
     end
 

@@ -18,8 +18,7 @@ module AnyCache::Adapters
       # @api private
       # @since 0.1.0
       def supported_driver?(driver)
-        defined?(::ActiveSupport::Cache::MemoryStore) &&
-        driver.is_a?(::ActiveSupport::Cache::MemoryStore)
+        AnyCache::Drivers::ActiveSupportMemoryStore.supported_source?(driver)
       end
     end
   end

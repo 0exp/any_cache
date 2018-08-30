@@ -13,7 +13,6 @@ SimpleCov.start { add_filter 'spec' }
 require 'bundler/setup'
 require 'any_cache'
 require 'pry'
-require 'qonfig'
 
 require_relative 'support/spec_support'
 

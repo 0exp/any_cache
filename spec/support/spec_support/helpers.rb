@@ -2,25 +2,23 @@
 
 module SpecSupport
   module Helpers
-    # rubocop:disable Metrics/AbcSize
     def build_cache_store
       case
       when Testing.test_redis_cache?
-        AnyCache.build(Cache::Redis.connect)
+        Cache::Redis.build
       when Testing.test_redis_store_cache?
-        AnyCache.build(Cache::RedisStore.connect)
+        Cache::RedisStore.build
       when Testing.test_dalli_cache?
-        AnyCache.build(Cache::Dalli.connect)
+        Cache::Dalli.build
       when Testing.test_as_memory_store_cache?
-        AnyCache.build(Cache::ActiveSupportMemoryStore.connect)
+        Cache::ActiveSupportMemoryStore.build
       when Testing.test_as_file_store_cache?
-        AnyCache.build(Cache::ActiveSupportFileStore.connect)
+        Cache::ActiveSupportFileStore.build
       when Testing.test_as_redis_cache_store_cache?
-        AnyCache.build(Cache::ActiveSupportRedisCacheStore.connect)
+        Cache::ActiveSupportRedisCacheStore.build
       else
         raise 'No cache :('
       end
     end
-    # rubocop:enable Metrics/AbcSize
   end
 end
