@@ -5,17 +5,15 @@ module SpecSupport::Cache::ActiveSupportFileStore
     configure do |conf|
       conf.driver = :as_file_store
 
-      conf.as_file_store.options = {
-        file_path: File.expand_path(
-          File.join('..', '..', '..', 'artifacts', SecureRandom.hex),
-          Pathname.new(__FILE__).realpath
-        )
-      }
+      conf.as_file_store.cache_path = File.expand_path(
+        File.join('..', '..', 'artifacts', SecureRandom.hex),
+        __dir__
+      )
     end
   end
 
   class << self
-    def connect
+    def build
       load_dependencies!
       build_cache_store
     end

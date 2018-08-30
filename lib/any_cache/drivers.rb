@@ -17,7 +17,7 @@ module AnyCache::Drivers
     # @raise [AnyCache::UnsupportedDriverError]
     #
     # @api private
-    # @since 0.1.0
+    # @since 0.2.0
     def build(config)
       driver = config[:driver]
 
