@@ -25,5 +25,9 @@ module SpecSupport::Testing
     def test_as_redis_cache_store_cache?
       !!ENV['TEST_AS_REDIS_CACHE_STORE_CACHE']
     end
+
+    def test_as_mem_cache_store_cache?
+      !!ENV['TEST_AS_MEM_CACHE_STORE_CACHE']
+    end
   end
 end

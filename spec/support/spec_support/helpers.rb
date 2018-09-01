@@ -16,6 +16,8 @@ module SpecSupport
         Cache::ActiveSupportFileStore.build
       when Testing.test_as_redis_cache_store_cache?
         Cache::ActiveSupportRedisCacheStore.build
+      when Testing.test_as_mem_cache_store_cache?
+        Cache::ActiveSupportMemCacheStore.build
       else
         raise 'No cache :('
       end

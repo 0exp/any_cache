@@ -15,8 +15,9 @@ module AnyCacheSpecRunner
     redis:                     expand_gemfile_path('redis.gemfile'),
     redis_store:               expand_gemfile_path('redis_store.gemfile'),
     dalli:                     expand_gemfile_path('dalli.gemfile'),
+    active_support:            expand_gemfile_path('active_support.gemfile'),
     active_support_with_redis: expand_gemfile_path('active_support_with_redis.gemfile'),
-    active_support:            expand_gemfile_path('active_support.gemfile')
+    active_support_with_dalli: expand_gemfile_path('active_support_with_dalli.gemfile')
   }.freeze
 
   # rubocop:disable Metrics/MethodLength, Metrics/BlockLength
@@ -53,6 +54,11 @@ module AnyCacheSpecRunner
         '--test-as-memory-store',
         'Run specs with ActiveSupport::Cache::MemoryStore cache storage'
       ) { run_as_memory_store_cache_specs! }
+
+      opts.on(
+        '--test-as-mem-cache-store',
+        'Run specs with ActiveSupport::Cache::MemCacheStore cache storage'
+      ) { run_as_mem_cache_store_cache_specs! }
 
       opts.on(
         '-h', '--help',
@@ -102,6 +108,13 @@ module AnyCacheSpecRunner
   def run_as_memory_store_cache_specs!
     ENV['TEST_AS_MEMORY_STORE_CACHE'] = 'true'
     ENV['BUNDLE_GEMFILE'] = GEMFILES[:active_support]
+
+    run_tests!
+  end
+
+  def run_as_mem_cache_store_cache_specs!
+    ENV['TEST_AS_MEM_CACHE_STORE_CACHE'] = 'true'
+    ENV['BUNDLE_GEMFILE'] = GEMFILES[:active_support_with_dalli]
 
     run_tests!
   end

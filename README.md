@@ -8,9 +8,10 @@ Supported clients:
 - `Redis` ([gem redis](https://github.com/redis/redis-rb)) ([redis storage](https://redis.io/))
 - `Redis::Store` ([gem redis-store](https://github.com/redis-store/redis-store)) ([redis storage](https://redis.io/))
 - `Dalli::Client` ([gem dalli](https://github.com/petergoldstein/dalli)) ([memcached storage](https://memcached.org/))
+- `ActiveSupport::Cache::RedisCacheStore` ([gem activesupport](https://github.com/rails/rails/blob/master/activesupport/lib/active_support/cache/redis_cache_store.rb)) ([redis cache storage](https://api.rubyonrails.org/classes/ActiveSupport/Cache/RedisCacheStore.html))
+- `ActiveSupport::Cache::MemCacheStore` ([gem activesupport](https://github.com/rails/rails/blob/master/activesupport/lib/active_support/cache/mem_cache_store.rb)) ([memcache storage](https://api.rubyonrails.org/classes/ActiveSupport/Cache/MemCacheStore.html))
 - `ActiveSupport::Cache::FileStore` ([gem activesupport](https://github.com/rails/rails/blob/master/activesupport/lib/active_support/cache/file_store.rb)) ([file storage](https://api.rubyonrails.org/classes/ActiveSupport/Cache/FileStore.html))
 - `ActiveSupport::Cache::MemoryStore` ([gem activesupport](https://github.com/rails/rails/blob/master/activesupport/lib/active_support/cache/memory_store.rb)) ([in memory storage](https://api.rubyonrails.org/classes/ActiveSupport/Cache/MemoryStore.html))
-- `ActiveSupport::Cache::RedisCacheStore` ([gem activesupport](https://github.com/rails/rails/blob/master/activesupport/lib/active_support/cache/redis_cache_store.rb)) ([redis cache storage](https://api.rubyonrails.org/classes/ActiveSupport/Cache/RedisCacheStore.html))
 
 ---
 
@@ -40,9 +41,10 @@ require 'any_cache'
         - [AnyCache with Redis](#anycache-with-redis)
         - [AnyCache with Redis::Store](#anycache-with-redisstore)
         - [AnyCache with Dalli::Client](#anycache-with-dalliclient)
+        - [AnyCache with ActiveSupport::Cache::RedisCacheStore](#anycache-with-activesupportcacherediscachestore)
+        - [AnyCache with ActiveSupport::Cache::MemCacheStore](#anycache-with-activesupportcachememcachestore)
         - [AnyCache with ActiveSupport::Cache::FileStore](#anycache-with-activesupportcachefilestore)
         - [AnyCache with ActiveSupport::Cache::MemoryStore](#anycache-with-activesupportcachememorystore)
-        - [AnyCache with ActiveSupport::Cache::RedisCacheStore](#anycache-with-activesupportcacherediscachestore)
     - [Many cache storages](#many-cache-storages)
     - [Custom cache clients](#custom-cache-clients)
 - [Operations](#operations)
@@ -68,6 +70,7 @@ Supported clients:
 - `Redis::Store`
 - `Dalli::Client`
 - `ActiveSupport::Cache::RedisCacheStore`
+- `ActiveSupport::Cache::MemCacheStore`
 - `ActiveSupport::Cache::FileStore`
 - `ActiveSupport::Cache::MemoryStore`
 
@@ -89,6 +92,8 @@ client = Redis::Store.new(...)
 client = Dalli::Client.new(...)
 # -- or --
 client = ActiveSupport::Cache::RedisCacheStore.new(...)
+# --- or ---
+client = ActiveSupport::Cache::MemCacheStore.new(...)
 # -- or --
 client = ActiveSupport::Cache::FileStore.new(...)
 # -- or --
@@ -109,12 +114,13 @@ storage instantiation works via `.build` method without explicit attributes.
 
 Supported drivers:
 
-- `:redis` - Redis;
-- `:redis_tore` - Redis::Client;
-- `:dalli` - Dalli::Client
-- `:as_redis_cache_store` - ActiveSupport::Cache::RedisCacheStore;
-- `:as_file_store` - ActiveSupport::Cache::FileStore;
-- `:as_memory_store` - ActiveSupport::Cache::MemoryStore;
+- `:redis` - [Redis](#anycache-with-redis);
+- `:redis_tore` - [Redis::Client](#anycache-with-redisstore);
+- `:dalli` - [Dalli::Client](#anycache-with-dalliclient);
+- `:as_redis_cache_store` - [ActiveSupport::Cache::RedisCacheStore](#anycache-with-activesupportcacherediscachestore);
+- `:as_mem_cache_store` - [ActiveSupport::Cache::MemCacheStore](#anycache-with-activesupportcachememcachestore);
+- `:as_file_store` - [ActiveSupport::Cache::FileStore](#anycache-with-activesupportcachefilestore);
+- `:as_memory_store` - [ActiveSupport::Cache::MemoryStore](#anycache-with-activesupportcachememorystore);
 
 ##### `AnyCache` with `Redis`:
 
@@ -143,7 +149,31 @@ AnyCache.build
 ```ruby
 AnyCache.configure do |conf|
   conf.driver = :dalli
+  conf.dalli.servers = ... # string or array of strings
   conf.dalli.options = { ... } # Dalli::Client-related options
+end
+
+AnyCache.build
+```
+
+##### `AnyCache` with `ActiveSupport::Cache::RedisCacheStore`:
+
+```ruby
+AnyCache.configure do |conf|
+  conf.driver = :as_redis_cache_store
+  conf.as_redis_cache_store.options = { ... } # ActiveSupport::Cache::RedisCacheStore-related options
+end
+
+AnyCache.build
+```
+
+##### `AnyCache` with `ActiveSupport::Cache::MemCacheStore`:
+
+```ruby
+AnyCache.configure do |conf|
+  conf.driver = :as_mem_cache_store
+  conf.as_memory_store.servers = ... # string or array of strings
+  conf.as_memory_store.options = { ... } # ActiveSupport::Cache::MemCacheStore-related options
 end
 
 AnyCache.build
@@ -167,17 +197,6 @@ AnyCache.build
 AnyCache.configure do |conf|
   conf.driver = :as_memory_store
   conf.as_memory_store.options = { ... } # ActiveSupport::Cache::MemoryStore-related options
-end
-
-AnyCache.build
-```
-
-##### `AnyCache` with `ActiveSupport::Cache::RedisCacheStore`:
-
-```ruby
-AnyCache.configure do |conf|
-  conf.driver = :as_redis_cache_store
-  conf.as_redis_cache_store.options = { ... } # ActiveSupport::Cache::RedisCacheStore-related options
 end
 
 AnyCache.build
@@ -396,13 +415,8 @@ bin/rspec --test-dalli # run specs with Dalli::Client
 bin/rspec --test-as-file-store # run specs with ActiveSupport::Cache::FileStore
 bin/rspec --test-as-memory-store # run specs with ActiveSupport::Cache::MemoryStore
 bin/rspec --test-as-redis-cache-store # run specs with ActiveSupport::Cache::RedisCacheStore
+bin/rspec --test-as-mem-cache-store # run specs with ActiveSupport::Cache::MemCacheStore
 ```
-
----
-
-## Roadmap
-
-- configuration layer with ability to instantiate cache clients implicitly
 
 ---
 

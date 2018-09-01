@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-module SpecSupport::Cache::Dalli
+module SpecSupport::Cache::ActiveSupportMemCacheStore
   class CacheStore < AnyCache
     configure do |conf|
-      conf.driver = :dalli
-      conf.dalli.servers = '127.0.0.1:11211'
-      conf.dalli.options = { namespace: 'any_cache' }
+      conf.driver = :as_mem_cache_store
+      conf.as_mem_cache_store.servers = '127.0.0.1:11211'
+      conf.as_mem_cache_store.options = { namespace: 'any_cache' }
     end
   end
 
@@ -19,6 +19,7 @@ module SpecSupport::Cache::Dalli
 
     def load_dependencies!
       require 'dalli'
+      require 'active_support'
     end
 
     def build_cache_store

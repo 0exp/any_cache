@@ -9,6 +9,7 @@ module AnyCache::Drivers
   require_relative 'drivers/active_support_file_store'
   require_relative 'drivers/active_support_memory_store'
   require_relative 'drivers/active_support_redis_cache_store'
+  require_relative 'drivers/active_support_mem_cache_store'
 
   class << self
     # @param config [Qonfig::DataSet]
@@ -34,6 +35,8 @@ module AnyCache::Drivers
         ActiveSupportMemoryStore.build(config[:as_memory_store])
       when :as_redis_cache_store
         ActiveSupportRedisCacheStore.build(config[:as_redis_cache_store])
+      when :as_mem_cache_store
+        ActiveSupportMemCacheStore.build(config[:as_mem_cache_store])
       else
         raise AnyCache::UnsupportedDriverError
       end

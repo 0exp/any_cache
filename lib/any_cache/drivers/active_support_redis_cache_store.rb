@@ -16,7 +16,7 @@ module AnyCache::Drivers::ActiveSupportRedisCacheStore
     end
 
     # @param settings [Qonfig::Settings]
-    # @return [::Redis]
+    # @return [::ActiveSupport::Cache::RedisCacheStore]
     #
     # @api private
     # @sicne 0.2.0

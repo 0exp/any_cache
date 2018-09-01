@@ -2,6 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+- support for `ActiveSupport::Cache::MemCacheStore`;
 - configuration layer `AnyCache.configure`: an ability to choose and configure a necessary cache client
   without any explicit client object instantiation (client object will be instantiated implicitly);
 
