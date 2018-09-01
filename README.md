@@ -231,7 +231,7 @@ If you want to use your own cache client implementation, you should provide an o
 - `#write(key, value, [**options])` ([doc](#write))
 - `#delete(key, [**options])` ([doc](#delete))
 - `#increment(key, amount, [**options])` ([doc](#increment))
-- `#decrmeent(key, amount, [**options])` ([doc](#decrement))
+- `#decrement(key, amount, [**options])` ([doc](#decrement))
 - `#expire(key, [**options])` ([doc](#expire))
 - `#persist(key, [**options])` ([doc](#persist))
 - `#clear([**options])` ([doc](#clear))
