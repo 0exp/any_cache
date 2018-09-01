@@ -101,7 +101,7 @@ module AnyCache::Adapters
       if is_initial
         # NOTE: Dalli::Client can't decrement:
         #   - non-raw values;
-        #   - values lower lower than zero
+        #   - values lower lower than zero;
         #   - empty entries;
         write(key, INITIAL_DECREMNETED_VALUE, expires_in: expires_in) && INITIAL_DECREMNETED_VALUE
       else
