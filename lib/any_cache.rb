@@ -46,6 +46,11 @@ class AnyCache
     setting :as_redis_cache_store do
       setting :options, {}
     end
+
+    setting :as_mem_cache_store do
+      setting :servers, nil
+      setting :options, {}
+    end
   end
 
   class << self

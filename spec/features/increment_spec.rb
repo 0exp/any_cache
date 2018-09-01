@@ -69,7 +69,7 @@ describe 'Operation: #increment' do
   context 'with previously defined permanent entry' do
     before { cache_store.write(entry[:key], entry[:value]) }
 
-    it_behaves_like 'incrementation'
+    # it_behaves_like 'incrementation'
 
     context 'with re-expiration' do
       specify 'entry gets new expiration time' do
@@ -122,6 +122,7 @@ describe 'Operation: #increment' do
       it 'creates new permanent entry with corresponding initial value' do
         ini_value = rand(1..100)
         new_amount = cache_store.increment(entry[:key], ini_value)
+
         expect(new_amount).to eq(ini_value)
 
         sleep(expiration_time + 1) # NOTE: try to expire current entry

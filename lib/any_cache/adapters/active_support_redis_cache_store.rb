@@ -4,7 +4,7 @@ module AnyCache::Adapters
   # @api private
   # @since 0.1.0
   class ActiveSupportRedisCacheStore < Basic
-    # TODO: think about locks
+    # TODO: think about locks (Concurrent::ReentrantReadWriteLock)
 
     class << self
       # @param driver [Object]
@@ -70,7 +70,7 @@ module AnyCache::Adapters
     # @since 0.1.0
     def increment(key, amount = DEFAULT_INCR_DECR_AMOUNT, **options)
       expires_in = options.fetch(:expires_in, NO_EXPIRATION_TTL)
-      is_initial = expires_in && !read(key)
+      is_initial = !read(key) # TODO: rewrite with #exist?(key)
 
       if is_initial
         write(key, amount, expires_in: expires_in) && amount
@@ -90,7 +90,7 @@ module AnyCache::Adapters
     # @since 0.1.0
     def decrement(key, amount = DEFAULT_INCR_DECR_AMOUNT, **options)
       expires_in = options.fetch(:expires_in, NO_EXPIRATION_TTL)
-      is_initial = expires_in && !read(key)
+      is_initial = !read(key) # TODO: rewrite with #exist?(key)
 
       if is_initial
         write(key, -amount, expires_in: expires_in) && -amount

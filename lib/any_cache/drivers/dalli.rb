@@ -14,7 +14,7 @@ module AnyCache::Drivers::Dalli
     end
 
     # @param settings [Qonfig::Settings]
-    # @return [::Redis]
+    # @return [::Dalli::Client]
     #
     # @api private
     # @sicne 0.2.0
