@@ -82,3 +82,15 @@ matrix:
   - rvm: ruby-head
     gemfile: gemfiles/redis_store.gemfile
     env: TEST_REDIS_CACHE=true
+  - rvm: 2.3.7
+    gemfile: gemfiles/active_support_with_dalli.gemfile
+    env: TEST_AS_MEM_CACHE_STORE_CACHE=true
+  - rvm: 2.4.4
+    gemfile: gemfiles/active_support_with_dalli.gemfile
+    env: TEST_AS_MEM_CACHE_STORE_CACHE=true
+  - rvm: 2.5.1
+    gemfile: gemfiles/active_support_with_dalli.gemfile
+    env: TEST_AS_MEM_CACHE_STORE_CACHE=true
+  - rvm: ruby-head
+    gemfile: gemfiles/active_support_with_dalli.gemfile
+    env: TEST_AS_MEM_CACHE_STORE_CACHE=true
