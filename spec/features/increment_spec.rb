@@ -69,7 +69,7 @@ describe 'Operation: #increment' do
   context 'with previously defined permanent entry' do
     before { cache_store.write(entry[:key], entry[:value]) }
 
-    # it_behaves_like 'incrementation'
+    it_behaves_like 'incrementation'
 
     context 'with re-expiration' do
       specify 'entry gets new expiration time' do

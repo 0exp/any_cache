@@ -5,7 +5,7 @@ module SpecSupport::Cache::ActiveSupportMemCacheStore
     configure do |conf|
       conf.driver = :as_mem_cache_store
       conf.as_mem_cache_store.servers = '127.0.0.1:11211'
-      conf.as_mem_cache_store.options = { namespace: 'blastwave' }
+      conf.as_mem_cache_store.options = { namespace: 'any_cache' }
     end
   end
 

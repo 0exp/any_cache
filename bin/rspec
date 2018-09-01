@@ -17,7 +17,7 @@ module AnyCacheSpecRunner
     dalli:                     expand_gemfile_path('dalli.gemfile'),
     active_support:            expand_gemfile_path('active_support.gemfile'),
     active_support_with_redis: expand_gemfile_path('active_support_with_redis.gemfile'),
-    active_support_with_dalli: expand_gemfile_path('active_support_with_dalli.gemfile'),
+    active_support_with_dalli: expand_gemfile_path('active_support_with_dalli.gemfile')
   }.freeze
 
   # rubocop:disable Metrics/MethodLength, Metrics/BlockLength

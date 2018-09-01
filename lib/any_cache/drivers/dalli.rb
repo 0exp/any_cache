@@ -19,7 +19,7 @@ module AnyCache::Drivers::Dalli
     # @api private
     # @sicne 0.2.0
     def build(settings)
-      ::Dalli::Client.new(settings.servers, settings.options)
+      ::Dalli::Client.new(Array(settings.servers), settings.options)
     end
   end
 end

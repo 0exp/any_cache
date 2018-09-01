@@ -27,12 +27,12 @@ Gem::Specification.new do |spec|
     `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(spec|features)/}) }
   end
 
-  spec.add_dependency 'concurrent-ruby',    '~> 1.0'
-  spec.add_development_dependency 'qonfig', '~> 0.6'
+  spec.add_dependency 'concurrent-ruby', '~> 1.0'
+  spec.add_dependency 'qonfig',          '~> 0.6'
 
   spec.add_development_dependency 'coveralls',        '~> 0.8'
   spec.add_development_dependency 'simplecov',        '~> 0.16'
-  spec.add_development_dependency 'armitage-rubocop', '~> 0.6'
+  spec.add_development_dependency 'armitage-rubocop', '~> 0.7'
   spec.add_development_dependency 'rspec',            '~> 3.8'
 
   spec.add_development_dependency 'bundler'

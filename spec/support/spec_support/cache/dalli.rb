@@ -5,7 +5,7 @@ module SpecSupport::Cache::Dalli
     configure do |conf|
       conf.driver = :dalli
       conf.dalli.servers = '127.0.0.1:11211'
-      conf.dalli.options = { namespace: 'blastwave' }
+      conf.dalli.options = { namespace: 'any_cache' }
     end
   end
 

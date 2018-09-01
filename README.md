@@ -42,7 +42,7 @@ require 'any_cache'
         - [AnyCache with Redis::Store](#anycache-with-redisstore)
         - [AnyCache with Dalli::Client](#anycache-with-dalliclient)
         - [AnyCache with ActiveSupport::Cache::RedisCacheStore](#anycache-with-activesupportcacherediscachestore)
-        - [AnyCache with ActiveSupport::Cache::MemCacheStore](#anycache-with-activesupportmemcachestore)
+        - [AnyCache with ActiveSupport::Cache::MemCacheStore](#anycache-with-activesupportcachememcachestore)
         - [AnyCache with ActiveSupport::Cache::FileStore](#anycache-with-activesupportcachefilestore)
         - [AnyCache with ActiveSupport::Cache::MemoryStore](#anycache-with-activesupportcachememorystore)
     - [Many cache storages](#many-cache-storages)
@@ -69,8 +69,8 @@ Supported clients:
 - `Redis`
 - `Redis::Store`
 - `Dalli::Client`
-- `ActiveSupport::Cache::MemCacheStore`
 - `ActiveSupport::Cache::RedisCacheStore`
+- `ActiveSupport::Cache::MemCacheStore`
 - `ActiveSupport::Cache::FileStore`
 - `ActiveSupport::Cache::MemoryStore`
 
@@ -116,7 +116,7 @@ Supported drivers:
 
 - `:redis` - [Redis](#anycache-with-redis);
 - `:redis_tore` - [Redis::Client](#anycache-with-redisstore);
-- `:dalli` - [Dalli::Clien](#anycache-with-dalliclient);
+- `:dalli` - [Dalli::Client](#anycache-with-dalliclient);
 - `:as_redis_cache_store` - [ActiveSupport::Cache::RedisCacheStore](#anycache-with-activesupportcacherediscachestore);
 - `:as_mem_cache_store` - [ActiveSupport::Cache::MemCacheStore](#anycache-with-activesupportcachememcachestore);
 - `:as_file_store` - [ActiveSupport::Cache::FileStore](#anycache-with-activesupportcachefilestore);
@@ -415,13 +415,8 @@ bin/rspec --test-dalli # run specs with Dalli::Client
 bin/rspec --test-as-file-store # run specs with ActiveSupport::Cache::FileStore
 bin/rspec --test-as-memory-store # run specs with ActiveSupport::Cache::MemoryStore
 bin/rspec --test-as-redis-cache-store # run specs with ActiveSupport::Cache::RedisCacheStore
+bin/rspec --test-as-mem-cache-store # run specs with ActiveSupport::Cache::MemCacheStore
 ```
-
----
-
-## Roadmap
-
-- configuration layer with ability to instantiate cache clients implicitly
 
 ---
 

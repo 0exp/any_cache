@@ -1,4 +1,4 @@
-# frozen_string_ltieral: true
+# frozen_string_literal: true
 
 module AnyCache::Drivers::ActiveSupportMemCacheStore
   class << self
@@ -19,9 +19,7 @@ module AnyCache::Drivers::ActiveSupportMemCacheStore
     # @api private
     # @since 0.2.0
     def build(settings)
-      ::ActiveSupport::Cache::MemCacheStore.new([
-        Array(settings.servers), settings.options
-      ])
+      ::ActiveSupport::Cache::MemCacheStore.new([Array(settings.servers), settings.options])
     end
   end
 end
