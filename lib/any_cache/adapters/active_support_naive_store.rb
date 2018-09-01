@@ -118,6 +118,16 @@ module AnyCache::Adapters
       lock.with_write_lock { pers_operation.call(key) }
     end
 
+    # @param key [String]
+    # @param options [Hash]
+    # @return [Boolean]
+    #
+    # @api private
+    # @since 0.2.0
+    def exist?(key, **options)
+      lock.with_read_lock { super }
+    end
+
     private
 
     # @return [Concurrent::ReentrantReadWriteLock]

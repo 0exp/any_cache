@@ -114,5 +114,15 @@ module AnyCache::Adapters
     def clear(**options)
       raise NotImplementedError
     end
+
+    # @param key [String]
+    # @param options [Hash]
+    # @return [Boolean]
+    #
+    # @api private
+    # @since 0.2.0
+    def exist?(key, **options)
+      raise NotImplementedError
+    end
   end
 end

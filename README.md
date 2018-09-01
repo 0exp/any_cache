@@ -1,7 +1,7 @@
 # AnyCache &middot; [![Gem Version](https://badge.fury.io/rb/any_cache.svg)](https://badge.fury.io/rb/any_cache) [![Build Status](https://travis-ci.org/0exp/any_cache.svg?branch=master)](https://travis-ci.org/0exp/any_cache) [![Coverage Status](https://coveralls.io/repos/github/0exp/any_cache/badge.svg)](https://coveralls.io/github/0exp/any_cache)
 
 AnyCache - a simplest cache wrapper that provides a minimalistic generic interface for all well-known cache storages and includes a minimal set of necessary operations:
-`read`, `write`, `delete`, `expire`, `persist`, `clear`, `increment`, `decrement`.
+`read`, `write`, `delete`, `expire`, `persist`, `exist?`, `clear`, `increment`, `decrement`.
 
 Supported clients:
 
@@ -55,6 +55,7 @@ require 'any_cache'
     - [Decrement](#decrement)
     - [Expire](#expire)
     - [Persist](#persist)
+    - [Existence](#existence)
     - [Clear](#clear)
 
 ---
@@ -234,6 +235,7 @@ If you want to use your own cache client implementation, you should provide an o
 - `#decrement(key, amount, [**options])` ([doc](#decrement))
 - `#expire(key, [**options])` ([doc](#expire))
 - `#persist(key, [**options])` ([doc](#persist))
+- `#exist?(key, [**options])` ([doc](#existence))
 - `#clear([**options])` ([doc](#clear))
 
 ```ruby
@@ -266,6 +268,7 @@ AnyCache.build(MyCacheClient.new)
 - [expire](#expire)
 - [persist](#persist)
 - [clear](#clear)
+- [exist?](#existence)
 
 ---
 
@@ -379,6 +382,20 @@ any_cache.write("data", { a: 1 }, expires_in: 30)
 
 # --- remove entry expiration (make it permanent) ---
 any_cache.persist("data")
+```
+
+---
+
+### Existence
+
+- `AnyCache#exist?(key)` - determine if an entry exists
+
+```ruby
+# --- entry exists ---
+any_cache.exist?("data") # => true
+
+# --- entry does not exist ---
+any_cache.exist?("another-data") # => false
 ```
 
 ---

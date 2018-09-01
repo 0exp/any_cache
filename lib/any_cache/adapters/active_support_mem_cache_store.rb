@@ -133,5 +133,15 @@ module AnyCache::Adapters
     def persist(key, **options)
       read(key).tap { |value| write(key, value) }
     end
+
+    # @param key [String]
+    # @param options [Hash]
+    # @return [Boolean]
+    #
+    # @api private
+    # @since 0.2.0
+    def exist?(key, **options)
+      driver.exist?(key)
+    end
   end
 end
