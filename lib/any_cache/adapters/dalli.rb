@@ -144,7 +144,7 @@ module AnyCache::Adapters
     # @api private
     # @since 0.2.0
     def exist?(key, **options)
-      !!touch(key)
+      !get(key).nil? # NOTE: can conflict with :cache_nils Dalli::Client option
     end
   end
 end
