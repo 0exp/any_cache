@@ -14,6 +14,7 @@ describe 'Custom cache clients' do
         def persist(key, **); end
         def clear(key, **); end
         def exist?(key, **); end
+        def fetch(key, **); end
         # rubocop:enable Layout/EmptyLineBetweenDefs
       end.new
     end
@@ -30,6 +31,7 @@ describe 'Custom cache clients' do
         def persist; end
         def clear; end
         def exist?; end
+        def fetch; end
       end.new
       # rubocop:enable Layout/EmptyLineBetweenDefs
     end
@@ -48,6 +50,7 @@ describe 'Custom cache clients' do
       expire
       persist
       clear
+      fetch
       exist?
     ].each do |operation|
       specify "AnyCache instance delegates :#{operation} operation to the custom client" do
@@ -90,6 +93,7 @@ describe 'Custom cache clients' do
         expire
         persist
         clear
+        fetch
         exist?
       ]
     end
@@ -98,7 +102,7 @@ describe 'Custom cache clients' do
       while required_methods.shift
         incomplete_cache_client = Class.new.tap do |klass|
           required_methods.each do |required_method|
-            klass.define_method(required_method) {}
+            klass.send(:define_method, required_method, &(proc {}))
           end
         end.new
 

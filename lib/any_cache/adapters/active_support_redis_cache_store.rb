@@ -70,9 +70,8 @@ module AnyCache::Adapters
     # @since 0.1.0
     def increment(key, amount = DEFAULT_INCR_DECR_AMOUNT, **options)
       expires_in = options.fetch(:expires_in, NO_EXPIRATION_TTL)
-      is_initial = !read(key) # TODO: rewrite with #exist?(key)
 
-      if is_initial
+      unless exist?(key)
         write(key, amount, expires_in: expires_in) && amount
       else
         driver.increment(key, amount).tap do
@@ -90,9 +89,8 @@ module AnyCache::Adapters
     # @since 0.1.0
     def decrement(key, amount = DEFAULT_INCR_DECR_AMOUNT, **options)
       expires_in = options.fetch(:expires_in, NO_EXPIRATION_TTL)
-      is_initial = !read(key) # TODO: rewrite with #exist?(key)
 
-      if is_initial
+      unless exist?(key)
         write(key, -amount, expires_in: expires_in) && -amount
       else
         driver.decrement(key, amount).tap do
@@ -132,6 +130,21 @@ module AnyCache::Adapters
     # @since 0.2.0
     def exist?(key, **options)
       driver.exist?(key)
+    end
+
+    # @param key [String]
+    # @option expires_in [Integer]
+    # @option force [Boolean]
+    # @return [Object]
+    #
+    # @api private
+    # @since 0.2.0
+    def fetch(key, **options, &block)
+      force_rewrite = options.fetch(:force, false)
+      force_rewrite = force_rewrite.call if force_rewrite.respond_to?(:call)
+      expires_in    = options.fetch(:expires_in, NO_EXPIRATION_TTL)
+
+      driver.fetch(key, force: force_rewrite, expires_in: expires_in, &block)
     end
   end
 end

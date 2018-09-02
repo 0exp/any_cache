@@ -89,7 +89,6 @@ module AnyCache::Adapters
       expires_in = options.fetch(:expires_in, NO_EXPIRATION_TTL)
       new_amount = nil
 
-      # TODO: think about Redis#multi
       pipelined do
         new_amount = incrby(key, amount)
         expire(key, expires_in: expires_in) if expires_in
@@ -109,7 +108,6 @@ module AnyCache::Adapters
       expires_in = options.fetch(:expires_in, NO_EXPIRATION_TTL)
       new_amount = nil
 
-      # TODO: think about Redis#multi
       pipelined do
         new_amount = decrby(key, amount)
         expire(key, expires_in: expires_in) if expires_in
@@ -157,6 +155,23 @@ module AnyCache::Adapters
     # @since 0.2.0
     def exist?(key, **options)
       exists(key)
+    end
+
+    # @param key [String]
+    # @option expires_in [Integer]
+    # @option force [Boolean]
+    # @return [Object]
+    #
+    # @api private
+    # @since 0.2.0
+    def fetch(key, **options)
+      force_rewrite = options.fetch(:force, false)
+      force_rewrite = force_rewrite.call if force_rewrite.respond_to?(:call)
+
+      # NOTE: think about #pipelined
+      read(key).tap { |value| return value if value } unless force_rewrite
+
+      yield.tap { |value| write(key, value, **options) } if block_given?
     end
   end
 end

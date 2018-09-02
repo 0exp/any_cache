@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 describe 'Operation: #clear' do
-  let(:cache_store) { build_cache_store }
-
-  after { cache_store.clear }
+  include_context 'cache store'
 
   it 'clears storage' do
     # NOTE: write random values

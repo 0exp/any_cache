@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 describe 'Operation: #delete' do
-  after { cache_store.clear }
-
-  let(:cache_store) { build_cache_store }
+  include_context 'cache store'
 
   it 'removes entry from cache' do
     first_pair  = { key: SecureRandom.hex, value: SecureRandom.hex(4) }
