@@ -70,9 +70,8 @@ module AnyCache::Adapters
     # @since 0.1.0
     def increment(key, amount = DEFAULT_INCR_DECR_AMOUNT, **options)
       expires_in = options.fetch(:expires_in, NO_EXPIRATION_TTL)
-      is_initial = exist?(key)
 
-      if is_initial
+      unless exist?(key)
         write(key, amount, expires_in: expires_in) && amount
       else
         driver.increment(key, amount).tap do
@@ -90,9 +89,8 @@ module AnyCache::Adapters
     # @since 0.1.0
     def decrement(key, amount = DEFAULT_INCR_DECR_AMOUNT, **options)
       expires_in = options.fetch(:expires_in, NO_EXPIRATION_TTL)
-      is_initial = exist?(key)
 
-      if is_initial
+      unless exist?(key)
         write(key, -amount, expires_in: expires_in) && -amount
       else
         driver.decrement(key, amount).tap do
