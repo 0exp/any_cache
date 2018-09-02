@@ -128,6 +128,22 @@ module AnyCache::Adapters
       lock.with_read_lock { super }
     end
 
+    # @param key [String]
+    # @option expires_in [Integer]
+    # @return [Object]
+    #
+    # @api private
+    # @since 0.2.0
+    def fetch(key, **options, &block)
+      lock.with_write_lock do
+        force_rewrite = options.fetch(:force, false)
+        force_rewrite = force_rewrite.call if force_rewrite.respond_to?(:call)
+        expires_in    = options.fetch(:expires_in, self.class::Operation::NO_EXPIRATION_TTL)
+
+        super(key, force: force_rewrite, expires_in: expires_in, &block)
+      end
+    end
+
     private
 
     # @return [Concurrent::ReentrantReadWriteLock]

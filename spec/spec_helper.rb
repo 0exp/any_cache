@@ -15,6 +15,7 @@ require 'any_cache'
 require 'pry'
 
 require_relative 'support/spec_support'
+require_relative 'support/shared_contexts'
 
 RSpec.configure do |config|
   config.filter_run_when_matching :focus

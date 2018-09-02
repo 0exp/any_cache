@@ -144,7 +144,24 @@ module AnyCache::Adapters
     # @api private
     # @since 0.2.0
     def exist?(key, **options)
-      !get(key).nil? # NOTE: can conflict with :cache_nils Dalli::Client option
+      !get(key).nil? # NOTE: can conflict with :cache_nils Dalli::Client's config
+    end
+
+    # @param key [String]
+    # @option expires_in [Integer]
+    # @option force [Boolean]
+    # @return [Object]
+    #
+    # @api private
+    # @since 0.2.0
+    def fetch(key, **options)
+      force_rewrite = options.fetch(:force, false)
+      force_rewrite = force_rewrite.call if force_rewrite.respond_to?(:call)
+
+      # NOTE: can conflict with :cache_nils Dalli::Client's config
+      read(key).tap { |value| return value if value } unless force_rewrite
+
+      yield.tap { |value| write(key, value, **options) } if block_given?
     end
   end
 end

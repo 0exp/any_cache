@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 describe 'Operation: #read' do
-  after { cache_store.clear }
-
-  let(:cache_store) { build_cache_store }
+  include_context 'cache store'
 
   context 'when the required entry exists' do
     let(:expiration_time) { 8 } # NOTE: in seconds

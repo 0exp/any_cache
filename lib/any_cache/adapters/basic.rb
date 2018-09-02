@@ -124,5 +124,15 @@ module AnyCache::Adapters
     def exist?(key, **options)
       raise NotImplementedError
     end
+
+    # @param key [String]
+    # @param options [Hash]
+    # @return [Object]
+    #
+    # @api private
+    # @since 0.2.0
+    def fetch(key, **options, &block)
+      raise NotImplementedError
+    end
   end
 end
