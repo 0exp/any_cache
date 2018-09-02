@@ -155,6 +155,9 @@ module AnyCache::Adapters
     attr_reader :expr_operation
 
     # @return [Operation::Persist]
+    #
+    # @api private
+    # @since 0.1.0
     attr_reader :pers_operation
   end
 end

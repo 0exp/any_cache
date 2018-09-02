@@ -126,6 +126,9 @@ Supported drivers:
 ##### `AnyCache` with `Redis`:
 
 ```ruby
+require 'redis'
+require 'any_cache'
+
 AnyCache.configure do |conf|
   conf.driver = :redis
   conf.redis.options = { ... } # Redis-related options
@@ -137,6 +140,9 @@ AnyCache.build
 ##### `AnyCache` with `Redis::Store`:
 
 ```ruby
+require 'redis_store'
+require 'any_cache'
+
 AnyCache.configure do |conf|
   conf.driver = :redis_store
   conf.redis_store.options = { ... } # Redis::Store-related options
@@ -148,6 +154,9 @@ AnyCache.build
 ##### `AnyCache` with `Dalli::Client`:
 
 ```ruby
+require 'dalli'
+require 'any_cache'
+
 AnyCache.configure do |conf|
   conf.driver = :dalli
   conf.dalli.servers = ... # string or array of strings
@@ -160,6 +169,9 @@ AnyCache.build
 ##### `AnyCache` with `ActiveSupport::Cache::RedisCacheStore`:
 
 ```ruby
+require 'active_support'
+require 'any_cache'
+
 AnyCache.configure do |conf|
   conf.driver = :as_redis_cache_store
   conf.as_redis_cache_store.options = { ... } # ActiveSupport::Cache::RedisCacheStore-related options
@@ -171,6 +183,9 @@ AnyCache.build
 ##### `AnyCache` with `ActiveSupport::Cache::MemCacheStore`:
 
 ```ruby
+require 'active_support'
+require 'any_cache'
+
 AnyCache.configure do |conf|
   conf.driver = :as_mem_cache_store
   conf.as_memory_store.servers = ... # string or array of strings
@@ -183,6 +198,9 @@ AnyCache.build
 ##### `AnyCache` with `ActiveSupport::Cache::FileStore`:
 
 ```ruby
+require 'active_support'
+require 'any_cache'
+
 AnyCache.configure do |conf|
   conf.driver = :as_file_store
   conf.as_file_store.cache_path = '/path/to/cache'
@@ -195,6 +213,9 @@ AnyCache.build
 ##### `AnyCache` with `ActiveSupport::Cache::MemoryStore`:
 
 ```ruby
+require 'activesupport'
+require 'any_cache'
+
 AnyCache.configure do |conf|
   conf.driver = :as_memory_store
   conf.as_memory_store.options = { ... } # ActiveSupport::Cache::MemoryStore-related options
@@ -242,11 +263,11 @@ If you want to use your own cache client implementation, you should provide an o
 class MyCacheClient
   # ...
 
-  def read
+  def read(key, **)
     # ...
   end
 
-  def write
+  def write(key, value, **)
     # ...
   end
 
