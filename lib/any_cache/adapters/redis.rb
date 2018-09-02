@@ -42,7 +42,8 @@ module AnyCache::Adapters
                    :incrby,
                    :decrby,
                    :pipelined,
-                   :flushdb
+                   :flushdb,
+                   :exists
 
     # @param key [String]
     # @param options [Hash]
@@ -146,6 +147,16 @@ module AnyCache::Adapters
     # @since 0.1.0
     def clear(**options)
       flushdb
+    end
+
+    # @param key [String]
+    # @param options [Hash]
+    # @return [Boolean]
+    #
+    # @api private
+    # @since 0.2.0
+    def exist?(key, **options)
+      exists(key)
     end
   end
 end

@@ -136,5 +136,15 @@ module AnyCache::Adapters
     def clear(**options)
       flush(0) # NOTE: 0 is a flush delay
     end
+
+    # @param key [String]
+    # @param options [Hash]
+    # @return [Boolean]
+    #
+    # @api private
+    # @since 0.2.0
+    def exist?(key, **options)
+      !get(key).nil? # NOTE: can conflict with :cache_nils Dalli::Client option
+    end
   end
 end

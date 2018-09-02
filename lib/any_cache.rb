@@ -73,7 +73,8 @@ class AnyCache
                  :decrement,
                  :expire,
                  :persist,
-                 :clear
+                 :clear,
+                 :exist?
 
   # @return [AnyCache::Adapters::Basic]
   #
