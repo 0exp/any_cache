@@ -102,7 +102,7 @@ describe 'Custom cache clients' do
       while required_methods.shift
         incomplete_cache_client = Class.new.tap do |klass|
           required_methods.each do |required_method|
-            klass.define_method(required_method) {}
+            klass.send(:define_method, required_method, &(proc {}))
           end
         end.new
 
