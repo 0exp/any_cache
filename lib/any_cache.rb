@@ -8,6 +8,7 @@ require 'concurrent/atomic/reentrant_read_write_lock'
 # @since 0.1.0
 class AnyCache
   require_relative 'any_cache/version'
+  require_relative 'any_cache/error'
   require_relative 'any_cache/drivers'
   require_relative 'any_cache/adapters'
 
