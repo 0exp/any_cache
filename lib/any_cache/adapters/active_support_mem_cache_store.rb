@@ -146,6 +146,7 @@ module AnyCache::Adapters
 
     # @param key [String]
     # @option expires_in [Integer]
+    # @option force [Boolean]
     # @return [Object]
     #
     # @api private

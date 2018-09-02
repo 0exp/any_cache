@@ -1,7 +1,7 @@
 # AnyCache &middot; [![Gem Version](https://badge.fury.io/rb/any_cache.svg)](https://badge.fury.io/rb/any_cache) [![Build Status](https://travis-ci.org/0exp/any_cache.svg?branch=master)](https://travis-ci.org/0exp/any_cache) [![Coverage Status](https://coveralls.io/repos/github/0exp/any_cache/badge.svg)](https://coveralls.io/github/0exp/any_cache)
 
 AnyCache - a simplest cache wrapper that provides a minimalistic generic interface for all well-known cache storages and includes a minimal set of necessary operations:
-`read`, `write`, `delete`, `expire`, `persist`, `exist?`, `clear`, `increment`, `decrement`.
+`fetch`, `read`, `write`, `delete`, `expire`, `persist`, `exist?`, `clear`, `increment`, `decrement`.
 
 Supported clients:
 
@@ -249,6 +249,7 @@ dalli_cache = DalliCache.build
 
 If you want to use your own cache client implementation, you should provide an object that responds to:
 
+- `#fetch(*key, [**options])` ([doc](#fetch))
 - `#read(key, [**options])` ([doc](#read))
 - `#write(key, value, [**options])` ([doc](#write))
 - `#delete(key, [**options])` ([doc](#delete))
@@ -281,6 +282,7 @@ AnyCache.build(MyCacheClient.new)
 
 `AnyCache` provides a following operation set:
 
+- [fetch](#fetch)
 - [read](#read)
 - [write](#write)
 - [delete](#delete)
@@ -290,6 +292,43 @@ AnyCache.build(MyCacheClient.new)
 - [persist](#persist)
 - [clear](#clear)
 - [exist?](#existence)
+
+---
+
+### Fetch
+
+- `AnyCache#fetch(key, [force:], [expires_in:], [&block])`
+    - works in `ActiveSupport::Cache::Store#fetch`-manner;
+    - fetches data from the cache, using the given key;
+    - if there is data in the cache with the given key, then that data is returned;
+    - if there is no such data in the cache (a cache miss), then nil will be returned:
+        - if a block has been passed, that block will be passed the key and executed in the event of a cache miss;
+        - the return value of the block will be written to the cache under the given cache key, and that return value will be returned;
+
+```ruby
+# --- entry exists ---
+any_cache.fetch("data") # => "some_data"
+any_cache.fetch("data") { "new_data" } # => "some_data"
+
+# --- entry does not exist ---
+any_cache.fetch("data") # => nil
+any_cache.fetch("data") { "new_data" } # => "new_data"
+any_cache.fetch("data") # => "new_data"
+
+# --- new entry with expiration time ---
+any_cache.fetch("data") # => nil
+any_cache.fetch("data", expires_in: 8) { "new_data" } # => "new_data"
+any_cache.fetch("data") # => "new_data"
+# ...sleep 8 seconds...
+any_cache.fetch("data") # => nil
+
+# --- force update/rewrite ---
+any_cache.fetch("data") # => "some_data"
+any_cache.fetch("data", expires_in: 8, force: true) { "new_data" } # => "new_data"
+any_cache.fetch("data") # => "new_data"
+# ...sleep 8 seconds...
+any_cache.fetch("data") # => nil
+```
 
 ---
 
