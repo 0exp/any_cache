@@ -4,7 +4,7 @@
 # @since 0.2.0
 module AnyCache::Drivers::ActiveSupportRedisCacheStore
   class << self
-    # @param driver [::Redis]
+    # @param driver [::ActiveSupport::Cache::RedisCacheStore]
     # @return [Boolean]
     #
     # @api private
