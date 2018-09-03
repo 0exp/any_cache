@@ -48,6 +48,7 @@ require 'any_cache'
     - [Many cache storages](#many-cache-storages)
     - [Custom cache clients](#custom-cache-clients)
 - [Operations](#operations)
+    - [Fetch](#fetch)
     - [Read](#read)
     - [Write](#write)
     - [Delete](#delete)
@@ -77,8 +78,8 @@ Supported clients:
 
 `AnyCache` can be instantiated by two ways:
 
-- with explicit client object instantiated manually;
-- via configuration;
+- with explicit client object instantiated manually ([read](#manual-creation));
+- via configuration ([read](#config-based-creation));
 
 #### Manual creation
 
@@ -140,7 +141,7 @@ AnyCache.build
 ##### `AnyCache` with `Redis::Store`:
 
 ```ruby
-require 'redis_store'
+require 'redis-store'
 require 'any_cache'
 
 AnyCache.configure do |conf|
@@ -334,7 +335,7 @@ any_cache.fetch("data") # => nil
 
 ### Read
 
-- `AnyCache#read(key)` - get entry value from cache storage
+- `AnyCache#read(key)` - get an entry value from the cache storage
 
 ```ruby
 # --- entry exists ---
@@ -348,7 +349,7 @@ any_cache.read("data") # => nil
 
 ### Write
 
-- `AnyCache#write(key, value, [expires_in:])` - write new entry to cache storage
+- `AnyCache#write(key, value, [expires_in:])` - write a new entry to the cache storage
 
 ```ruby
 # --- permanent entry ---
@@ -362,7 +363,7 @@ any_cache.write("data", 123, expires_in: 60)
 
 ### Delete
 
-- `AnyCache#delete(key)` - remove entry from cache storage
+- `AnyCache#delete(key)` - remove entry from the cache storage
 
 ```ruby
 any_cache.delete("data")
@@ -372,8 +373,8 @@ any_cache.delete("data")
 
 ### Increment
 
-- `AnyCache#increment(key, amount = 1, [expires_in:])` - increment entry's value by passed amount
-  and set new expiration time if needed
+- `AnyCache#increment(key, amount = 1, [expires_in:])` - increment entry's value by the given amount
+  and set the new expiration time if needed
 
 ```ruby
 # --- increment existing entry ---
@@ -396,8 +397,8 @@ any_cache.increment("another_data", 5, expires_in: 5) # => 5
 
 ### Decrement
 
-- `AnyCache#decrement(key, amount = 1, [expires_in:])` - decrement entry's value by passed amount
-  and set new expiration time if needed
+- `AnyCache#decrement(key, amount = 1, [expires_in:])` - decrement entry's value by the given amount
+  and set the new expiration time if needed
 
 ```ruby
 # --- decrement existing entry ---
