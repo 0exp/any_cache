@@ -17,13 +17,13 @@ module AnyCache::Adapters
       end
     end
 
-    # @return [Integer]
+    # @return [NilClass]
     #
     # @api private
     # @since 0.2.0
     NO_EXPIRATION_TTL = nil
 
-    # @return [NilClass]
+    # @return [Integer]
     #
     # @api private
     # @since 0.2.0
@@ -51,7 +51,9 @@ module AnyCache::Adapters
     # @api private
     # @since 0.2.0
     def read(key, **options)
-      driver.read(key, raw: true)
+      raw = options.fetch(:raw, true)
+
+      driver.read(key, raw: raw)
     end
 
     # @param key [String]
@@ -63,8 +65,9 @@ module AnyCache::Adapters
     # @sicne 0.2.0
     def write(key, value, **options)
       expires_in = options.fetch(:expires_in, NO_EXPIRATION_TTL)
+      raw = options.fetch(:raw, true)
 
-      driver.write(key, value, expires_in: expires_in, raw: true)
+      driver.write(key, value, expires_in: expires_in, raw: raw)
     end
 
     # @param key [String]
