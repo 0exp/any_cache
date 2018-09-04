@@ -58,13 +58,14 @@ class AnyCache
     # @param driver [Object]
     # @return [AnyCache]
     #
-    # @api private
+    # @api public
     # @since 0.1.0
     def build(driver = Drivers.build(config))
       new(Adapters.build(driver))
     end
   end
 
+  # @api public
   # @since 0.1.0
   def_delegators :adapter,
                  :read,

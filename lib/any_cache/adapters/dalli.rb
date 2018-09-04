@@ -61,8 +61,9 @@ module AnyCache::Adapters
 
     def write(key, value, **options)
       expires_in = options.fetch(:expires_in, NO_EXPIRATION_TTL)
+      raw = options.fetch(:raw, true)
 
-      set(key, value, expires_in, raw: true)
+      set(key, value, expires_in, raw: raw)
     end
 
     # @param key [String]

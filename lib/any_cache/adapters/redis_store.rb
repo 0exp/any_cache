@@ -22,7 +22,9 @@ module AnyCache::Adapters
     # @api private
     # @since 0.1.0
     def read(key, **options)
-      get(key, raw: true)
+      raw = options.fetch(:raw, true)
+
+      get(key, raw: raw)
     end
 
     # @param key [String]
@@ -34,8 +36,9 @@ module AnyCache::Adapters
     # @since 0.1.0
     def write(key, value, **options)
       expires_in = options.fetch(:expires_in, NO_EXPIRATION_TTL)
+      raw = options.fetch(:raw, true)
 
-      expires_in ? setex(key, expires_in, value, raw: true) : set(key, value, raw: true)
+      expires_in ? setex(key, expires_in, value, raw: raw) : set(key, value, raw: raw)
     end
   end
 end
