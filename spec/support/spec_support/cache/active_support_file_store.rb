@@ -4,7 +4,7 @@ module SpecSupport::Cache::ActiveSupportFileStore
   class CacheStore < AnyCache
     configure do |conf|
       conf.driver = :as_file_store
-
+      conf.logger = SpecSupport::NullLogger
       conf.as_file_store.cache_path = File.expand_path(
         File.join('..', '..', 'artifacts', SecureRandom.hex),
         __dir__

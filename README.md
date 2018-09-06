@@ -47,6 +47,7 @@ require 'any_cache'
         - [AnyCache with ActiveSupport::Cache::MemoryStore](#anycache-with-activesupportcachememorystore)
     - [Many cache storages](#many-cache-storages)
     - [Custom cache clients](#custom-cache-clients)
+    - [Shared configs](#shared-config)
 - [Operations](#operations)
     - [Fetch](#fetch)
     - [Read](#read)
@@ -278,6 +279,8 @@ end
 
 AnyCache.build(MyCacheClient.new)
 ```
+
+#### Shared configs
 
 ## Operations
 

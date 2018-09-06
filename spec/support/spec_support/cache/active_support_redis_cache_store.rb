@@ -4,6 +4,7 @@ module SpecSupport::Cache::ActiveSupportRedisCacheStore
   class CacheStore < AnyCache
     configure do |conf|
       conf.driver = :as_redis_cache_store
+      conf.logger = SpecSupport::NullLogger
     end
   end
 

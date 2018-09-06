@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+- logging
+
 ## [0.2.0] - 2018-09-03
 - fetching operation `AnyCache#fetch(key, force:, expires_in:, &block)`
   - fetches data from the cache using the given key;
