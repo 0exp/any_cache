@@ -39,7 +39,7 @@ module AnyCache::Delegation
           shared_config[:logger].tap do |logger|
             AnyCache::Logging::Activity.log(
               self, logger, activity: delegat, message: <<~MESSAGE
-                performed <##{delegat}> operation with params: #{args} and options: #{opts}.
+                performed <#{delegat}> operation with params: #{args} and options: #{opts}.
               MESSAGE
             ) if logger
           end

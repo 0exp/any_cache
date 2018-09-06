@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 describe 'Operation: #expire' do
-  after { cache_store.clear }
+  include_context 'cache store'
 
-  let(:cache_store)  { build_cache_store }
   let(:first_entry)  { { key: SecureRandom.hex, value: SecureRandom.hex(4) } }
   let(:second_entry) { { key: SecureRandom.hex, value: SecureRandom.hex(4) } }
 

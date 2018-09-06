@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 describe 'Operation: #exist?' do
-  after { cache_store.clear }
+  include_context 'cache store'
 
-  let(:cache_store)     { build_cache_store }
   let(:expiration_time) { 8 } # NOTE: in seconds
   let(:entry)           { { key: SecureRandom.hex, value: SecureRandom.hex(4) } }
 

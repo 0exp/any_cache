@@ -19,7 +19,7 @@ module AnyCache::Logging
     #
     # @api private
     # @since 0.3.0
-    ANONYMOUS_CACHER_INSTANCE_NAME = '<anonymous_cache>'
+    ANONYMOUS_CACHER_CLASS_NAME = '<__anonymous_cache__>'
 
     class << self
       # @param cacher [AnyCache]
@@ -31,7 +31,7 @@ module AnyCache::Logging
       # @api private
       # @since 0.3.0
       def log(cacher, logger, activity: nil, message: nil)
-        cacher = cacher.class.name || ANONYMOUS_CACHER_INSTANCE_NAME
+        cacher = cacher.class.name || ANONYMOUS_CACHER_CLASS_NAME
         progname = "[AnyCache<#{cacher}>/Activity<#{activity}>]"
         logger.add(logger.level, message, progname)
       end
