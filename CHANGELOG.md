@@ -2,9 +2,19 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
-- logging
+### Added
+- logging:
+  - configuration: `AnyCache.configure { |conf| conf.logger = your_logger_object }`;
+  - disable logging: `AnyCache.configure { |conf| conf.logger = nil }`;
+  - `::Logger.new(STDOUT)` with `::Logger::INFO` level is used by default (an instance of `AnyCache::Logging::Logger`);
+  - log message contains the following information:
+    - standard log data (level and time);
+    - cache class name;
+    - current cache operation (`read`, `write` and etc);
+    - cache operation arguments;
 
 ## [0.2.0] - 2018-09-03
+### Added
 - fetching operation `AnyCache#fetch(key, force:, expires_in:, &block)`
   - fetches data from the cache using the given key;
   - if a block has been passed and data with the given key does not exist -
