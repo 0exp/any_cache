@@ -38,9 +38,9 @@ module AnyCache::Delegation
         send(receiver).send(delegat, *args, **opts, &block).tap do
           shared_config[:logger].tap do |logger|
             AnyCache::Logging::Activity.log(
-              self, logger, activity: delegat, message: <<~MESSAGE
-                performed <#{delegat}> operation with params: #{args} and options: #{opts}.
-              MESSAGE
+              self, logger, activity: delegat, message:
+                "performed <#{delegat}> operation with " \
+                "params: #{args.inspect} and options: #{opts.inspect}."
             ) if logger
           end
         end
