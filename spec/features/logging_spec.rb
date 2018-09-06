@@ -41,7 +41,7 @@ describe 'Feature: Logging' do
       log_message = "[AnyCache<#{cacher_name}>/Activity<read>]"
 
       expect(output.string).not_to include(log_message)
-      cache_store.read(entry[:key], { custom_option: SecureRandom.hex(4) })
+      cache_store.read(entry[:key], custom_option: SecureRandom.hex(4))
       expect(output.string).to include(log_message)
     end
 
@@ -49,7 +49,7 @@ describe 'Feature: Logging' do
       log_message = "[AnyCache<#{cacher_name}>/Activity<write>]"
 
       expect(output.string).not_to include(log_message)
-      cache_store.write(entry[:key], entry[:value], { expires_in: expires_in })
+      cache_store.write(entry[:key], entry[:value], expires_in: expires_in)
       expect(output.string).to include(log_message)
     end
 
@@ -57,7 +57,7 @@ describe 'Feature: Logging' do
       log_message = "[AnyCache<#{cacher_name}>/Activity<delete>]"
 
       expect(output.string).not_to include(log_message)
-      cache_store.delete(entry[:key], { custom_option: SecureRandom.hex(4) })
+      cache_store.delete(entry[:key], custom_option: SecureRandom.hex(4))
       expect(output.string).to include(log_message)
     end
 
@@ -66,7 +66,7 @@ describe 'Feature: Logging' do
       cache_store.write(entry[:key], rand(2..10))
 
       expect(output.string).not_to include(log_message)
-      cache_store.increment(entry[:key], rand(1..2), { expires_in: expires_in })
+      cache_store.increment(entry[:key], rand(1..2), expires_in: expires_in)
       expect(output.string).to include(log_message)
     end
 
