@@ -6,6 +6,7 @@ describe 'Custom cache clients' do
       Class.new do
         # rubocop:disable Layout/EmptyLineBetweenDefs
         def read(key, **); end
+        def read_multi(*keys, **); end
         def write(key, value, **); end
         def delete(key, **); end
         def increment(key, value, **); end
@@ -23,6 +24,7 @@ describe 'Custom cache clients' do
       # rubocop:disable Layout/EmptyLineBetweenDefs
       Class.new do
         def read; end
+        def read_multi; end
         def write; end
         def delete; end
         def increment; end
@@ -46,6 +48,7 @@ describe 'Custom cache clients' do
 
     %i[
       read
+      read_multi
       delete
       expire
       persist
@@ -86,6 +89,7 @@ describe 'Custom cache clients' do
     let(:required_methods) do
       %i[
         read
+        read_multi
         write
         delete
         increment

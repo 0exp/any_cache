@@ -27,6 +27,19 @@ module AnyCache::Adapters
       get(key, raw: raw)
     end
 
+    # @param keys [Array<String>]
+    # @param options [Hash]
+    # @return [Hash]
+    #
+    # @api private
+    # @since 0.3.0
+    def read_multi(*keys, **options)
+      raw = options.fetch(:raw, true)
+
+      # NOTE: cant use Redis::Store#mget cuz it has some marshalling errors :(
+      Hash[keys.zip(keys.map { |key| read(key, **options) })]
+    end
+
     # @param key [String]
     # @param value [Object]
     # @option expires_in [NilClass, Integer] Time in seconds

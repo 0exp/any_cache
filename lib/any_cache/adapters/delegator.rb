@@ -20,7 +20,8 @@ module AnyCache::Adapters
         driver.respond_to?(:persist) &&
         driver.respond_to?(:clear) &&
         driver.respond_to?(:exist?) &&
-        driver.respond_to?(:fetch)
+        driver.respond_to?(:fetch) &&
+        driver.respond_to?(:read_multi)
       end
     end
 
@@ -35,6 +36,7 @@ module AnyCache::Adapters
                    :persist,
                    :clear,
                    :exist?,
-                   :fetch
+                   :fetch,
+                   :read_multi
   end
 end

@@ -39,9 +39,16 @@ module AnyCache::Adapters
     # @since 0.1.0
     MIN_DECRESEAD_VAL = 0
 
+    # @return [Array]
+    #
+    # @api private
+    # @since 0.3.0
+    READ_MULTY_EMPTY_KEYS_SET = [].freeze
+
     # @since 0.1.0
     def_delegators :driver,
                    :get,
+                   :get_multi,
                    :set,
                    :incr,
                    :decr,
@@ -59,6 +66,25 @@ module AnyCache::Adapters
       get(key)
     end
 
+    # @param keys [Array<String>]
+    # @param options [Hash]
+    # @return [Hash]
+    #
+    # @api private
+    # @since 0.3.0
+    def read_multi(*keys, **options)
+      get_multi(*keys).tap do |res|
+        res.merge!(Hash[(keys - res.keys).zip(READ_MULTY_EMPTY_KEYS_SET)])
+      end
+    end
+
+    # @param key [String]
+    # @param value [Object]
+    # @option expires_in [Integer]
+    # @return [void]
+    #
+    # @api private
+    # @since 0.1.0
     def write(key, value, **options)
       expires_in = options.fetch(:expires_in, NO_EXPIRATION_TTL)
       raw = options.fetch(:raw, true)

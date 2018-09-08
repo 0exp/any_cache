@@ -7,6 +7,12 @@ class AnyCache::Adapters::ActiveSupportNaiveStore
     # @since 0.1.0
     extend Forwardable
 
+    # @return [Array]
+    #
+    # @api private
+    # @since 0.3.0
+    READ_MULTY_EMPTY_KEYS_SET = [].freeze
+
     # @return [NilClass]
     #
     # @api private

@@ -84,7 +84,8 @@ class AnyCache
                           :persist,
                           :clear,
                           :exist?,
-                          :fetch
+                          :fetch,
+                          :read_multi
 
   # @return [AnyCache::Adapters::Basic]
   #

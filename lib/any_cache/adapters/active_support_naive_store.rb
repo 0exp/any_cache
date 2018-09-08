@@ -34,6 +34,20 @@ module AnyCache::Adapters
       lock.with_read_lock { super }
     end
 
+    # @param keys [Array<String>]
+    # @param options [Hash]
+    # @return [Hash]
+    #
+    # @api private
+    # @since 0.3.0
+    def read_multi(*keys, **options)
+      lock.with_read_lock do
+        super.tap do |res|
+          res.merge!(Hash[(keys - res.keys).zip(Operation::READ_MULTY_EMPTY_KEYS_SET)])
+        end
+      end
+    end
+
     # @param key [String]
     # @param options [Hash]
     # @return [void]

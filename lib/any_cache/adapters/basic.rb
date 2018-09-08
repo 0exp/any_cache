@@ -43,6 +43,16 @@ module AnyCache::Adapters
       raise NotImplementedError
     end
 
+    # @param keys [Array<String>]
+    # @param options [Hash]
+    # @return [Hash]
+    #
+    # @api private
+    # @since 0.3.0
+    def read_multi(*keys, **options)
+      raise NotImplementedError
+    end
+
     # @param key [String]
     # @param value [Object]
     # @param options [Hash]
