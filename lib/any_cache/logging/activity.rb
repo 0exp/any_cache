@@ -13,7 +13,7 @@ module AnyCache::Logging::Activity
     # @param cacher [AnyCache]
     # @param logger [::Logger]
     # @option activity [String, NilClass]
-    # @param message [String, NillClass]
+    # @option message [String, NillClass]
     # @return [void]
     #
     # @api private

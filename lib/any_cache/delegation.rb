@@ -8,7 +8,7 @@ module AnyCache::Delegation
     # @return [void]
     #
     # @api private
-    # @since 0.2.0
+    # @since 0.3.0
     def included(base_klass)
       base_klass.extend(ClassMethods)
     end
@@ -28,7 +28,7 @@ module AnyCache::Delegation
     end
 
     # @param receiver [Symbol, String]
-    # @param delegator [Symbol, String]
+    # @param delegat [Symbol, String]
     # @return [void]
     #
     # @api private
