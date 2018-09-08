@@ -103,7 +103,7 @@ client = ActiveSupport::Cache::FileStore.new(...)
 client = ActiveSupport::Cache::MemoryStore.new(...)
 
 # 2) build AnyCache instance
-any_cache = AnyCache.build(client) # => <AnyCache:0x00007f990527f268 ...>
+cache_store = AnyCache.build(client) # => <AnyCache:0x00007f990527f268 ...>
 ```
 
 #### Config-based creation
@@ -136,7 +136,7 @@ AnyCache.configure do |conf|
   conf.redis.options = { ... } # Redis-related options
 end
 
-AnyCache.build
+cache_store = AnyCache.build
 ```
 
 ##### `AnyCache` with `Redis::Store`:
@@ -150,7 +150,7 @@ AnyCache.configure do |conf|
   conf.redis_store.options = { ... } # Redis::Store-related options
 end
 
-AnyCache.build
+cache_store = AnyCache.build
 ```
 
 ##### `AnyCache` with `Dalli::Client`:
@@ -165,7 +165,7 @@ AnyCache.configure do |conf|
   conf.dalli.options = { ... } # Dalli::Client-related options
 end
 
-AnyCache.build
+cache_store = AnyCache.build
 ```
 
 ##### `AnyCache` with `ActiveSupport::Cache::RedisCacheStore`:
@@ -179,7 +179,7 @@ AnyCache.configure do |conf|
   conf.as_redis_cache_store.options = { ... } # ActiveSupport::Cache::RedisCacheStore-related options
 end
 
-AnyCache.build
+cache_store = AnyCache.build
 ```
 
 ##### `AnyCache` with `ActiveSupport::Cache::MemCacheStore`:
@@ -194,7 +194,7 @@ AnyCache.configure do |conf|
   conf.as_memory_store.options = { ... } # ActiveSupport::Cache::MemCacheStore-related options
 end
 
-AnyCache.build
+cache_store = AnyCache.build
 ```
 
 ##### `AnyCache` with `ActiveSupport::Cache::FileStore`:
@@ -209,7 +209,7 @@ AnyCache.configure do |conf|
   conf.as_file_store.options = { ... } # ActiveSupport::Cache::FileStore-related options
 end
 
-AnyCache.build
+cache_store = AnyCache.build
 ```
 
 ##### `AnyCache` with `ActiveSupport::Cache::MemoryStore`:
@@ -223,7 +223,7 @@ AnyCache.configure do |conf|
   conf.as_memory_store.options = { ... } # ActiveSupport::Cache::MemoryStore-related options
 end
 
-AnyCache.build
+cache_store = AnyCache.build
 ```
 
 #### Many cache storages
@@ -355,27 +355,27 @@ any_cache.clear
 
 ```ruby
 # --- entry exists ---
-any_cache.fetch("data") # => "some_data"
-any_cache.fetch("data") { "new_data" } # => "some_data"
+cache_store.fetch("data") # => "some_data"
+cache_store.fetch("data") { "new_data" } # => "some_data"
 
 # --- entry does not exist ---
-any_cache.fetch("data") # => nil
-any_cache.fetch("data") { "new_data" } # => "new_data"
-any_cache.fetch("data") # => "new_data"
+cache_store.fetch("data") # => nil
+cache_store.fetch("data") { "new_data" } # => "new_data"
+cache_store.fetch("data") # => "new_data"
 
 # --- new entry with expiration time ---
-any_cache.fetch("data") # => nil
-any_cache.fetch("data", expires_in: 8) { "new_data" } # => "new_data"
-any_cache.fetch("data") # => "new_data"
+cache_store.fetch("data") # => nil
+cache_store.fetch("data", expires_in: 8) { "new_data" } # => "new_data"
+cache_store.fetch("data") # => "new_data"
 # ...sleep 8 seconds...
-any_cache.fetch("data") # => nil
+cache_store.fetch("data") # => nil
 
 # --- force update/rewrite ---
-any_cache.fetch("data") # => "some_data"
-any_cache.fetch("data", expires_in: 8, force: true) { "new_data" } # => "new_data"
-any_cache.fetch("data") # => "new_data"
+cache_store.fetch("data") # => "some_data"
+cache_store.fetch("data", expires_in: 8, force: true) { "new_data" } # => "new_data"
+cache_store.fetch("data") # => "new_data"
 # ...sleep 8 seconds...
-any_cache.fetch("data") # => nil
+cache_store.fetch("data") # => nil
 ```
 
 ---
@@ -386,10 +386,10 @@ any_cache.fetch("data") # => nil
 
 ```ruby
 # --- entry exists ---
-any_cache.read("data") # => "some_data"
+cache_store.read("data") # => "some_data"
 
 # --- entry doesnt exist ---
-any_cache.read("data") # => nil
+cache_store.read("data") # => nil
 ```
 
 ---
@@ -400,10 +400,10 @@ any_cache.read("data") # => nil
 
 ```ruby
 # --- permanent entry ---
-any_cache.write("data", 123)
+cache_store.write("data", 123)
 
 # --- temporal entry (expires in 60 seconds) ---
-any_cache.write("data", 123, expires_in: 60)
+cache_store.write("data", 123, expires_in: 60)
 ```
 
 ---
@@ -413,7 +413,7 @@ any_cache.write("data", 123, expires_in: 60)
 - `AnyCache#delete(key)` - remove entry from the cache storage
 
 ```ruby
-any_cache.delete("data")
+cache_store.delete("data")
 ```
 
 ---
@@ -425,19 +425,19 @@ any_cache.delete("data")
 
 ```ruby
 # --- increment existing entry ---
-any_cache.write("data", 1)
+cache_store.write("data", 1)
 
 # --- increment by default value (1) ---
-any_cache.increment("data") # => 2
+cache_store.increment("data") # => 2
 
 # --- increment by custom value ---
-any_cache.increment("data", 12) # => 14
+cache_store.increment("data", 12) # => 14
 
 # --- increment and expire after 31 seconds
-any_cache.incrmeent("data", expires_in: 31) # => 15
+cache_store.incrmeent("data", expires_in: 31) # => 15
 
 # --- increment nonexistent entry (create new entry) ---
-any_cache.increment("another_data", 5, expires_in: 5) # => 5
+cache_store.increment("another_data", 5, expires_in: 5) # => 5
 ```
 
 ---
@@ -449,19 +449,19 @@ any_cache.increment("another_data", 5, expires_in: 5) # => 5
 
 ```ruby
 # --- decrement existing entry ---
-any_cache.write("data", 15)
+cache_store.write("data", 15)
 
 # --- decrement by default value (1) ---
-any_cache.decrement("data") # => 14
+cache_store.decrement("data") # => 14
 
 # --- decrement by custom value ---
-any_cache.decrement("data", 10) # => 4
+cache_store.decrement("data", 10) # => 4
 
 # --- decrement and expire after 5 seconds
-any_cache.decrememnt("data", expirs_in: 5) # => 3
+cache_store.decrememnt("data", expirs_in: 5) # => 3
 
 # --- decrement nonexistent entry (create new entry) ---
-any_cache.decrememnt("another_data", 2, expires_in: 10) # => -2 (or 0 for Dalli::Client)
+cache_store.decrememnt("another_data", 2, expires_in: 10) # => -2 (or 0 for Dalli::Client)
 ```
 
 ---
@@ -472,10 +472,10 @@ any_cache.decrememnt("another_data", 2, expires_in: 10) # => -2 (or 0 for Dalli:
 
 ```ruby
 # --- expire immediately ---
-any_cache.expire("data")
+cache_store.expire("data")
 
 # --- set new expiration time (in seconds) --
-any_cache.expire("data", expires_in: 36)
+cache_store.expire("data", expires_in: 36)
 ```
 
 ---
@@ -486,10 +486,10 @@ any_cache.expire("data", expires_in: 36)
 
 ```ruby
 # --- create temporal entry (30 seconds) ---
-any_cache.write("data", { a: 1 }, expires_in: 30)
+cache_store.write("data", { a: 1 }, expires_in: 30)
 
 # --- remove entry expiration (make it permanent) ---
-any_cache.persist("data")
+cache_store.persist("data")
 ```
 
 ---
@@ -500,10 +500,10 @@ any_cache.persist("data")
 
 ```ruby
 # --- entry exists ---
-any_cache.exist?("data") # => true
+cache_store.exist?("data") # => true
 
 # --- entry does not exist ---
-any_cache.exist?("another-data") # => false
+cache_store.exist?("another-data") # => false
 ```
 
 ---
@@ -514,17 +514,17 @@ any_cache.exist?("another-data") # => false
 
 ```ruby
 # --- prepare cache data ---
-any_cache.write("data", { a: 1, b: 2 })
-any_cache.write("another_data", 123_456)
+cache_store.write("data", { a: 1, b: 2 })
+cache_store.write("another_data", 123_456)
 
-any_cache.read("data") # => { a: 1, b: 2 }
-any_cache.read("another_data") # => 123_456
+cache_store.read("data") # => { a: 1, b: 2 }
+cache_store.read("another_data") # => 123_456
 
 # --- clear cache ---
-any_cache.clear
+cache_store.clear
 
-any_cache.read("data") # => nil
-any_cache.read("another_data") # => nil
+cache_store.read("data") # => nil
+cache_store.read("another_data") # => nil
 ```
 
 ---
