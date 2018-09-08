@@ -4,6 +4,7 @@ module SpecSupport::Cache::ActiveSupportMemoryStore
   class CacheStore < AnyCache
     configure do |conf|
       conf.driver = :as_memory_store
+      conf.logger = SpecSupport::NullLogger
     end
   end
 

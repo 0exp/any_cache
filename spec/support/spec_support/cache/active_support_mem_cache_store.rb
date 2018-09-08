@@ -4,6 +4,7 @@ module SpecSupport::Cache::ActiveSupportMemCacheStore
   class CacheStore < AnyCache
     configure do |conf|
       conf.driver = :as_mem_cache_store
+      conf.logger = SpecSupport::NullLogger
       conf.as_mem_cache_store.servers = '127.0.0.1:11211'
       conf.as_mem_cache_store.options = { namespace: 'any_cache' }
     end

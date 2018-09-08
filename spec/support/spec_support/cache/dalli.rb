@@ -4,6 +4,7 @@ module SpecSupport::Cache::Dalli
   class CacheStore < AnyCache
     configure do |conf|
       conf.driver = :dalli
+      conf.logger = SpecSupport::NullLogger
       conf.dalli.servers = '127.0.0.1:11211'
       conf.dalli.options = { namespace: 'any_cache' }
     end

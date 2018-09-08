@@ -4,6 +4,7 @@ module SpecSupport::Cache::RedisStore
   class CacheStore < AnyCache
     configure do |conf|
       conf.driver = :redis_store
+      conf.logger = SpecSupport::NullLogger
       conf.redis_store.options = { host: '127.0.0.1', port: 6379 }
     end
   end

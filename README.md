@@ -47,6 +47,7 @@ require 'any_cache'
         - [AnyCache with ActiveSupport::Cache::MemoryStore](#anycache-with-activesupportcachememorystore)
     - [Many cache storages](#many-cache-storages)
     - [Custom cache clients](#custom-cache-clients)
+- [Logging](#logging)
 - [Operations](#operations)
     - [Fetch](#fetch)
     - [Read](#read)
@@ -279,6 +280,54 @@ end
 AnyCache.build(MyCacheClient.new)
 ```
 
+---
+
+### Logging
+
+AnyCache logs all its operations. By default, `AnyCache` uses a simple `STDOUT` logger with `Logger::INFO` level.
+Logging is performed with level configured in logger object.
+
+Logger configuration:
+
+```ruby
+# --- use your own logger ---
+AnyCache.configure do |conf|
+  conf.logger = MyLoggerObject.new
+end
+
+# --- disable logging ---
+AnyCache.configure do |conf|
+  conf.logger = nil
+end
+
+# --- (used by default) ---
+AnyCache.configure do |conf|
+  conf.logger = AnyCache::Logging::Logger.new(STDOUT)
+end
+```
+
+Log message format:
+
+```
+[AnyCache<CACHER_NAME>/Activity<OPERATION_NAME>]: performed <OPERATION NAME> operation with
+params: INSPECTED_ARGUMENTS and options: INSPECTED_OPTIONS
+```
+
+- progname
+  - `CACHER_NAME` - class name of your cache class;
+  - `OPERATION_NAME` - performed operation (`read`, `write`, `fetch` and etc);
+- message
+  - `INSPECTED_ARGUMENTS` - a set of operation arguments;
+  - `INSPECTED_OPTIONS` - a set of operation options;
+
+```ruby
+any_cache.write("data", 123, expires_in: 60)
+# I, [2018-09-07T10:04:56.649960 #15761]  INFO -- [AnyCache<AnyCache>/Activity<write>]: performed <write> operation with params: ["data", 123] and options: {:expires_in=>60}.
+
+any_cache.clear
+# I, [2018-09-07T10:05:26.999847 #15761]  INFO -- [AnyCache<AnyCache>/Activity<clear>]: performed <clear> operation with params: [] and options: {}.
+```
+
 ## Operations
 
 `AnyCache` provides a following operation set:
@@ -300,11 +349,9 @@ AnyCache.build(MyCacheClient.new)
 
 - `AnyCache#fetch(key, [force:], [expires_in:], [&block])`
     - works in `ActiveSupport::Cache::Store#fetch`-manner;
-    - fetches data from the cache, using the given key;
-    - if there is data in the cache with the given key, then that data is returned;
-    - if there is no such data in the cache (a cache miss), then nil will be returned:
-        - if a block has been passed, that block will be passed the key and executed in the event of a cache miss;
-        - the return value of the block will be written to the cache under the given cache key, and that return value will be returned;
+    - fetches data from the cache using the given key;
+    - if a block has been passed and data with the given key does not exist - that block
+      will be called and the return value will be written to the cache;
 
 ```ruby
 # --- entry exists ---

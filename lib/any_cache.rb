@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'logger'
 require 'qonfig'
 require 'securerandom'
 require 'concurrent/atomic/reentrant_read_write_lock'
@@ -11,16 +12,21 @@ class AnyCache
   require_relative 'any_cache/error'
   require_relative 'any_cache/drivers'
   require_relative 'any_cache/adapters'
-
-  # @since 0.1.0
-  extend Forwardable
+  require_relative 'any_cache/logging'
+  require_relative 'any_cache/delegation'
 
   # @since 0.2.0
   include Qonfig::Configurable
 
+  # @since 0.3.0
+  include Delegation
+
   # @since 0.2.0
+  # rubocop:disable Metrics/BlockLength
   configuration do
     setting :driver
+
+    setting :logger, Logging::Logger.new(STDOUT)
 
     setting :redis do
       setting :options, {}
@@ -53,6 +59,7 @@ class AnyCache
       setting :options, {}
     end
   end
+  # rubocop:enable Metrics/BlockLength
 
   class << self
     # @param driver [Object]
@@ -66,18 +73,18 @@ class AnyCache
   end
 
   # @api public
-  # @since 0.1.0
-  def_delegators :adapter,
-                 :read,
-                 :write,
-                 :delete,
-                 :increment,
-                 :decrement,
-                 :expire,
-                 :persist,
-                 :clear,
-                 :exist?,
-                 :fetch
+  # @since 0.3.0
+  def_loggable_delegators :adapter,
+                          :read,
+                          :write,
+                          :delete,
+                          :increment,
+                          :decrement,
+                          :expire,
+                          :persist,
+                          :clear,
+                          :exist?,
+                          :fetch
 
   # @return [AnyCache::Adapters::Basic]
   #
