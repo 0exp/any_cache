@@ -18,6 +18,7 @@ module AnyCache::Adapters
         driver.respond_to?(:write_multi) &&
         driver.respond_to?(:fetch_multi) &&
         driver.respond_to?(:delete) &&
+        driver.respond_to?(:delete_matched) &&
         driver.respond_to?(:increment) &&
         driver.respond_to?(:decrement) &&
         driver.respond_to?(:expire) &&
@@ -37,6 +38,7 @@ module AnyCache::Adapters
                    :write_multi,
                    :fetch_multi,
                    :delete,
+                   :delete_matched,
                    :increment,
                    :decrement,
                    :expire,

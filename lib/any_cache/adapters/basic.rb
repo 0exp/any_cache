@@ -76,22 +76,23 @@ module AnyCache::Adapters
 
     # @param key [String]
     # @param options [Hash]
+    # @param fallback [Proc]
     # @return [Object]
     #
     # @api private
     # @since 0.2.0
-    def fetch(key, **options, &block)
+    def fetch(key, **options, &fallback)
       raise NotImplementedError
     end
 
     # @param keys [Array<String>]
     # @param options [Hash]
-    # @param block [Proc]
+    # @param fallback [Proc]
     # @return [Hash]
     #
     # @api private
     # @since 0.3.0
-    def fetch_multi(*keys, **options, &block)
+    def fetch_multi(*keys, **options, &fallback)
       raise NotImplementedError
     end
 
@@ -102,6 +103,16 @@ module AnyCache::Adapters
     # @api private
     # @since 0.1.0
     def delete(key, **options)
+      raise NotImplementedError
+    end
+
+    # @param pattern [???]
+    # @param options [???]
+    # @return [void]
+    #
+    # @api private
+    # @since 0.3.0
+    def delete_matched(pattern, **options)
       raise NotImplementedError
     end
 

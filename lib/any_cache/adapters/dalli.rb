@@ -101,9 +101,7 @@ module AnyCache::Adapters
     def write_multi(entries, **options)
       raw = options.fetch(:raw, true)
 
-      entries.to_a.flatten.each_slice(2) do |(key, value)|
-        write(key, value, raw: raw)
-      end
+      entries.each_pair { |key, value| write(key, value, raw: raw) }
     end
 
     # @param key [String]
@@ -147,6 +145,16 @@ module AnyCache::Adapters
     # @since 0.1.0
     def delete(key, **options)
       driver.delete(key)
+    end
+
+    # @param pattern [???]
+    # @param options [???]
+    # @return [void]
+    #
+    # @api private
+    # @since 0.3.0
+    def delete_matched(pattern, **options)
+      # NOTE: unsupported
     end
 
     # @param key [String]

@@ -82,6 +82,7 @@ class AnyCache
                           :fetch,
                           :fetch_multi,
                           :delete,
+                          :delete_matched,
                           :increment,
                           :decrement,
                           :expire,

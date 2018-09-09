@@ -103,7 +103,7 @@ describe 'Custom cache clients' do
         method_options = { SecureRandom.hex.to_sym => SecureRandom.hex }
 
         expect(custom_client).to receive(operation).with(*entries, method_options)
-        cache_store.send(operation, *entries, **method_options)
+        cache_store.send(operation, entries, **method_options)
       end
     end
 

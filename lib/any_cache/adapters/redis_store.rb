@@ -61,7 +61,7 @@ module AnyCache::Adapters
     # @api private
     # @since 0.3.0
     def write_multi(entries, **options)
-      mset(*entries.to_a.flatten, raw: true)
+      mset(*entries.to_a.flatten!, raw: true)
     end
   end
 end

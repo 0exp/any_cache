@@ -131,6 +131,16 @@ module AnyCache::Adapters
       del(key)
     end
 
+    # @param pattern [???]
+    # @param options [???]
+    # @return [void]
+    #
+    # @api private
+    # @since 0.3.0
+    def delete_matched(pattern, **options)
+      # TODO: implement
+    end
+
     # @param key [String]
     # @param amount [Integer]
     # @option expires_in [NilClass, Integer] Time in seconds
