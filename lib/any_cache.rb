@@ -79,14 +79,15 @@ class AnyCache
                           :read_multi,
                           :write,
                           :write_multi,
+                          :fetch,
+                          :fetch_multi,
                           :delete,
                           :increment,
                           :decrement,
                           :expire,
                           :persist,
                           :clear,
-                          :exist?,
-                          :fetch
+                          :exist?
 
   # @return [AnyCache::Adapters::Basic]
   #

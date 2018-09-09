@@ -97,6 +97,47 @@ module AnyCache::Adapters
     end
 
     # @param key [String]
+    # @param fallback [Proc]
+    # @option expires_in [Integer]
+    # @option force [Boolean, Proc]
+    # @return [Object]
+    #
+    # @api private
+    # @since 0.2.0
+    def fetch(key, **options, &fallback)
+      lock.with_write_lock do
+        force_rewrite = options.fetch(:force, false)
+        force_rewrite = force_rewrite.call(key) if force_rewrite.respond_to?(:call)
+        expires_in    = options.fetch(:expires_in, self.class::Operation::NO_EXPIRATION_TTL)
+
+        super(key, force: force_rewrite, expires_in: expires_in, &fallback)
+      end
+    end
+
+    # @param keys [Array<String>]
+    # @param fallback [Proc]
+    # @option force [Boolean, Proc]
+    # @option expires_in [Integer]
+    # @return [Hash]
+    #
+    # @api private
+    # @since 0.3.0
+    def fetch_multi(*keys, **options, &fallback)
+      lock.with_write_lock do
+        force_rewrite = options.fetch(:force, false)
+        expires_in    = options.fetch(:expires_in, self.class::Operation::NO_EXPIRATION_TTL)
+
+        # NOTE:
+        #   use own #fetch_multi implementation cuz original #fetch_multi
+        #   does not support :force option
+        keys.each_with_object({}) do |key, dataset|
+          force = force_rewrite.respond_to?(:call) ? force_rewrite.call(key) : force_rewrite
+          dataset[key] = driver.fetch(key, force: force, expires_in: expires_in, &fallback)
+        end
+      end
+    end
+
+    # @param key [String]
     # @param amount [Integer, Float]
     # @option expires_in [NilClass, Integer]
     # @return [Integer, Float]
@@ -154,23 +195,6 @@ module AnyCache::Adapters
     # @since 0.2.0
     def exist?(key, **options)
       lock.with_read_lock { super }
-    end
-
-    # @param key [String]
-    # @option expires_in [Integer]
-    # @option force [Boolean]
-    # @return [Object]
-    #
-    # @api private
-    # @since 0.2.0
-    def fetch(key, **options, &block)
-      lock.with_write_lock do
-        force_rewrite = options.fetch(:force, false)
-        force_rewrite = force_rewrite.call if force_rewrite.respond_to?(:call)
-        expires_in    = options.fetch(:expires_in, self.class::Operation::NO_EXPIRATION_TTL)
-
-        super(key, force: force_rewrite, expires_in: expires_in, &block)
-      end
     end
 
     private

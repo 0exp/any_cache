@@ -76,6 +76,27 @@ module AnyCache::Adapters
 
     # @param key [String]
     # @param options [Hash]
+    # @return [Object]
+    #
+    # @api private
+    # @since 0.2.0
+    def fetch(key, **options, &block)
+      raise NotImplementedError
+    end
+
+    # @param keys [Array<String>]
+    # @param options [Hash]
+    # @param block [Proc]
+    # @return [Hash]
+    #
+    # @api private
+    # @since 0.3.0
+    def fetch_multi(*keys, **options, &block)
+      raise NotImplementedError
+    end
+
+    # @param key [String]
+    # @param options [Hash]
     # @return [void]
     #
     # @api private
@@ -142,16 +163,6 @@ module AnyCache::Adapters
     # @api private
     # @since 0.2.0
     def exist?(key, **options)
-      raise NotImplementedError
-    end
-
-    # @param key [String]
-    # @param options [Hash]
-    # @return [Object]
-    #
-    # @api private
-    # @since 0.2.0
-    def fetch(key, **options, &block)
       raise NotImplementedError
     end
   end

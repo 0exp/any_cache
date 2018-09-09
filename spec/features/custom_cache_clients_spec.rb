@@ -9,6 +9,8 @@ describe 'Custom cache clients' do
         def read_multi(*keys, **); end
         def write(key, value, **); end
         def write_multi(entries, **); end
+        def fetch(key, **); end
+        def fetch_multi(*keys, **); end
         def delete(key, **); end
         def increment(key, value, **); end
         def decrement(key, value, **); end
@@ -16,7 +18,6 @@ describe 'Custom cache clients' do
         def persist(key, **); end
         def clear(key, **); end
         def exist?(key, **); end
-        def fetch(key, **); end
         # rubocop:enable Layout/EmptyLineBetweenDefs
       end.new
     end
@@ -28,6 +29,8 @@ describe 'Custom cache clients' do
         def read_multi; end
         def write; end
         def write_multi; end
+        def fetch; end
+        def fetch_multi; end
         def delete; end
         def increment; end
         def decrement; end
@@ -35,7 +38,6 @@ describe 'Custom cache clients' do
         def persist; end
         def clear; end
         def exist?; end
-        def fetch; end
       end.new
       # rubocop:enable Layout/EmptyLineBetweenDefs
     end
@@ -89,7 +91,7 @@ describe 'Custom cache clients' do
     %i[
       write_multi
     ].each do |operation|
-      specify "anyCache instance delegates :#{operation} operation to the custom client" do
+      specify "AnyCache instance delegates :#{operation} operation to the custom client" do
         cache_store = AnyCache.build(custom_client)
 
         entries = {
@@ -100,8 +102,22 @@ describe 'Custom cache clients' do
 
         method_options = { SecureRandom.hex.to_sym => SecureRandom.hex }
 
-        expect(custom_client).to receive(operation).with(entries, method_options)
-        cache_store.send(operation, entries, **method_options)
+        expect(custom_client).to receive(operation).with(*entries, method_options)
+        cache_store.send(operation, *entries, **method_options)
+      end
+    end
+
+    %i[
+      fetch_multi
+    ].each do |operation|
+      specify "AnyCache instance delegates :#{operation} operation to the custom client" do
+        cache_store = AnyCache.build(custom_client)
+
+        entry_keys = Array.new(4) { SecureRandom.hex }
+        method_options = { SecureRandom.hex.to_sym => SecureRandom.hex }
+
+        expect(custom_client).to receive(operation).with(*entry_keys, method_options)
+        cache_store.send(operation, *entry_keys, **method_options)
       end
     end
   end
@@ -113,13 +129,14 @@ describe 'Custom cache clients' do
         read_multi
         write
         write_multi
+        fetch
+        fetch_multi
         delete
         increment
         decrement
         expire
         persist
         clear
-        fetch
         exist?
       ]
     end

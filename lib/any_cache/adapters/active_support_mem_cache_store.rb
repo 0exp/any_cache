@@ -103,6 +103,34 @@ module AnyCache::Adapters
     end
 
     # @param key [String]
+    # @option expires_in [Integer]
+    # @option force [Boolean, Proc]
+    # @return [Object]
+    #
+    # @api private
+    # @since 0.2.0
+    def fetch(key, **options, &fallback)
+      force_rewrite = options.fetch(:force, false)
+      force_rewrite = force_rewrite.call(key) if force_rewrite.respond_to?(:call)
+      expires_in    = options.fetch(:expires_in, NO_EXPIRATION_TTL)
+
+      driver.fetch(key, force: force_rewrite, expires_in: expires_in, &fallback)
+    end
+
+    # @param keys [Array<String>]
+    # @param options [Hash]
+    # @param fallback [Proc]
+    # @return [Hash]
+    #
+    # @api private
+    # @since 0.3.0
+    def fetch_multi(*keys, **options, &fallback)
+      keys.each_with_object({}) do |key, dataset|
+        dataset[key] = fetch(key, **options, &fallback)
+      end
+    end
+
+    # @param key [String]
     # @param amount [Integer]
     # @options expires_in [Integer]
     # @return [Integer, Float]
@@ -175,21 +203,6 @@ module AnyCache::Adapters
     # @since 0.2.0
     def exist?(key, **options)
       driver.exist?(key)
-    end
-
-    # @param key [String]
-    # @option expires_in [Integer]
-    # @option force [Boolean]
-    # @return [Object]
-    #
-    # @api private
-    # @since 0.2.0
-    def fetch(key, **options, &block)
-      force_rewrite = options.fetch(:force, false)
-      force_rewrite = force_rewrite.call if force_rewrite.respond_to?(:call)
-      expires_in    = options.fetch(:expires_in, NO_EXPIRATION_TTL)
-
-      driver.fetch(key, force: force_rewrite, expires_in: expires_in, &block)
     end
   end
 end

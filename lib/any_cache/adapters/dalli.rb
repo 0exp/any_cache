@@ -107,6 +107,39 @@ module AnyCache::Adapters
     end
 
     # @param key [String]
+    # @param fallback [Proc]
+    # @option expires_in [Integer]
+    # @option force [Boolean, Proc]
+    # @return [Object]
+    #
+    # @api private
+    # @since 0.2.0
+    def fetch(key, **options, &fallback)
+      force_rewrite = options.fetch(:force, false)
+      force_rewrite = force_rewrite.call(key) if force_rewrite.respond_to?(:call)
+
+      # NOTE: can conflict with :cache_nils Dalli::Client's config
+      read(key).tap { |value| return value if value } unless force_rewrite
+
+      fallback.call(key).tap { |value| write(key, value, **options) } if block_given?
+    end
+
+    # @param keys [Array<String>]
+    # @param fallback [Proc]
+    # @option force [Boolean, Proc]
+    # @option expires_in [Integer]
+    # @return [Hash]
+    #
+    # @api private
+    # @since 0.3.0
+    def fetch_multi(*keys, **options, &fallback)
+      # TODO: think about multi-thread approach
+      keys.each_with_object({}) do |key, dataset|
+        dataset[key] = fetch(key, **options, &fallback)
+      end
+    end
+
+    # @param key [String]
     # @param options [Hash]
     # @return [void]
     #
@@ -186,23 +219,6 @@ module AnyCache::Adapters
     # @since 0.2.0
     def exist?(key, **options)
       !get(key).nil? # NOTE: can conflict with :cache_nils Dalli::Client's config
-    end
-
-    # @param key [String]
-    # @option expires_in [Integer]
-    # @option force [Boolean]
-    # @return [Object]
-    #
-    # @api private
-    # @since 0.2.0
-    def fetch(key, **options)
-      force_rewrite = options.fetch(:force, false)
-      force_rewrite = force_rewrite.call if force_rewrite.respond_to?(:call)
-
-      # NOTE: can conflict with :cache_nils Dalli::Client's config
-      read(key).tap { |value| return value if value } unless force_rewrite
-
-      yield.tap { |value| write(key, value, **options) } if block_given?
     end
   end
 end
