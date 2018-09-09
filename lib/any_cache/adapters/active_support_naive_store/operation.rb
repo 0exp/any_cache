@@ -11,7 +11,7 @@ class AnyCache::Adapters::ActiveSupportNaiveStore
     #
     # @api private
     # @since 0.3.0
-    READ_MULTY_EMPTY_KEYS_SET = [].freeze
+    READ_MULTI_EMPTY_KEYS_SET = [].freeze
 
     # @return [NilClass]
     #

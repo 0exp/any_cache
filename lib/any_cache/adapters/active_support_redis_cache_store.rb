@@ -21,7 +21,7 @@ module AnyCache::Adapters
     #
     # @api private
     # @since 0.3.0
-    READ_MULTY_EMPTY_KEYS_SET = [].freeze
+    READ_MULTI_EMPTY_KEYS_SET = [].freeze
 
     # @since 0.1.0
     def_delegators :driver, :delete, :clear
@@ -66,7 +66,7 @@ module AnyCache::Adapters
       raw = options.fetch(:raw, true)
 
       driver.read_multi(*keys, raw: raw).tap do |res|
-        res.merge!(Hash[(keys - res.keys).zip(READ_MULTY_EMPTY_KEYS_SET)])
+        res.merge!(Hash[(keys - res.keys).zip(READ_MULTI_EMPTY_KEYS_SET)])
       end
     end
 
@@ -82,6 +82,18 @@ module AnyCache::Adapters
       raw = options.fetch(:raw, true)
 
       driver.write(key, value, expires_in: expires_in, raw: raw)
+    end
+
+    # @param entries [Hash]
+    # @param options [Hash]
+    # @return [void]
+    #
+    # @api private
+    # @sicne 0.3.0
+    def write_multi(entries, **options)
+      raw = options.fetch(:raw, true)
+
+      driver.write_multi(entries, expires_in: NO_EXPIRATION_TTL, raw: raw)
     end
 
     # @param key [String]

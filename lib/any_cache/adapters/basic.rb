@@ -64,6 +64,16 @@ module AnyCache::Adapters
       raise NotImplementedError
     end
 
+    # @param entries [Hash]
+    # @param options [Hash]
+    # @return [void]
+    #
+    # @api private
+    # @since 0.3.0
+    def write_multi(entries, **options)
+      raise NotImplementedError
+    end
+
     # @param key [String]
     # @param options [Hash]
     # @return [void]

@@ -44,7 +44,8 @@ module AnyCache::Adapters
                    :pipelined,
                    :flushdb,
                    :exists,
-                   :mapped_mget
+                   :mapped_mget,
+                   :mapped_mset
 
     # @param key [String]
     # @param options [Hash]
@@ -77,6 +78,16 @@ module AnyCache::Adapters
       expires_in = options.fetch(:expires_in, NO_EXPIRATION_TTL)
 
       expires_in ? setex(key, expires_in, value) : set(key, value)
+    end
+
+    # @param entries [Hash]
+    # @param options [Hash]
+    # @return [void]
+    #
+    # @api private
+    # @since 0.3.0
+    def write_multi(entries, **options)
+      mapped_mset(entries)
     end
 
     # @param key [String]

@@ -15,6 +15,8 @@ module AnyCache::Adapters
       end
     end
 
+    def_delegators :driver, :mset
+
     # @param key [String]
     # @param options [Hash]
     # @return [Object]
@@ -34,8 +36,6 @@ module AnyCache::Adapters
     # @api private
     # @since 0.3.0
     def read_multi(*keys, **options)
-      raw = options.fetch(:raw, true)
-
       # NOTE: cant use Redis::Store#mget cuz it has some marshalling errors :(
       Hash[keys.zip(keys.map { |key| read(key, **options) })]
     end
@@ -52,6 +52,16 @@ module AnyCache::Adapters
       raw = options.fetch(:raw, true)
 
       expires_in ? setex(key, expires_in, value, raw: raw) : set(key, value, raw: raw)
+    end
+
+    # @param entries [Hash]
+    # @param options [Hash]
+    # @return [void]
+    #
+    # @api private
+    # @since 0.3.0
+    def write_multi(entries, **options)
+      mset(*entries.to_a.flatten, raw: true)
     end
   end
 end
