@@ -43,7 +43,9 @@ module AnyCache::Adapters
                    :decrby,
                    :pipelined,
                    :flushdb,
-                   :exists
+                   :exists,
+                   :mapped_mget,
+                   :mapped_mset
 
     # @param key [String]
     # @param options [Hash]
@@ -53,6 +55,16 @@ module AnyCache::Adapters
     # @since 0.1.0
     def read(key, **options)
       get(key)
+    end
+
+    # @param keys [Array<String>]
+    # @param options [Hash]
+    # @return [Hash]
+    #
+    # @api private
+    # @since 0.3.0
+    def read_multi(*keys, **options)
+      mapped_mget(*keys)
     end
 
     # @param key [String]
@@ -66,6 +78,16 @@ module AnyCache::Adapters
       expires_in = options.fetch(:expires_in, NO_EXPIRATION_TTL)
 
       expires_in ? setex(key, expires_in, value) : set(key, value)
+    end
+
+    # @param entries [Hash]
+    # @param options [Hash]
+    # @return [void]
+    #
+    # @api private
+    # @since 0.3.0
+    def write_multi(entries, **options)
+      mapped_mset(entries)
     end
 
     # @param key [String]

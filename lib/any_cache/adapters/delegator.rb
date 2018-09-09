@@ -10,6 +10,7 @@ module AnyCache::Adapters
       #
       # @api private
       # @since 0.1.0
+      # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       def supported_driver?(driver)
         driver.respond_to?(:read) &&
         driver.respond_to?(:write) &&
@@ -20,14 +21,19 @@ module AnyCache::Adapters
         driver.respond_to?(:persist) &&
         driver.respond_to?(:clear) &&
         driver.respond_to?(:exist?) &&
-        driver.respond_to?(:fetch)
+        driver.respond_to?(:fetch) &&
+        driver.respond_to?(:read_multi) &&
+        driver.respond_to?(:write_multi)
       end
+      # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     end
 
     # @since 0.1.0
     def_delegators :driver,
                    :read,
+                   :read_multi,
                    :write,
+                   :write_multi,
                    :delete,
                    :increment,
                    :decrement,

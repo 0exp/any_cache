@@ -34,6 +34,20 @@ module AnyCache::Adapters
       lock.with_read_lock { super }
     end
 
+    # @param keys [Array<String>]
+    # @param options [Hash]
+    # @return [Hash]
+    #
+    # @api private
+    # @since 0.3.0
+    def read_multi(*keys, **options)
+      lock.with_read_lock do
+        super.tap do |res|
+          res.merge!(Hash[(keys - res.keys).zip(Operation::READ_MULTI_EMPTY_KEYS_SET)])
+        end
+      end
+    end
+
     # @param key [String]
     # @param options [Hash]
     # @return [void]
@@ -65,6 +79,20 @@ module AnyCache::Adapters
         expires_in = options.fetch(:expires_in, self.class::Operation::NO_EXPIRATION_TTL)
 
         super(key, value, expires_in: expires_in)
+      end
+    end
+
+    # @param entries [Hash]
+    # @param options [Hash]
+    # @return [void]
+    #
+    # @api private
+    # @since 0.3.0
+    def write_multi(entries, **options)
+      lock.with_write_lock do
+        expires_in = self.class::Operation::NO_EXPIRATION_TTL
+
+        super(entries, expires_in: expires_in)
       end
     end
 

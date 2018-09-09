@@ -76,7 +76,9 @@ class AnyCache
   # @since 0.3.0
   def_loggable_delegators :adapter,
                           :read,
+                          :read_multi,
                           :write,
+                          :write_multi,
                           :delete,
                           :increment,
                           :decrement,
