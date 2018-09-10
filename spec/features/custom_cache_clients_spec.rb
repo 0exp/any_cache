@@ -12,6 +12,7 @@ describe 'Custom cache clients' do
         def fetch(key, **); end
         def fetch_multi(*keys, **); end
         def delete(key, **); end
+        def delete_matched(pattern, **); end
         def increment(key, value, **); end
         def decrement(key, value, **); end
         def expire(key, **); end
@@ -32,6 +33,7 @@ describe 'Custom cache clients' do
         def fetch; end
         def fetch_multi; end
         def delete; end
+        def delete_matched; end
         def increment; end
         def decrement; end
         def expire; end
@@ -54,6 +56,7 @@ describe 'Custom cache clients' do
       read
       read_multi
       delete
+      delete_matched
       expire
       persist
       clear
@@ -102,7 +105,7 @@ describe 'Custom cache clients' do
 
         method_options = { SecureRandom.hex.to_sym => SecureRandom.hex }
 
-        expect(custom_client).to receive(operation).with(*entries, method_options)
+        expect(custom_client).to receive(operation).with(entries, method_options)
         cache_store.send(operation, entries, **method_options)
       end
     end
@@ -132,6 +135,7 @@ describe 'Custom cache clients' do
         fetch
         fetch_multi
         delete
+        delete_matched
         increment
         decrement
         expire
