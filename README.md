@@ -1,7 +1,7 @@
 # AnyCache &middot; [![Gem Version](https://badge.fury.io/rb/any_cache.svg)](https://badge.fury.io/rb/any_cache) [![Build Status](https://travis-ci.org/0exp/any_cache.svg?branch=master)](https://travis-ci.org/0exp/any_cache) [![Coverage Status](https://coveralls.io/repos/github/0exp/any_cache/badge.svg?branch=master)](https://coveralls.io/github/0exp/any_cache?branch=master)
 
 AnyCache - a simplest cache wrapper that provides a minimalistic generic interface for all well-known cache storages and includes a minimal set of necessary operations:
-`fetch`, `read`, `write`, `delete`, `expire`, `persist`, `exist?`, `clear`, `increment`, `decrement`.
+`fetch`, `read`, `write`, `delete`, `fetch_multi`, `read_multi`, `write_multi`, `delete_matched`, `expire`, `persist`, `exist?`, `clear`, `increment`, `decrement`.
 
 Supported clients:
 
@@ -49,12 +49,11 @@ require 'any_cache'
     - [Custom cache clients](#custom-cache-clients)
 - [Logging](#logging)
 - [Operations](#operations)
-    - [Fetch](#fetch)
-    - [Read](#read)
-    - [Write](#write)
-    - [Delete](#delete)
-    - [Increment](#increment)
-    - [Decrement](#decrement)
+    - [Fetch](#fetch) / [Fetch Multi](#fetch-multi)
+    - [Read](#read) / [Read Multi](#read-multi)
+    - [Write](#write) / [Write Multi](#write-multi)
+    - [Delete](#delete) / [Delete Matched](#delete-matched)
+    - [Increment](#increment) / [Decrement](#decrement)
     - [Expire](#expire)
     - [Persist](#persist)
     - [Existence](#existence)
@@ -251,10 +250,14 @@ dalli_cache = DalliCache.build
 
 If you want to use your own cache client implementation, you should provide an object that responds to:
 
-- `#fetch(*key, [**options])` ([doc](#fetch))
+- `#fetch(key, [**options])` ([doc](#fetch))
+- `#fetch_multi(*keys, [**options])` ([doc](#fetch-multi))
 - `#read(key, [**options])` ([doc](#read))
+- `#read_multi(*keys, [**options])` ([doc](#read-multi))
 - `#write(key, value, [**options])` ([doc](#write))
+- `#write_multi(entries, [**options])` ([doc](#write-multi))
 - `#delete(key, [**options])` ([doc](#delete))
+- `#delete_matched(pattern, [**options])` ([doc](#delete-matched))
 - `#increment(key, amount, [**options])` ([doc](#increment))
 - `#decrement(key, amount, [**options])` ([doc](#decrement))
 - `#expire(key, [**options])` ([doc](#expire))
@@ -332,12 +335,11 @@ any_cache.clear
 
 `AnyCache` provides a following operation set:
 
-- [fetch](#fetch)
-- [read](#read)
-- [write](#write)
-- [delete](#delete)
-- [increment](#increment)
-- [decrement](#decrement)
+- [fetch](#fetch) / [fetch_multi](#fetch-multi)
+- [read](#read) / [read_multi](#read-multi)
+- [write](#write) / [write_multi](#write-multi)
+- [delete](#delete) / [delete_matched](#delete-matched)
+- [increment](#increment) / [decrement](#decrement)
 - [expire](#expire)
 - [persist](#persist)
 - [clear](#clear)
@@ -351,7 +353,7 @@ any_cache.clear
     - works in `ActiveSupport::Cache::Store#fetch`-manner;
     - fetches data from the cache using the given key;
     - if a block has been passed and data with the given key does not exist - that block
-      will be called and the return value will be written to the cache;
+      will be called with the given key and the return value will be written to the cache;
 
 ```ruby
 # --- entry exists ---
@@ -360,19 +362,19 @@ cache_store.fetch("data") { "new_data" } # => "some_data"
 
 # --- entry does not exist ---
 cache_store.fetch("data") # => nil
-cache_store.fetch("data") { "new_data" } # => "new_data"
+cache_store.fetch("data") { |key| "new_data" } # => "new_data"
 cache_store.fetch("data") # => "new_data"
 
 # --- new entry with expiration time ---
 cache_store.fetch("data") # => nil
-cache_store.fetch("data", expires_in: 8) { "new_data" } # => "new_data"
+cache_store.fetch("data", expires_in: 8) { |key| "new_data" } # => "new_data"
 cache_store.fetch("data") # => "new_data"
 # ...sleep 8 seconds...
 cache_store.fetch("data") # => nil
 
 # --- force update/rewrite ---
 cache_store.fetch("data") # => "some_data"
-cache_store.fetch("data", expires_in: 8, force: true) { "new_data" } # => "new_data"
+cache_store.fetch("data", expires_in: 8, force: true) { |key| "new_data" } # => "new_data"
 cache_store.fetch("data") # => "new_data"
 # ...sleep 8 seconds...
 cache_store.fetch("data") # => nil
