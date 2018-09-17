@@ -147,8 +147,8 @@ module AnyCache::Adapters
       driver.delete(key)
     end
 
-    # @param pattern [???]
-    # @param options [???]
+    # @param pattern [Object]
+    # @param options [Hash]
     # @return [void]
     #
     # @api private

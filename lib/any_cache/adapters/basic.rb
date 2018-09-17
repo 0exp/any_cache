@@ -106,8 +106,8 @@ module AnyCache::Adapters
       raise NotImplementedError
     end
 
-    # @param pattern [???]
-    # @param options [???]
+    # @param pattern [Regexp, String, Object]
+    # @param options [Hash]
     # @return [void]
     #
     # @api private
