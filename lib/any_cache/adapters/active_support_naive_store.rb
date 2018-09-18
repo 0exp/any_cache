@@ -58,14 +58,14 @@ module AnyCache::Adapters
       lock.with_write_lock { super }
     end
 
-    # @param pattern [???]
-    # @param options [???]
+    # @param pattern [Object]
+    # @param options [Hash]
     # @return [void]
     #
     # @api private
     # @since 0.3.0
     def delete_matched(pattern, **options)
-
+      lock.with_write_lock { super }
     end
 
     # @param options [Hash]
