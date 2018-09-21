@@ -45,7 +45,25 @@ module AnyCache::Adapters
                    :flushdb,
                    :exists,
                    :mapped_mget,
-                   :mapped_mset
+                   :mapped_mset,
+                   :scan
+
+    # @return [AnyCache::Adapters::Redis::DeleteMatchedHeavy]
+    attr_reader :delete_matched_heavy
+
+    # @return [AnyCache::Adapters::Redis::DeleteMatchedSoftly]
+    attr_reader :delete_matched_softly
+
+    # @param driver [Object]
+    # @return [void]
+    #
+    # @api private
+    # @since 0.3.0
+    def initialize(driver)
+      super
+      @delete_matched_heavy  = DeleteMatchedHeavy.new(self)
+      @delete_matched_softly = DeleteMatchedSoftly.new(self)
+    end
 
     # @param key [String]
     # @param options [Hash]
@@ -138,7 +156,10 @@ module AnyCache::Adapters
     # @api private
     # @since 0.3.0
     def delete_matched(pattern, **options)
-
+      case pattern
+      when String then delete_matched_softly.call(pattern, **options)
+      when Regexp then delete_matched_heavy.call(pattern, **options)
+      end
     end
 
     # @param key [String]
