@@ -33,6 +33,18 @@ module AnyCache::Adapters
     # @since 0.1.0
     DEFAULT_INCR_DECR_AMOUNT = 1
 
+    # @return [String]
+    #
+    # @api private
+    # @since 0.3.0
+    DELETE_MATCHED_CURSOR = "0"
+
+    # @return [Integer]
+    #
+    # @api private
+    # @since 0.3.0
+    DELETE_MATCHED_BATCH_SIZE = 10
+
     # @since 0.1.0
     def_delegators :driver,
                    :get,
@@ -47,23 +59,6 @@ module AnyCache::Adapters
                    :mapped_mget,
                    :mapped_mset,
                    :scan
-
-    # @return [AnyCache::Adapters::Redis::DeleteMatchedHeavy]
-    attr_reader :delete_matched_heavy
-
-    # @return [AnyCache::Adapters::Redis::DeleteMatchedSoftly]
-    attr_reader :delete_matched_softly
-
-    # @param driver [Object]
-    # @return [void]
-    #
-    # @api private
-    # @since 0.3.0
-    def initialize(driver)
-      super
-      @delete_matched_heavy  = DeleteMatchedHeavy.new(self)
-      @delete_matched_softly = DeleteMatchedSoftly.new(self)
-    end
 
     # @param key [String]
     # @param options [Hash]
@@ -156,9 +151,21 @@ module AnyCache::Adapters
     # @api private
     # @since 0.3.0
     def delete_matched(pattern, **options)
+      cursor = DELETE_MATCHED_CURSOR
+
       case pattern
-      when String then delete_matched_softly.call(pattern, **options)
-      when Regexp then delete_matched_heavy.call(pattern, **options)
+      when String
+        loop do
+          cursor, keys = adapter.scan(cursor, match: pattern, count: DELETE_MATCHED_BATCH_SIZE)
+          del(keys)
+          break if cursor == DELETE_MATCHED_CURSOR
+        end
+      when Regexp
+        loop do
+          cursor, keys = adapter.scan(cursor, count: DELETE_MATCHED_BATCH_SIZE)
+          del(keys.grep(pattern))
+          break if cursor == DELETE_MATCHED_CURSOR
+        end
       end
     end
 
