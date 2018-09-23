@@ -24,7 +24,7 @@ module AnyCache::Adapters
     READ_MULTI_EMPTY_KEYS_SET = [].freeze
 
     # @since 0.1.0
-    def_delegators :driver, :delete, :clear
+    def_delegators :driver, :delete, :clear, :delete_matched
 
     # @return [NilClass]
     #
@@ -128,15 +128,6 @@ module AnyCache::Adapters
       keys.each_with_object({}) do |key, dataset|
         dataset[key] = fetch(key, **options, &fallback)
       end
-    end
-
-    # @param pattern [String]
-    # @param options [Hash]
-    # @return [void]
-    #
-    # @api private
-    # @since 0.3.0
-    def delete_matched(pattern, **options)
     end
 
     # @param key [String]
