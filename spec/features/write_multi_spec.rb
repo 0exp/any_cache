@@ -7,7 +7,7 @@ describe 'Operation: #write_multi' do
   let(:entry_2) { { key: SecureRandom.hex, value: SecureRandom.hex(4) } }
   let(:entry_3) { { key: SecureRandom.hex, value: SecureRandom.hex(4) } }
 
-  specify do
+  specify 'writes a set of permanent entries' do
     expect(cache_store.read(entry_1[:key])).to eq(nil) # NOTE: nonexistent entry
     expect(cache_store.read(entry_2[:key])).to eq(nil) # NOTE: nonexistent entry
     expect(cache_store.read(entry_3[:key])).to eq(nil) # NOTE: nonexistent entry

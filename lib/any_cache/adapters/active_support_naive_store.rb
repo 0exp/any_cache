@@ -58,7 +58,7 @@ module AnyCache::Adapters
       lock.with_write_lock { super }
     end
 
-    # @param pattern [Object]
+    # @param pattern [String, Regexp]
     # @param options [Hash]
     # @return [void]
     #

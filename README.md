@@ -311,7 +311,7 @@ end
 
 Log message format:
 
-```
+```shell
 [AnyCache<CACHER_NAME>/Activity<OPERATION_NAME>]: performed <OPERATION NAME> operation with
 params: INSPECTED_ARGUMENTS and options: INSPECTED_OPTIONS
 ```
@@ -349,10 +349,10 @@ any_cache.clear
 
 ### Fetch
 
-- `AnyCache#fetch(key, [force:], [expires_in:], [&block])`
+- `AnyCache#fetch(key, [force:], [expires_in:], [&fallback])`
     - works in `ActiveSupport::Cache::Store#fetch`-manner;
     - fetches data from the cache using the given key;
-    - if a block has been passed and data with the given key does not exist - that block
+    - if a `fallback` block has been passed and data with the given key does not exist - that block
       will be called with the given key and the return value will be written to the cache;
 
 ```ruby
@@ -367,17 +367,26 @@ cache_store.fetch("data") # => "new_data"
 
 # --- new entry with expiration time ---
 cache_store.fetch("data") # => nil
-cache_store.fetch("data", expires_in: 8) { |key| "new_data" } # => "new_data"
+cache_store.fetch("data", expires_in: 8) { |key| "new_#{key}" } # => "new_data"
 cache_store.fetch("data") # => "new_data"
 # ...sleep 8 seconds...
 cache_store.fetch("data") # => nil
 
 # --- force update/rewrite ---
 cache_store.fetch("data") # => "some_data"
-cache_store.fetch("data", expires_in: 8, force: true) { |key| "new_data" } # => "new_data"
+cache_store.fetch("data", expires_in: 8, force: true) { |key| "new_#{key}" } # => "new_data"
 cache_store.fetch("data") # => "new_data"
 # ...sleep 8 seconds...
 cache_store.fetch("data") # => nil
+```
+
+---
+
+### Fetch Multi
+
+- `AnyCache#fetch_multy(*keys, [force:], [expires_in:], [&fallback])`
+
+```ruby
 ```
 
 ---
@@ -396,6 +405,16 @@ cache_store.read("data") # => nil
 
 ---
 
+### Read Multi
+
+- `AnyCache#read_multi(*keys)`
+
+
+```ruby
+```
+
+---
+
 ### Write
 
 - `AnyCache#write(key, value, [expires_in:])` - write a new entry to the cache storage
@@ -410,12 +429,30 @@ cache_store.write("data", 123, expires_in: 60)
 
 ---
 
+### Write Multi
+
+- `AnyCache#write_multi(**entry_pairs)`
+
+```ruby
+```
+
+---
+
 ### Delete
 
 - `AnyCache#delete(key)` - remove entry from the cache storage
 
 ```ruby
 cache_store.delete("data")
+```
+
+---
+
+### Delete Matched
+
+- `AnyCache#delete_matched(pattern)`
+
+```ruby
 ```
 
 ---
@@ -544,6 +581,13 @@ bin/rspec --test-as-memory-store # run specs with ActiveSupport::Cache::MemorySt
 bin/rspec --test-as-redis-cache-store # run specs with ActiveSupport::Cache::RedisCacheStore
 bin/rspec --test-as-mem-cache-store # run specs with ActiveSupport::Cache::MemCacheStore
 ```
+
+---
+
+## Roadmap
+
+- instrumentation layer;
+- `#delete_matched` for memcached-based cache storages;
 
 ---
 

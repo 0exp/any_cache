@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'Operation: #fetch_multi', :focus do
+describe 'Operation: #fetch_multi' do
   include_context 'cache store'
 
   let(:entry_1) { { key: SecureRandom.hex, value: SecureRandom.hex(4) } }
@@ -9,7 +9,7 @@ describe 'Operation: #fetch_multi', :focus do
 
   let(:expires_in) { 8 } # NOTE: in seconds
 
-  specify do
+  specify 'returns a set of key-value pairs by the given key set' do
     # NOTE: nonexisntent data
     expect(cache_store.fetch_multi(entry_1[:key], entry_2[:key], entry_3[:key])).to match(
       entry_1[:key] => nil,

@@ -37,7 +37,7 @@ module AnyCache::Adapters
     #
     # @api private
     # @since 0.3.0
-    DELETE_MATCHED_CURSOR = "0"
+    DELETE_MATCHED_CURSOR_START = "0"
 
     # @return [Integer]
     #
@@ -151,20 +151,20 @@ module AnyCache::Adapters
     # @api private
     # @since 0.3.0
     def delete_matched(pattern, **options)
-      cursor = DELETE_MATCHED_CURSOR
+      cursor  = DELETE_MATCHED_CURSOR_START
 
       case pattern
       when String
         loop do
-          cursor, keys = adapter.scan(cursor, match: pattern, count: DELETE_MATCHED_BATCH_SIZE)
+          cursor, keys = scan(cursor, match: pattern, count: DELETE_MATCHED_BATCH_SIZE)
           del(keys)
-          break if cursor == DELETE_MATCHED_CURSOR
+          break if cursor == DELETE_MATCHED_CURSOR_START
         end
       when Regexp
         loop do
-          cursor, keys = adapter.scan(cursor, count: DELETE_MATCHED_BATCH_SIZE)
+          cursor, keys = scan(cursor, count: DELETE_MATCHED_BATCH_SIZE)
           del(keys.grep(pattern))
-          break if cursor == DELETE_MATCHED_CURSOR
+          break if cursor == DELETE_MATCHED_CURSOR_START
         end
       end
     end

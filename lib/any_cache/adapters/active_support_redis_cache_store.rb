@@ -24,7 +24,7 @@ module AnyCache::Adapters
     READ_MULTI_EMPTY_KEYS_SET = [].freeze
 
     # @since 0.1.0
-    def_delegators :driver, :delete, :clear, :delete_matched
+    def_delegators :driver, :delete, :delete_matched, :clear
 
     # @return [NilClass]
     #
