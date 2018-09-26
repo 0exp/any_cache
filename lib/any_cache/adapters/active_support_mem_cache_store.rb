@@ -137,7 +137,7 @@ module AnyCache::Adapters
     # @api private
     # @since 0.3.0
     def delete_matched(pattern, **options)
-      # TODO: implement
+      # TODO: make it real >:]
     end
 
     # @param key [String]

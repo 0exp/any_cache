@@ -9,7 +9,7 @@ describe 'Operation: #fetch_multi' do
 
   let(:expires_in) { 8 } # NOTE: in seconds
 
-  specify 'returns a set of key-value pairs by the given key set' do
+  specify 'returns a set of key-value pairs by the given key set (or writes new)' do
     # NOTE: nonexisntent data
     expect(cache_store.fetch_multi(entry_1[:key], entry_2[:key], entry_3[:key])).to match(
       entry_1[:key] => nil,
