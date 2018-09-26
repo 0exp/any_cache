@@ -33,6 +33,18 @@ module AnyCache::Adapters
     # @since 0.1.0
     DEFAULT_INCR_DECR_AMOUNT = 1
 
+    # @return [String]
+    #
+    # @api private
+    # @since 0.3.0
+    DELETE_MATCHED_CURSOR_START = "0"
+
+    # @return [Integer]
+    #
+    # @api private
+    # @since 0.3.0
+    DELETE_MATCHED_BATCH_SIZE = 10
+
     # @since 0.1.0
     def_delegators :driver,
                    :get,
@@ -43,7 +55,10 @@ module AnyCache::Adapters
                    :decrby,
                    :pipelined,
                    :flushdb,
-                   :exists
+                   :exists,
+                   :mapped_mget,
+                   :mapped_mset,
+                   :scan
 
     # @param key [String]
     # @param options [Hash]
@@ -53,6 +68,16 @@ module AnyCache::Adapters
     # @since 0.1.0
     def read(key, **options)
       get(key)
+    end
+
+    # @param keys [Array<String>]
+    # @param options [Hash]
+    # @return [Hash]
+    #
+    # @api private
+    # @since 0.3.0
+    def read_multi(*keys, **options)
+      mapped_mget(*keys)
     end
 
     # @param key [String]
@@ -68,6 +93,47 @@ module AnyCache::Adapters
       expires_in ? setex(key, expires_in, value) : set(key, value)
     end
 
+    # @param entries [Hash]
+    # @param options [Hash]
+    # @return [void]
+    #
+    # @api private
+    # @since 0.3.0
+    def write_multi(entries, **options)
+      mapped_mset(entries)
+    end
+
+    # @param key [String]
+    # @option expires_in [Integer]
+    # @option force [Boolean]
+    # @return [Object]
+    #
+    # @api private
+    # @since 0.2.0
+    def fetch(key, **options, &fallback)
+      force_rewrite = options.fetch(:force, false)
+      force_rewrite = force_rewrite.call(key) if force_rewrite.respond_to?(:call)
+
+      # NOTE: think about #pipelined
+      read(key).tap { |value| return value if value } unless force_rewrite
+
+      fallback.call(key).tap { |value| write(key, value, **options) } if block_given?
+    end
+
+    # @param keys [Array<string>]
+    # @param options [Hash]
+    # @param fallback [Proc]
+    # @return [Hash]
+    #
+    # @api private
+    # @since 0.3.0
+    def fetch_multi(*keys, **options, &fallback)
+      # TODO: think about multi-thread approach
+      keys.each_with_object({}) do |key, dataset|
+        dataset[key] = fetch(key, **options, &fallback)
+      end
+    end
+
     # @param key [String]
     # @param options [Hash]
     # @return [void]
@@ -76,6 +142,31 @@ module AnyCache::Adapters
     # @since 0.1.0
     def delete(key, **options)
       del(key)
+    end
+
+    # @param pattern [String, Regexp]
+    # @param options [Hash]
+    # @return [void]
+    #
+    # @api private
+    # @since 0.3.0
+    def delete_matched(pattern, **options)
+      cursor  = DELETE_MATCHED_CURSOR_START
+
+      case pattern
+      when String
+        loop do
+          cursor, keys = scan(cursor, match: pattern, count: DELETE_MATCHED_BATCH_SIZE)
+          del(keys)
+          break if cursor == DELETE_MATCHED_CURSOR_START
+        end
+      when Regexp
+        loop do
+          cursor, keys = scan(cursor, count: DELETE_MATCHED_BATCH_SIZE)
+          del(keys.grep(pattern))
+          break if cursor == DELETE_MATCHED_CURSOR_START
+        end
+      end
     end
 
     # @param key [String]
@@ -155,23 +246,6 @@ module AnyCache::Adapters
     # @since 0.2.0
     def exist?(key, **options)
       exists(key)
-    end
-
-    # @param key [String]
-    # @option expires_in [Integer]
-    # @option force [Boolean]
-    # @return [Object]
-    #
-    # @api private
-    # @since 0.2.0
-    def fetch(key, **options)
-      force_rewrite = options.fetch(:force, false)
-      force_rewrite = force_rewrite.call if force_rewrite.respond_to?(:call)
-
-      # NOTE: think about #pipelined
-      read(key).tap { |value| return value if value } unless force_rewrite
-
-      yield.tap { |value| write(key, value, **options) } if block_given?
     end
   end
 end

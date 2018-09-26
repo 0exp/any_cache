@@ -1,7 +1,7 @@
 # AnyCache &middot; [![Gem Version](https://badge.fury.io/rb/any_cache.svg)](https://badge.fury.io/rb/any_cache) [![Build Status](https://travis-ci.org/0exp/any_cache.svg?branch=master)](https://travis-ci.org/0exp/any_cache) [![Coverage Status](https://coveralls.io/repos/github/0exp/any_cache/badge.svg?branch=master)](https://coveralls.io/github/0exp/any_cache?branch=master)
 
 AnyCache - a simplest cache wrapper that provides a minimalistic generic interface for all well-known cache storages and includes a minimal set of necessary operations:
-`fetch`, `read`, `write`, `delete`, `expire`, `persist`, `exist?`, `clear`, `increment`, `decrement`.
+`fetch`, `read`, `write`, `delete`, `fetch_multi`, `read_multi`, `write_multi`, `delete_matched`, `expire`, `persist`, `exist?`, `clear`, `increment`, `decrement`.
 
 Supported clients:
 
@@ -49,12 +49,11 @@ require 'any_cache'
     - [Custom cache clients](#custom-cache-clients)
 - [Logging](#logging)
 - [Operations](#operations)
-    - [Fetch](#fetch)
-    - [Read](#read)
-    - [Write](#write)
-    - [Delete](#delete)
-    - [Increment](#increment)
-    - [Decrement](#decrement)
+    - [Fetch](#fetch) / [Fetch Multi](#fetch-multi)
+    - [Read](#read) / [Read Multi](#read-multi)
+    - [Write](#write) / [Write Multi](#write-multi)
+    - [Delete](#delete) / [Delete Matched](#delete-matched)
+    - [Increment](#increment) / [Decrement](#decrement)
     - [Expire](#expire)
     - [Persist](#persist)
     - [Existence](#existence)
@@ -118,7 +117,7 @@ storage instantiation works via `.build` method without explicit attributes.
 Supported drivers:
 
 - `:redis` - [Redis](#anycache-with-redis);
-- `:redis_tore` - [Redis::Client](#anycache-with-redisstore);
+- `:redis_store` - [Redis::Client](#anycache-with-redisstore);
 - `:dalli` - [Dalli::Client](#anycache-with-dalliclient);
 - `:as_redis_cache_store` - [ActiveSupport::Cache::RedisCacheStore](#anycache-with-activesupportcacherediscachestore);
 - `:as_mem_cache_store` - [ActiveSupport::Cache::MemCacheStore](#anycache-with-activesupportcachememcachestore);
@@ -251,10 +250,14 @@ dalli_cache = DalliCache.build
 
 If you want to use your own cache client implementation, you should provide an object that responds to:
 
-- `#fetch(*key, [**options])` ([doc](#fetch))
+- `#fetch(key, [**options])` ([doc](#fetch))
+- `#fetch_multi(*keys, [**options])` ([doc](#fetch-multi))
 - `#read(key, [**options])` ([doc](#read))
+- `#read_multi(*keys, [**options])` ([doc](#read-multi))
 - `#write(key, value, [**options])` ([doc](#write))
+- `#write_multi(entries, [**options])` ([doc](#write-multi))
 - `#delete(key, [**options])` ([doc](#delete))
+- `#delete_matched(pattern, [**options])` ([doc](#delete-matched))
 - `#increment(key, amount, [**options])` ([doc](#increment))
 - `#decrement(key, amount, [**options])` ([doc](#decrement))
 - `#expire(key, [**options])` ([doc](#expire))
@@ -308,8 +311,8 @@ end
 
 Log message format:
 
-```
-[AnyCache<CACHER_NAME>/Activity<OPERATION_NAME>]: performed <OPERATION NAME> operation with
+```shell
+[AnyCache<CACHER_NAME>/Activity<OPERATION_NAME>]: performed <OPERATION_NAME> operation with
 params: INSPECTED_ARGUMENTS and options: INSPECTED_OPTIONS
 ```
 
@@ -332,12 +335,11 @@ any_cache.clear
 
 `AnyCache` provides a following operation set:
 
-- [fetch](#fetch)
-- [read](#read)
-- [write](#write)
-- [delete](#delete)
-- [increment](#increment)
-- [decrement](#decrement)
+- [fetch](#fetch) / [fetch_multi](#fetch-multi)
+- [read](#read) / [read_multi](#read-multi)
+- [write](#write) / [write_multi](#write-multi)
+- [delete](#delete) / [delete_matched](#delete-matched)
+- [increment](#increment) / [decrement](#decrement)
 - [expire](#expire)
 - [persist](#persist)
 - [clear](#clear)
@@ -347,11 +349,11 @@ any_cache.clear
 
 ### Fetch
 
-- `AnyCache#fetch(key, [force:], [expires_in:], [&block])`
+- `AnyCache#fetch(key, [force:], [expires_in:], [&fallback])`
     - works in `ActiveSupport::Cache::Store#fetch`-manner;
     - fetches data from the cache using the given key;
-    - if a block has been passed and data with the given key does not exist - that block
-      will be called and the return value will be written to the cache;
+    - if a `fallback` block has been passed and data with the given key does not exist - that block
+      will be called with the given key and the return value will be written to the cache;
 
 ```ruby
 # --- entry exists ---
@@ -360,22 +362,60 @@ cache_store.fetch("data") { "new_data" } # => "some_data"
 
 # --- entry does not exist ---
 cache_store.fetch("data") # => nil
-cache_store.fetch("data") { "new_data" } # => "new_data"
+cache_store.fetch("data") { |key| "new_data" } # => "new_data"
 cache_store.fetch("data") # => "new_data"
 
 # --- new entry with expiration time ---
 cache_store.fetch("data") # => nil
-cache_store.fetch("data", expires_in: 8) { "new_data" } # => "new_data"
+cache_store.fetch("data", expires_in: 8) { |key| "new_#{key}" } # => "new_data"
 cache_store.fetch("data") # => "new_data"
 # ...sleep 8 seconds...
 cache_store.fetch("data") # => nil
 
 # --- force update/rewrite ---
 cache_store.fetch("data") # => "some_data"
-cache_store.fetch("data", expires_in: 8, force: true) { "new_data" } # => "new_data"
+cache_store.fetch("data", expires_in: 8, force: true) { |key| "new_#{key}" } # => "new_data"
 cache_store.fetch("data") # => "new_data"
 # ...sleep 8 seconds...
 cache_store.fetch("data") # => nil
+```
+
+---
+
+### Fetch Multi
+
+- `AnyCache#fetch_multi(*keys, [force:], [expires_in:], [&fallback])`
+    - get a set of entries in hash form from the cache storage using given keys;
+    - works in `#fetch` manner but with a series of entries;
+    - nonexistent entries will be fetched with `nil` values;
+
+```ruby
+# --- fetch entries ---
+cache_store.fetch_multi("data", "second_data", "last_data")
+# => returns:
+{
+  "data" => "data", # existing entry
+  "second_data" => nil, # nonexistent entry
+  "last_data" => nil # nonexistent entry
+}
+
+# --- fetch etnries and define non-existent entries ---
+cache_store.fetch_multi("data", "second_data", "last_data") { |key| "new_#{key}" }
+# => returns:
+{
+  "data" => "data", # entry with OLD value
+  "second_data" => "new_second_data", # entry with NEW DEFINED value
+  "last_data" => "new_last_data" # entry with NEW DEFINED value
+}
+
+# --- force rewrite all entries ---
+cache_store.fetch_multi("data", "second_data", "last_data", force: true) { |key| "force_#{key}" }
+# => returns
+{
+  "data" => "force_data", # entry with REDEFINED value
+  "second_data" => "force_second_data", # entry with REDEFINED value
+  "last_data" => "force_last_data" # entry with REDEFINED value
+}
 ```
 
 ---
@@ -394,6 +434,25 @@ cache_store.read("data") # => nil
 
 ---
 
+### Read Multi
+
+- `AnyCache#read_multi(*keys)`
+    - get entries from the cache storage in hash form;
+    - nonexistent entries will be fetched with `nil` values;
+
+```ruby
+cache_store.read_multi("data", "another_data", "last_data", "super_data")
+# => returns
+{
+  "data" => "test", # existing entry
+  "another_data" => nil, # nonexistent entry
+  "last_data" => "some_data", # exisitng enry
+  "super_data" => nil # existing entry
+}
+```
+
+---
+
 ### Write
 
 - `AnyCache#write(key, value, [expires_in:])` - write a new entry to the cache storage
@@ -408,12 +467,37 @@ cache_store.write("data", 123, expires_in: 60)
 
 ---
 
+### Write Multi
+
+- `AnyCache#write_multi(**entries)` - write a set of permanent entries to the cache storage
+
+```ruby
+cache_store.write_multi("data" => "test", "another_data" => 123)
+```
+
+---
+
 ### Delete
 
 - `AnyCache#delete(key)` - remove entry from the cache storage
 
 ```ruby
 cache_store.delete("data")
+```
+
+---
+
+### Delete Matched
+
+- `AnyCache#delete_matched(pattern)` - delete all entries with keys matching the pattern
+    - currently unsupported: `:dalli`, `:as_mem_cache_store`
+
+```ruby
+# --- using a regepx ---
+cache_store.delete_matched(/\A*test*\z/i)
+
+# --- using a string ---
+cache_store.delete_matched("data")
 ```
 
 ---
@@ -542,6 +626,14 @@ bin/rspec --test-as-memory-store # run specs with ActiveSupport::Cache::MemorySt
 bin/rspec --test-as-redis-cache-store # run specs with ActiveSupport::Cache::RedisCacheStore
 bin/rspec --test-as-mem-cache-store # run specs with ActiveSupport::Cache::MemCacheStore
 ```
+
+---
+
+## Roadmap
+
+- instrumentation layer;
+- global and configurable default expiration time;
+- `#delete_matched` for memcached-based cache storages;
 
 ---
 

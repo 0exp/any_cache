@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 ### Added
+- multi-operations: `#read_multi`, `#write_multi`, `#fetch_multi`, `#delete_matched`;
 - logging:
   - configuration: `AnyCache.configure { |conf| conf.logger = your_logger_object }`;
   - disable logging: `AnyCache.configure { |conf| conf.logger = nil }`;

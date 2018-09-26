@@ -25,4 +25,6 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 
   config.include SpecSupport::Helpers
+  config.include SpecSupport::Testing
+  config.extend  SpecSupport::Testing
 end
