@@ -117,7 +117,7 @@ storage instantiation works via `.build` method without explicit attributes.
 Supported drivers:
 
 - `:redis` - [Redis](#anycache-with-redis);
-- `:redis_tore` - [Redis::Client](#anycache-with-redisstore);
+- `:redis_store` - [Redis::Client](#anycache-with-redisstore);
 - `:dalli` - [Dalli::Client](#anycache-with-dalliclient);
 - `:as_redis_cache_store` - [ActiveSupport::Cache::RedisCacheStore](#anycache-with-activesupportcacherediscachestore);
 - `:as_mem_cache_store` - [ActiveSupport::Cache::MemCacheStore](#anycache-with-activesupportcachememcachestore);
@@ -312,7 +312,7 @@ end
 Log message format:
 
 ```shell
-[AnyCache<CACHER_NAME>/Activity<OPERATION_NAME>]: performed <OPERATION NAME> operation with
+[AnyCache<CACHER_NAME>/Activity<OPERATION_NAME>]: performed <OPERATION_NAME> operation with
 params: INSPECTED_ARGUMENTS and options: INSPECTED_OPTIONS
 ```
 
@@ -384,9 +384,38 @@ cache_store.fetch("data") # => nil
 
 ### Fetch Multi
 
-- `AnyCache#fetch_multy(*keys, [force:], [expires_in:], [&fallback])`
+- `AnyCache#fetch_multi(*keys, [force:], [expires_in:], [&fallback])`
+    - get a set of entries in hash form from the cache storage using given keys;
+    - works in `#fetch` manner but with a series of entries;
+    - nonexistent entries will be fetched with `nil` values;
 
 ```ruby
+# --- fetch entries ---
+cache_store.fetch_multi("data", "second_data", "last_data")
+# => returns:
+{
+  "data" => "data", # existing entry
+  "second_data" => nil, # nonexistent entry
+  "last_data" => nil # nonexistent entry
+}
+
+# --- fetch etnries and define non-existent entries ---
+cache_store.fetch_multi("data", "second_data", "last_data") { |key| "new_#{key}" }
+# => returns:
+{
+  "data" => "data", # entry with OLD value
+  "second_data" => "new_second_data", # entry with NEW DEFINED value
+  "last_data" => "new_last_data" # entry with NEW DEFINED value
+}
+
+# --- force rewrite all entries ---
+cache_store.fetch_multi("data", "second_data", "last_data", force: true) { |key| "force_#{key}" }
+# => returns
+{
+  "data" => "force_data", # entry with REDEFINED value
+  "second_data" => "force_second_data", # entry with REDEFINED value
+  "last_data" => "force_last_data" # entry with REDEFINED value
+}
 ```
 
 ---
@@ -408,9 +437,18 @@ cache_store.read("data") # => nil
 ### Read Multi
 
 - `AnyCache#read_multi(*keys)`
-
+    - get entries from the cache storage in hash form;
+    - nonexistent entries will be fetched with `nil` values;
 
 ```ruby
+cache_store.read_multi("data", "another_data", "last_data", "super_data")
+# => returns
+{
+  "data" => "test", # existing entry
+  "another_data" => nil, # nonexistent entry
+  "last_data" => "some_data", # exisitng enry
+  "super_data" => nil # existing entry
+}
 ```
 
 ---
@@ -431,9 +469,10 @@ cache_store.write("data", 123, expires_in: 60)
 
 ### Write Multi
 
-- `AnyCache#write_multi(**entry_pairs)`
+- `AnyCache#write_multi(**entries)` - write a set of permanent entries to the cache storage
 
 ```ruby
+cache_store.write_multi("data" => "test", "another_data" => 123)
 ```
 
 ---
@@ -450,9 +489,15 @@ cache_store.delete("data")
 
 ### Delete Matched
 
-- `AnyCache#delete_matched(pattern)`
+- `AnyCache#delete_matched(pattern)` - delete all entries with keys matching the pattern
+    - currently unsupported: `:dalli`, `:as_mem_cache_store`
 
 ```ruby
+# --- using a regepx ---
+cache_store.delete_matched(/\A*test*\z/i)
+
+# --- using a string ---
+cache_store.delete_matched("data")
 ```
 
 ---
@@ -587,6 +632,7 @@ bin/rspec --test-as-mem-cache-store # run specs with ActiveSupport::Cache::MemCa
 ## Roadmap
 
 - instrumentation layer;
+- global and configurable default expiration time;
 - `#delete_matched` for memcached-based cache storages;
 
 ---

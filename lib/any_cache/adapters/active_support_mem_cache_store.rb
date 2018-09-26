@@ -130,8 +130,8 @@ module AnyCache::Adapters
       end
     end
 
-    # @param pattern [???]
-    # @param options [???]
+    # @param pattern [String, Regexp]
+    # @param options [Hash]
     # @return [void]
     #
     # @api private
