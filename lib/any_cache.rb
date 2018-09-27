@@ -58,6 +58,11 @@ class AnyCache
       setting :servers, nil
       setting :options, {}
     end
+
+    setting :as_dalli_store do
+      setting :servers, nil
+      setting :options, {}
+    end
   end
   # rubocop:enable Metrics/BlockLength
 

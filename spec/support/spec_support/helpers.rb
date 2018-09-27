@@ -18,6 +18,8 @@ module SpecSupport
         Cache::ActiveSupportRedisCacheStore.build
       when Testing.test_as_mem_cache_store_cache?
         Cache::ActiveSupportMemCacheStore.build
+      when Testing.test_as_dalli_store_cache?
+        Cache::ActiveSupportDalliStore.build
       else
         raise 'No cache :('
       end

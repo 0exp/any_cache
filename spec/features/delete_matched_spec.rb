@@ -15,7 +15,10 @@ describe 'Operation: #delete_matched' do
     )
   end
 
-  specify 'removes matched keys only', exclude: %i[dalli as_mem_cache_store as_redis_cache_store] do
+  specify(
+    'removes matched keys only',
+    exclude: %i[dalli as_mem_cache_store as_redis_cache_store as_dalli_store]
+  ) do
     expect(cache_store.read(entry_1[:key])).to eq(entry_1[:value])
     expect(cache_store.read(entry_2[:key])).to eq(entry_2[:value])
     expect(cache_store.read(entry_3[:key])).to eq(entry_3[:value])

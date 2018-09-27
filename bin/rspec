@@ -61,6 +61,11 @@ module AnyCacheSpecRunner
       ) { run_as_mem_cache_store_cache_specs! }
 
       opts.on(
+        '--test-as-dalli-store',
+        'Run specs with ActiveSupport::Cache::DalliStore cache storage'
+      ) { run_as_dalli_store_specs! }
+
+      opts.on(
         '-h', '--help',
         'Show this message'
       ) { puts opts }
@@ -114,6 +119,13 @@ module AnyCacheSpecRunner
 
   def run_as_mem_cache_store_cache_specs!
     ENV['TEST_AS_MEM_CACHE_STORE_CACHE'] = 'true'
+    ENV['BUNDLE_GEMFILE'] = GEMFILES[:active_support_with_dalli]
+
+    run_tests!
+  end
+
+  def run_as_dalli_store_specs!
+    ENV['TEST_AS_DALLI_STORE'] = 'true'
     ENV['BUNDLE_GEMFILE'] = GEMFILES[:active_support_with_dalli]
 
     run_tests!
