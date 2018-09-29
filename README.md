@@ -9,7 +9,7 @@ Supported clients:
 - `Redis::Store` ([gem redis-store](https://github.com/redis-store/redis-store)) ([redis storage](https://redis.io/))
 - `Dalli::Client` ([gem dalli](https://github.com/petergoldstein/dalli)) ([memcached storage](https://memcached.org/))
 - `ActiveSupport::Cache::RedisCacheStore` ([gem activesupport](https://github.com/rails/rails/blob/master/activesupport/lib/active_support/cache/redis_cache_store.rb)) ([redis cache storage](https://api.rubyonrails.org/classes/ActiveSupport/Cache/RedisCacheStore.html))
-- `ActiveSupport::Cache::DalliStore` ([gem dalli](https://github.com/petergoldstein/dalli/blob/master/lib/active_support/cache/dalli_store.rb))
+- `ActiveSupport::Cache::DalliStore` ([gem dalli](https://github.com/petergoldstein/dalli)) ([dalli store](https://github.com/petergoldstein/dalli/blob/master/lib/active_support/cache/dalli_store.rb))
 - `ActiveSupport::Cache::MemCacheStore` ([gem activesupport](https://github.com/rails/rails/blob/master/activesupport/lib/active_support/cache/mem_cache_store.rb)) ([memcache storage](https://api.rubyonrails.org/classes/ActiveSupport/Cache/MemCacheStore.html))
 - `ActiveSupport::Cache::FileStore` ([gem activesupport](https://github.com/rails/rails/blob/master/activesupport/lib/active_support/cache/file_store.rb)) ([file storage](https://api.rubyonrails.org/classes/ActiveSupport/Cache/FileStore.html))
 - `ActiveSupport::Cache::MemoryStore` ([gem activesupport](https://github.com/rails/rails/blob/master/activesupport/lib/active_support/cache/memory_store.rb)) ([in memory storage](https://api.rubyonrails.org/classes/ActiveSupport/Cache/MemoryStore.html))
