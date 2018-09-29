@@ -197,6 +197,7 @@ require 'any_cache'
 
 AnyCache.configure do |conf|
   conf.driver = :as_dalli_store
+  conf.as_dalli_store.servers = ... # string or array of strings
   conf.as_dalli_store.options = { ... } # ActiveSupport::Cache::DalliStore-related options
 end
 
@@ -211,8 +212,8 @@ require 'any_cache'
 
 AnyCache.configure do |conf|
   conf.driver = :as_mem_cache_store
-  conf.as_memory_store.servers = ... # string or array of strings
-  conf.as_memory_store.options = { ... } # ActiveSupport::Cache::MemCacheStore-related options
+  conf.as_mem_cache_store.servers = ... # string or array of strings
+  conf.as_mem_cache_store.options = { ... } # ActiveSupport::Cache::MemCacheStore-related options
 end
 
 cache_store = AnyCache.build
