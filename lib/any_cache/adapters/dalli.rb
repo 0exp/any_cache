@@ -119,7 +119,7 @@ module AnyCache::Adapters
       # NOTE: can conflict with :cache_nils Dalli::Client's config
       read(key).tap { |value| return value if value } unless force_rewrite
 
-      fallback.call(key).tap { |value| write(key, value, **options) } if block_given?
+      yield(key).tap { |value| write(key, value, **options) } if block_given?
     end
 
     # @param keys [Array<String>]

@@ -16,7 +16,7 @@ describe 'Operation: #delete_matched' do
   end
 
   specify(
-    'removes matched keys only',
+    'removes matched keys only (with simple strings support)',
     exclude: %i[dalli as_mem_cache_store as_redis_cache_store as_dalli_store]
   ) do
     expect(cache_store.read(entry_1[:key])).to eq(entry_1[:value])
@@ -36,7 +36,10 @@ describe 'Operation: #delete_matched' do
     expect(cache_store.read(entry_3[:key])).to eq(nil)
   end
 
-  specify 'removes matched keys only', only: %i[as_redis_cache_store redis redis_store] do
+  specify(
+    'removes matched keys only (with redis blob strings support)',
+    only: %i[as_redis_cache_store redis redis_store]
+  ) do
     expect(cache_store.read(entry_1[:key])).to eq(entry_1[:value])
     expect(cache_store.read(entry_2[:key])).to eq(entry_2[:value])
     expect(cache_store.read(entry_3[:key])).to eq(entry_3[:value])

@@ -23,7 +23,7 @@ module AnyCache::Adapters
     #
     # @api private
     # @since 0.1.0
-    # rubocop:disable Metrics/LineLength
+    # rubocop:disable Metrics/LineLength, Metrics/AbcSize
     def build(driver)
       case
       when RedisStore.supported_driver?(driver)                   then RedisStore.new(driver)
@@ -39,6 +39,6 @@ module AnyCache::Adapters
         raise AnyCache::UnsupportedDriverError
       end
     end
-    # rubocop:enable Metrics/LineLength
+    # rubocop:enable Metrics/LineLength, Metrics/AbcSize
   end
 end

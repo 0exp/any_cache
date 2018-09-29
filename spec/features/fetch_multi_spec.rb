@@ -53,10 +53,14 @@ describe 'Operation: #fetch_multi' do
 
     # NOTE: force rewrite
     data_stub = SecureRandom.hex(4)
-    cache_store.fetch_multi(entry_1[:key], entry_2[:key], expires_in: expires_in, force: true) do |key|
+    cache_store.fetch_multi(
+      entry_1[:key],
+      entry_2[:key],
+      expires_in: expires_in,
+      force: true
+    ) do |key|
       "#{key}-#{data_stub}"
     end
-    # rubocop:enable Metrics/MethodLength
 
     # NOTE: entries with new values (and expiration time)
     expect(cache_store.fetch_multi(entry_1[:key], entry_2[:key], entry_3[:key])).to match(

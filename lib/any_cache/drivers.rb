@@ -20,6 +20,7 @@ module AnyCache::Drivers
     #
     # @api private
     # @since 0.2.0
+    # rubocop:disable Metrics/AbcSize
     def build(config)
       driver = config[:driver]
 
@@ -44,5 +45,6 @@ module AnyCache::Drivers
         raise AnyCache::UnsupportedDriverError
       end
     end
+    # rubocop:enable Metrics/AbcSize
   end
 end
