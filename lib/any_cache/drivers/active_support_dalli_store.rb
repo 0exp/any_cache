@@ -6,7 +6,7 @@ module AnyCache::Drivers::ActiveSupportDalliStore
     # @return [Boolean]
     #
     # @api private
-    # @since 0.2.0
+    # @since 0.3.0
     def supported_source?(driver)
       defined?(::Dalli) &&
       defined?(::ActiveSupport::Cache::DalliStore) &&
@@ -17,7 +17,7 @@ module AnyCache::Drivers::ActiveSupportDalliStore
     # @return [::ActiveSupport::Cache::DalliStore]
     #
     # @api private
-    # @since 0.2.0
+    # @since 0.3.0
     def build(settings)
       ::ActiveSupport::Cache::DalliStore.new([Array(settings.servers), settings.options])
     end

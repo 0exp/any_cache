@@ -2,14 +2,14 @@
 
 module AnyCache::Adapters
   # @api private
-  # @since 0.2.0
+  # @since 0.3.0
   class ActiveSupportDalliStore < Basic
     class << self
       # @param driver [Object]
       # @retunr [Boolean]
       #
       # @api private
-      # @since 0.2.0
+      # @since 0.3.0
       def supported_driver?(driver)
         AnyCache::Drivers::ActiveSupportDalliStore.supported_source?(driver)
       end
