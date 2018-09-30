@@ -173,6 +173,16 @@ module AnyCache::Adapters
       end
     end
 
+    # @param pattern [String, Regexp]
+    # @param options [Hash]
+    # @return [void]
+    #
+    # @api private
+    # @since 0.3.0
+    def delete_matched(pattern, **options)
+      # TODO: make it real >:]
+    end
+
     # @param key [String]
     # @option expires_in [Integer]
     # @return [void]

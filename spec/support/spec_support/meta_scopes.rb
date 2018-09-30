@@ -29,7 +29,7 @@ RSpec.configure do |config|
     example.call if test_as_memory_store_cache?
   end
 
-  config.around(:example, :as_dali_store) do |example|
+  config.around(:example, :as_dalli_store) do |example|
     example.call if test_as_dalli_store_cache?
   end
 
@@ -42,7 +42,7 @@ RSpec.configure do |config|
     next if test_as_mem_cache_store_cache?   && example.metadata[:exclude].include?(:as_mem_cache_store)
     next if test_as_file_store_cache?        && example.metadata[:exclude].include?(:as_file_store)
     next if test_as_memory_store_cache?      && example.metadata[:exclude].include?(:as_memory_store)
-    next if test_as_dalli_store_cache?       && example.metadata[:exclude].include?(:as_dali_store)
+    next if test_as_dalli_store_cache?       && example.metadata[:exclude].include?(:as_dalli_store)
 
     example.call
   end
@@ -57,7 +57,7 @@ RSpec.configure do |config|
     next if test_as_mem_cache_store_cache?   && !example.metadata[:only].include?(:as_mem_cache_store)
     next if test_as_file_store_cache?        && !example.metadata[:only].include?(:as_file_store)
     next if test_as_memory_store_cache?      && !example.metadata[:only].include?(:as_memory_store)
-    next if test_as_dalli_store_cache?       && !example.metadata[:only].include?(:as_dali_store)
+    next if test_as_dalli_store_cache?       && !example.metadata[:only].include?(:as_dalli_store)
 
     example.call
   end
