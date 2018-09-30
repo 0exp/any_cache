@@ -9,7 +9,7 @@ describe 'Operation: #fetch_multi' do
 
   let(:expires_in) { 8 } # NOTE: in seconds
 
-  specify 'returns a set of key-value pairs by the given key set (or writes new)' do
+  specify 'returns a set of key-value pairs by the given key set' do
     # NOTE: nonexisntent data
     expect(cache_store.fetch_multi(entry_1[:key], entry_2[:key], entry_3[:key])).to match(
       entry_1[:key] => nil,
@@ -44,26 +44,52 @@ describe 'Operation: #fetch_multi' do
       "#{key}-#{data_stub}"
     end
 
-    # NOTE: entry_2 has especial dynamically calculated value
-    expect(data).to match(
-      entry_1[:key] => entry_1[:value],
-      entry_2[:key] => "#{entry_2[:key]}-#{data_stub}",
-      entry_3[:key] => entry_3[:value]
-    )
+    unless test_as_dalli_store_cache? # TODO: remove this condition in future
+      # NOTE: entry_2 has especial dynamically calculated value
+      expect(data).to match(
+        entry_1[:key] => entry_1[:value],
+        entry_2[:key] => "#{entry_2[:key]}-#{data_stub}",
+        entry_3[:key] => entry_3[:value]
+      )
+    end
+
+    if test_as_dalli_store_cache? # TODO: remove this block of code in future
+      # NOTE: entry_2 has especial dynamically calculated value
+      expect(data).to match(
+        entry_1[:key] => entry_1[:value],
+        entry_2[:key] => "-#{data_stub}",
+        entry_3[:key] => entry_3[:value]
+      )
+    end
 
     # NOTE: force rewrite
     data_stub = SecureRandom.hex(4)
-    cache_store.fetch_multi(entry_1[:key], entry_2[:key], expires_in: expires_in, force: true) do |key|
+    cache_store.fetch_multi(
+      entry_1[:key],
+      entry_2[:key],
+      expires_in: expires_in,
+      force: true
+    ) do |key|
       "#{key}-#{data_stub}"
     end
-    # rubocop:enable Metrics/MethodLength
 
-    # NOTE: entries with new values (and expiration time)
-    expect(cache_store.fetch_multi(entry_1[:key], entry_2[:key], entry_3[:key])).to match(
-      entry_1[:key] => "#{entry_1[:key]}-#{data_stub}",
-      entry_2[:key] => "#{entry_2[:key]}-#{data_stub}",
-      entry_3[:key] => entry_3[:value]
-    )
+    unless test_as_dalli_store_cache? # TODO: remove this condition in future
+      # NOTE: entries with new values (and expiration time)
+      expect(cache_store.fetch_multi(entry_1[:key], entry_2[:key], entry_3[:key])).to match(
+        entry_1[:key] => "#{entry_1[:key]}-#{data_stub}",
+        entry_2[:key] => "#{entry_2[:key]}-#{data_stub}",
+        entry_3[:key] => entry_3[:value]
+      )
+    end
+
+    if test_as_dalli_store_cache? # TODO: remove this block of code in future
+      # NOTE: entries with new values (and expiration time)
+      expect(cache_store.fetch_multi(entry_1[:key], entry_2[:key], entry_3[:key])).to match(
+        entry_1[:key] => "-#{data_stub}",
+        entry_2[:key] => "-#{data_stub}",
+        entry_3[:key] => entry_3[:value]
+      )
+    end
 
     sleep(expires_in + 1)
 

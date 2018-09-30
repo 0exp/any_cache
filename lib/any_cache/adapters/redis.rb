@@ -37,7 +37,7 @@ module AnyCache::Adapters
     #
     # @api private
     # @since 0.3.0
-    DELETE_MATCHED_CURSOR_START = "0"
+    DELETE_MATCHED_CURSOR_START = '0'
 
     # @return [Integer]
     #
@@ -117,7 +117,7 @@ module AnyCache::Adapters
       # NOTE: think about #pipelined
       read(key).tap { |value| return value if value } unless force_rewrite
 
-      fallback.call(key).tap { |value| write(key, value, **options) } if block_given?
+      yield(key).tap { |value| write(key, value, **options) } if block_given?
     end
 
     # @param keys [Array<string>]
@@ -151,7 +151,7 @@ module AnyCache::Adapters
     # @api private
     # @since 0.3.0
     def delete_matched(pattern, **options)
-      cursor  = DELETE_MATCHED_CURSOR_START
+      cursor = DELETE_MATCHED_CURSOR_START
 
       case pattern
       when String

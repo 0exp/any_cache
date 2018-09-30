@@ -20,7 +20,7 @@ module AnyCacheSpecRunner
     active_support_with_dalli: expand_gemfile_path('active_support_with_dalli.gemfile')
   }.freeze
 
-  # rubocop:disable Metrics/MethodLength, Metrics/BlockLength
+  # rubocop:disable Metrics/MethodLength, Metrics/BlockLength, Metrics/AbcSize
   def run!
     OptionParser.new do |opts|
       opts.banner = 'Usage: bin/rspec [options]'
@@ -61,12 +61,17 @@ module AnyCacheSpecRunner
       ) { run_as_mem_cache_store_cache_specs! }
 
       opts.on(
+        '--test-as-dalli-store',
+        'Run specs with ActiveSupport::Cache::DalliStore cache storage'
+      ) { run_as_dalli_store_specs! }
+
+      opts.on(
         '-h', '--help',
         'Show this message'
       ) { puts opts }
     end.parse!
   end
-  # rubocop:enable Metrics/MethodLength, Metrics/BlockLength
+  # rubocop:enable Metrics/MethodLength, Metrics/BlockLength, Metrics/AbcSize
 
   private
 
@@ -114,6 +119,13 @@ module AnyCacheSpecRunner
 
   def run_as_mem_cache_store_cache_specs!
     ENV['TEST_AS_MEM_CACHE_STORE_CACHE'] = 'true'
+    ENV['BUNDLE_GEMFILE'] = GEMFILES[:active_support_with_dalli]
+
+    run_tests!
+  end
+
+  def run_as_dalli_store_specs!
+    ENV['TEST_AS_DALLI_STORE'] = 'true'
     ENV['BUNDLE_GEMFILE'] = GEMFILES[:active_support_with_dalli]
 
     run_tests!

@@ -10,6 +10,7 @@ module AnyCache::Drivers
   require_relative 'drivers/active_support_memory_store'
   require_relative 'drivers/active_support_redis_cache_store'
   require_relative 'drivers/active_support_mem_cache_store'
+  require_relative 'drivers/active_support_dalli_store'
 
   class << self
     # @param config [Qonfig::DataSet]
@@ -19,6 +20,7 @@ module AnyCache::Drivers
     #
     # @api private
     # @since 0.2.0
+    # rubocop:disable Metrics/AbcSize
     def build(config)
       driver = config[:driver]
 
@@ -37,9 +39,12 @@ module AnyCache::Drivers
         ActiveSupportRedisCacheStore.build(config[:as_redis_cache_store])
       when :as_mem_cache_store
         ActiveSupportMemCacheStore.build(config[:as_mem_cache_store])
+      when :as_dalli_store
+        ActiveSupportDalliStore.build(config[:as_dalli_store])
       else
         raise AnyCache::UnsupportedDriverError
       end
     end
+    # rubocop:enable Metrics/AbcSize
   end
 end
