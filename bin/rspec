@@ -20,7 +20,7 @@ module AnyCacheSpecRunner
     active_support_with_dalli: expand_gemfile_path('active_support_with_dalli.gemfile')
   }.freeze
 
-  # rubocop:disable Metrics/MethodLength, Metrics/BlockLength
+  # rubocop:disable Metrics/MethodLength, Metrics/BlockLength, Metrics/AbcSize
   def run!
     OptionParser.new do |opts|
       opts.banner = 'Usage: bin/rspec [options]'
@@ -71,7 +71,7 @@ module AnyCacheSpecRunner
       ) { puts opts }
     end.parse!
   end
-  # rubocop:enable Metrics/MethodLength, Metrics/BlockLength
+  # rubocop:enable Metrics/MethodLength, Metrics/BlockLength, Metrics/AbcSize
 
   private
 
