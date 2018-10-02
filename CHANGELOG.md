@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.3.0] - 2018-10-02
 ### Added
 - support for `ActiveSupport::Cache::DalliStore` client;
 - multi-operations: `#read_multi`, `#write_multi`, `#fetch_multi`, `#delete_matched`;
