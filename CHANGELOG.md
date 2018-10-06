@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.3.1] - 2018-10-xx
+### Added
+- patch interface `AnyCache.enable_patch!(:patch_series_name)`:
+  - `ActiveSupport::Cache::DalliStore` patch: now the `#fetch` method provides
+    a cache key attribute to the fallback proc (can be enabled via `.enable(:dalli_store)`);
+
 ## [0.3.0] - 2018-10-06
 ### Added
 - support for `ActiveSupport::Cache::DalliStore` client;
