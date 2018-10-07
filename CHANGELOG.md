@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.3.1] - 2018-10-xx
+## [0.3.1] - 2018-10-08
 ### Added
 - patch interface `AnyCache.enable_patch!(:patch_series_name)`:
   - `ActiveSupport::Cache::DalliStore` patch: now the `#fetch` method provides
