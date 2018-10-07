@@ -44,23 +44,12 @@ describe 'Operation: #fetch_multi' do
       "#{key}-#{data_stub}"
     end
 
-    unless test_as_dalli_store_cache? # TODO: remove this condition in future
-      # NOTE: entry_2 has especial dynamically calculated value
-      expect(data).to match(
-        entry_1[:key] => entry_1[:value],
-        entry_2[:key] => "#{entry_2[:key]}-#{data_stub}",
-        entry_3[:key] => entry_3[:value]
-      )
-    end
-
-    if test_as_dalli_store_cache? # TODO: remove this block of code in future
-      # NOTE: entry_2 has especial dynamically calculated value
-      expect(data).to match(
-        entry_1[:key] => entry_1[:value],
-        entry_2[:key] => "-#{data_stub}",
-        entry_3[:key] => entry_3[:value]
-      )
-    end
+    # NOTE: entry_2 has especial dynamically calculated value
+    expect(data).to match(
+      entry_1[:key] => entry_1[:value],
+      entry_2[:key] => "#{entry_2[:key]}-#{data_stub}",
+      entry_3[:key] => entry_3[:value]
+    )
 
     # NOTE: force rewrite
     data_stub = SecureRandom.hex(4)
@@ -73,23 +62,12 @@ describe 'Operation: #fetch_multi' do
       "#{key}-#{data_stub}"
     end
 
-    unless test_as_dalli_store_cache? # TODO: remove this condition in future
-      # NOTE: entries with new values (and expiration time)
-      expect(cache_store.fetch_multi(entry_1[:key], entry_2[:key], entry_3[:key])).to match(
-        entry_1[:key] => "#{entry_1[:key]}-#{data_stub}",
-        entry_2[:key] => "#{entry_2[:key]}-#{data_stub}",
-        entry_3[:key] => entry_3[:value]
-      )
-    end
-
-    if test_as_dalli_store_cache? # TODO: remove this block of code in future
-      # NOTE: entries with new values (and expiration time)
-      expect(cache_store.fetch_multi(entry_1[:key], entry_2[:key], entry_3[:key])).to match(
-        entry_1[:key] => "-#{data_stub}",
-        entry_2[:key] => "-#{data_stub}",
-        entry_3[:key] => entry_3[:value]
-      )
-    end
+    # NOTE: entries with new values (and expiration time)
+    expect(cache_store.fetch_multi(entry_1[:key], entry_2[:key], entry_3[:key])).to match(
+      entry_1[:key] => "#{entry_1[:key]}-#{data_stub}",
+      entry_2[:key] => "#{entry_2[:key]}-#{data_stub}",
+      entry_3[:key] => entry_3[:value]
+    )
 
     sleep(expires_in + 1)
 

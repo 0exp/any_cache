@@ -60,6 +60,7 @@ require 'any_cache'
     - [Persist](#persist)
     - [Existence](#existence)
     - [Clear](#clear)
+- [Roadmap](#roadmap)
 
 ---
 
@@ -194,6 +195,8 @@ cache_store = AnyCache.build
 require 'dalli'
 require 'active_support'
 require 'any_cache'
+
+AnyCache.enable_patch!(:dalli_store)
 
 AnyCache.configure do |conf|
   conf.driver = :as_dalli_store

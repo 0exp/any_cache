@@ -13,6 +13,7 @@ module SpecSupport::Cache::ActiveSupportDalliStore
   class << self
     def build
       load_dependencies!
+      enable_patches!
       build_cache_store
     end
 
@@ -22,6 +23,10 @@ module SpecSupport::Cache::ActiveSupportDalliStore
       require 'dalli'
       require 'active_support'
       require 'active_support/cache/dalli_store'
+    end
+
+    def enable_patches!
+      AnyCache.enable_patch!(:dalli_store)
     end
 
     def build_cache_store
