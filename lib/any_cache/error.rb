@@ -10,5 +10,5 @@ class AnyCache
   UnsupportedDriverError = Class.new(Error)
 
   # @since 0.3.1
-  NonexistentPatchError = Class.new(ArgumentError)
+  NonexistentPatchError = Class.new(Error)
 end
