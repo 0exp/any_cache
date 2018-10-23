@@ -196,7 +196,7 @@ require 'dalli'
 require 'active_support'
 require 'any_cache'
 
-AnyCache.enable_patch!(:dalli_store)
+AnyCache.enable_patch!(:dalli_store) # NOTE: actual for Dalli <= 2.7.8
 
 AnyCache.configure do |conf|
   conf.driver = :as_dalli_store
