@@ -58,4 +58,3 @@ module AnyCache::Patches::DalliStore
     # rubocop:enable all
   end
 end
-
