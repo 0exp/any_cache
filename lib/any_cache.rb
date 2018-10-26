@@ -95,6 +95,7 @@ class AnyCache
                           :expire,
                           :persist,
                           :clear,
+                          :cleanup,
                           :exist?
 
   # @return [AnyCache::Adapters::Basic]
