@@ -46,7 +46,7 @@ module AnyCache::Adapters
     DEAD_TTL = 0
 
     # @since 0.3.0
-    def_delegators :driver, :delete, :clear
+    def_delegators :driver, :delete, :clear, :cleanup
 
     # @param key [String]
     # @param options [Hash]
