@@ -219,6 +219,15 @@ module AnyCache::Adapters
       flush(0) # NOTE: 0 is a flush delay
     end
 
+    # @param options [Hash]
+    # @return [void]
+    #
+    # @api private
+    # @since 0.4.0
+    def cleanup(**options)
+      # NOTE: manual removing is not suppored (memcached doing it by itself)
+    end
+
     # @param key [String]
     # @param options [Hash]
     # @return [Boolean]

@@ -77,6 +77,15 @@ module AnyCache::Adapters
       lock.with_write_lock { super }
     end
 
+    # @param options [Hash]
+    # @return [void]
+    #
+    # @api private
+    # @since 0.4.0
+    def cleanup(**options)
+      lock.with_write_lock { super }
+    end
+
     # @param key [String]
     # @param value [Object]
     # @param options [Hash]

@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+- `AnyCache#cleanup` - remove expired entries manually
+  (make sence only for `:as_file_store` and `:as_memory_store` at this moment);
+
 ## [0.3.1] - 2018-10-08
 ### Added
 - patch interface `AnyCache.enable_patch!(:patch_series_name)`:

@@ -214,5 +214,14 @@ module AnyCache::Adapters
     def exist?(key, **options)
       driver.exist?(key)
     end
+
+    # @param options [Hash]
+    # @return [void]
+    #
+    # @api private
+    # @since 0.4.0
+    def cleanup(**options)
+      # NOTE: manual removing is not supported (memcached doing it by itself)
+    end
   end
 end
