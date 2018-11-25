@@ -221,7 +221,7 @@ module AnyCache::Adapters
     # @api private
     # @since 0.4.0
     def cleanup(**options)
-      # NOTE: manual removing is not supported (memcached doing it by itself)
+      # NOTE: manual removing is not supported (memcached doing this by itself)
     end
   end
 end

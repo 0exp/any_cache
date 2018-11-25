@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'Operation: #cleanup', :focus do
+describe 'Operation: #cleanup' do
   include_context 'cache store'
 
   it 'removes expired entries' do
