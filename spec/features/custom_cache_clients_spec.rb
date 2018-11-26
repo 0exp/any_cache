@@ -18,6 +18,7 @@ describe 'Custom cache clients' do
         def expire(key, **); end
         def persist(key, **); end
         def clear(key, **); end
+        def cleanup(**); end
         def exist?(key, **); end
         # rubocop:enable Layout/EmptyLineBetweenDefs
       end.new
@@ -39,6 +40,7 @@ describe 'Custom cache clients' do
         def expire; end
         def persist; end
         def clear; end
+        def cleanup(**); end
         def exist?; end
       end.new
       # rubocop:enable Layout/EmptyLineBetweenDefs
@@ -60,6 +62,7 @@ describe 'Custom cache clients' do
       expire
       persist
       clear
+      cleanup
       fetch
       exist?
     ].each do |operation|
@@ -141,6 +144,7 @@ describe 'Custom cache clients' do
         expire
         persist
         clear
+        cleanup
         exist?
       ]
     end
