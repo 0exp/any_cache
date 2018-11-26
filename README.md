@@ -1,7 +1,7 @@
 # AnyCache &middot; [![Gem Version](https://badge.fury.io/rb/any_cache.svg)](https://badge.fury.io/rb/any_cache) [![Build Status](https://travis-ci.org/0exp/any_cache.svg?branch=master)](https://travis-ci.org/0exp/any_cache) [![Coverage Status](https://coveralls.io/repos/github/0exp/any_cache/badge.svg?branch=master)](https://coveralls.io/github/0exp/any_cache?branch=master)
 
 AnyCache - a simplest cache wrapper that provides a minimalistic generic interface for all well-known cache storages and includes a minimal set of necessary operations:
-`fetch`, `read`, `write`, `delete`, `fetch_multi`, `read_multi`, `write_multi`, `delete_matched`, `expire`, `persist`, `exist?`, `clear`, `increment`, `decrement`.
+`fetch`, `read`, `write`, `delete`, `fetch_multi`, `read_multi`, `write_multi`, `delete_matched`, `expire`, `persist`, `exist?`, `clear`, `cleanup`, `increment`, `decrement`.
 
 Supported clients:
 
@@ -60,6 +60,7 @@ require 'any_cache'
     - [Persist](#persist)
     - [Existence](#existence)
     - [Clear](#clear)
+    - [Cleanup](#cleanup)
 - [Roadmap](#roadmap)
 
 ---
@@ -290,6 +291,7 @@ If you want to use your own cache client implementation, you should provide an o
 - `#persist(key, [**options])` ([doc](#persist))
 - `#exist?(key, [**options])` ([doc](#existence))
 - `#clear([**options])` ([doc](#clear))
+- `#cleanup([**options])` ([doc](#cleanup))
 
 ```ruby
 class MyCacheClient
@@ -640,6 +642,21 @@ cache_store.read("another_data") # => nil
 
 ---
 
+### Cleanup
+
+- `AnyCache#cleanup()` - remove expired entries from cache database (make sense only for `:as_file_store` and `:as_memory_store` cache clients)
+
+```ruby
+# --- prepare cache data ---
+cache_store.write("data", "123", expires_in: 5)
+cache_store.write("another_data", "456", expires_in: 10)
+
+# --- waiting for cache exiration (10 seconds) ---
+cache_store.cleanup # remove expired entries from database (release disk space for example)
+```
+
+---
+
 ## Build
 
 - see [bin/rspec](bin/rspec)
@@ -662,6 +679,7 @@ bin/rspec --test-as-memory-store # run specs with ActiveSupport::Cache::MemorySt
 - instrumentation layer;
 - global and configurable default expiration time;
 - `#delete_matched` for memcached-based cache storages;
+- generic marshaling;
 
 ---
 

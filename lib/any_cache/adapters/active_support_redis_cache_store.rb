@@ -23,9 +23,6 @@ module AnyCache::Adapters
     # @since 0.3.0
     READ_MULTI_EMPTY_KEYS_SET = [].freeze
 
-    # @since 0.1.0
-    def_delegators :driver, :delete, :delete_matched, :clear
-
     # @return [NilClass]
     #
     # @api private
@@ -43,6 +40,9 @@ module AnyCache::Adapters
     # @api private
     # @since 0.1.0
     DEFAULT_INCR_DECR_AMOUNT = 1
+
+    # @since 0.1.0
+    def_delegators :driver, :delete, :delete_matched, :clear
 
     # @param key [String]
     # @param options [Hash]
@@ -199,6 +199,15 @@ module AnyCache::Adapters
     # @since 0.2.0
     def exist?(key, **options)
       driver.exist?(key)
+    end
+
+    # @param options [Hash]
+    # @return [void]
+    #
+    # @api private
+    # @since 0.4.0
+    def cleanup(**options)
+      # NOTE: manual removing is not suppored (redis doing this by itself)
     end
   end
 end

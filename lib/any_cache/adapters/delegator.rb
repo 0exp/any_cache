@@ -16,6 +16,7 @@ module AnyCache::Adapters
         driver.respond_to?(:read_multi) &&
         driver.respond_to?(:write) &&
         driver.respond_to?(:write_multi) &&
+        driver.respond_to?(:fetch) &&
         driver.respond_to?(:fetch_multi) &&
         driver.respond_to?(:delete) &&
         driver.respond_to?(:delete_matched) &&
@@ -24,8 +25,8 @@ module AnyCache::Adapters
         driver.respond_to?(:expire) &&
         driver.respond_to?(:persist) &&
         driver.respond_to?(:clear) &&
-        driver.respond_to?(:exist?) &&
-        driver.respond_to?(:fetch)
+        driver.respond_to?(:cleanup) &&
+        driver.respond_to?(:exist?)
       end
       # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/AbcSize
     end
@@ -36,6 +37,7 @@ module AnyCache::Adapters
                    :read_multi,
                    :write,
                    :write_multi,
+                   :fetch,
                    :fetch_multi,
                    :delete,
                    :delete_matched,
@@ -44,7 +46,7 @@ module AnyCache::Adapters
                    :expire,
                    :persist,
                    :clear,
-                   :exist?,
-                   :fetch
+                   :cleanup,
+                   :exist?
   end
 end

@@ -238,6 +238,15 @@ module AnyCache::Adapters
       flushdb
     end
 
+    # @param options [Hash]
+    # @return [void]
+    #
+    # @api private
+    # @since 0.4.0
+    def cleanup(**options)
+      # NOTE: manual removing is not suppored (redis doing this by itself)
+    end
+
     # @param key [String]
     # @param options [Hash]
     # @return [Boolean]

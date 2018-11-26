@@ -167,6 +167,15 @@ module AnyCache::Adapters
       raise NotImplementedError
     end
 
+    # @param options [Hash]
+    # @return [void]
+    #
+    # @api private
+    # @since 0.4.0
+    def cleanup(**options)
+      raise NotImplementedError
+    end
+
     # @param key [String]
     # @param options [Hash]
     # @return [Boolean]
