@@ -3,6 +3,8 @@
 # @api private
 # @since 0.4.0
 module AnyCache::Dumper
+  require_relative 'dumper/dumpable'
+
   class << self
     # @param hash [Hash]
     # @return [Hash]

@@ -66,7 +66,7 @@ module AnyCache::Adapters
       raw = options.fetch(:raw, false)
       value = get(key)
 
-      raw ? value : AnyCache::Dumper.load(value)
+      raw ? value : detransform_value(value)
     end
 
     # @param keys [Array<String>]
@@ -82,7 +82,7 @@ module AnyCache::Adapters
         res.merge!(Hash[(keys - res.keys).zip(READ_MULTI_EMPTY_KEYS_SET)])
       end
 
-      raw ? entires : AnyCache::Dumper.detransform_hash(entries)
+      raw ? entires : detransform_pairset(entries)
     end
 
     # @param key [String]
@@ -95,7 +95,7 @@ module AnyCache::Adapters
     def write(key, value, **options)
       expires_in = options.fetch(:expires_in, NO_EXPIRATION_TTL)
       raw = options.fetch(:raw, false)
-      value = AnyCache::Dumper.dump(value) unless raw
+      value = transform_value(value) unless raw
 
       set(key, value, expires_in, raw: raw)
     end

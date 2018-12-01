@@ -70,7 +70,7 @@ module AnyCache::Adapters
       value = get(key)
       raw = options.fetch(:raw, false)
 
-      raw ? value : AnyCache::Dumper.load(value)
+      raw ? value : detransform_value(value)
     end
 
     # @param keys [Array<String>]
@@ -83,7 +83,7 @@ module AnyCache::Adapters
       raw = options.fetch(:raw, false)
       entries = mapped_mget(*keys)
 
-      raw ? entries : AnyCache::Dumper.detransform_hash(entries)
+      raw ? entries : detransform_pairset(entries)
     end
 
     # @param key [String]
@@ -96,7 +96,7 @@ module AnyCache::Adapters
     def write(key, value, **options)
       raw = options.fetch(:raw, false)
       expires_in = options.fetch(:expires_in, NO_EXPIRATION_TTL)
-      value = AnyCache::Dumper.dump(value) unless raw
+      value = transform_value(value) unless raw
 
       expires_in ? setex(key, expires_in, value) : set(key, value)
     end
@@ -109,7 +109,8 @@ module AnyCache::Adapters
     # @since 0.3.0
     def write_multi(entries, **options)
       raw = options.fetch(:raw, false)
-      entries = AnyCache::Dumper.transform_hash(entries) unless raw
+      entries = transform_pairset(entries) unless raw
+
       mapped_mset(entries)
     end
 

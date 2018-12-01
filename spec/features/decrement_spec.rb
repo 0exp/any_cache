@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'Operation: #decrement', :focus do
+describe 'Operation: #decrement' do
   include_context 'cache store'
 
   let(:expiration_time) { 8 } # NOTE: in seconds

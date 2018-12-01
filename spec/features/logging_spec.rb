@@ -63,7 +63,7 @@ describe 'Feature: Logging' do
 
     specify '#increment' do
       log_message = "[AnyCache<#{cacher_name}>/Activity<increment>]"
-      cache_store.write(entry[:key], rand(2..10))
+      cache_store.write(entry[:key], rand(2..10), raw: true)
 
       expect(output.string).not_to include(log_message)
       cache_store.increment(entry[:key], rand(1..2), expires_in: expires_in)
@@ -72,7 +72,7 @@ describe 'Feature: Logging' do
 
     specify '#decrmenet' do
       log_message = "[AnyCache<#{cacher_name}>/Activity<decrement>]"
-      cache_store.write(entry[:key], rand(2..10))
+      cache_store.write(entry[:key], rand(2..10), raw: true)
 
       expect(output.string).not_to include(log_message)
       cache_store.decrement(entry[:key], rand(1..2), expires_in: expires_in)
@@ -120,6 +120,14 @@ describe 'Feature: Logging' do
       cache_store.fetch(entry[:key], force: [true, false].sample, expires_in: expires_in) do
         entry[:value]
       end
+      expect(output.string).to include(log_message)
+    end
+
+    specify '#cleanup' do
+      log_message = "[AnyCache<#{cacher_name}>/Activity<cleanup>]"
+
+      expect(output.string).not_to include(log_message)
+      cache_store.cleanup(custom_option: SecureRandom.hex(4))
       expect(output.string).to include(log_message)
     end
   end
