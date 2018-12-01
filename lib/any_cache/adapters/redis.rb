@@ -67,7 +67,10 @@ module AnyCache::Adapters
     # @api private
     # @since 0.1.0
     def read(key, **options)
-      get(key)
+      value = get(key)
+      raw = options.fetch(:raw, false)
+
+      raw ? value : AnyCache::Dumper.load(value)
     end
 
     # @param keys [Array<String>]
@@ -77,7 +80,10 @@ module AnyCache::Adapters
     # @api private
     # @since 0.3.0
     def read_multi(*keys, **options)
-      mapped_mget(*keys)
+      raw = options.fetch(:raw, false)
+      entries = mapped_mget(*keys)
+
+      raw ? entries : AnyCache::Dumper.detransform_hash(entries)
     end
 
     # @param key [String]
@@ -88,7 +94,9 @@ module AnyCache::Adapters
     # @api private
     # @since 0.1.0
     def write(key, value, **options)
+      raw = options.fetch(:raw, false)
       expires_in = options.fetch(:expires_in, NO_EXPIRATION_TTL)
+      value = AnyCache::Dumper.dump(value) unless raw
 
       expires_in ? setex(key, expires_in, value) : set(key, value)
     end
@@ -100,6 +108,8 @@ module AnyCache::Adapters
     # @api private
     # @since 0.3.0
     def write_multi(entries, **options)
+      raw = options.fetch(:raw, false)
+      entries = AnyCache::Dumper.transform_hash(entries) unless raw
       mapped_mset(entries)
     end
 
@@ -115,7 +125,7 @@ module AnyCache::Adapters
       force_rewrite = force_rewrite.call(key) if force_rewrite.respond_to?(:call)
 
       # NOTE: think about #pipelined
-      read(key).tap { |value| return value if value } unless force_rewrite
+      read(key, **options).tap { |value| return value if value } unless force_rewrite
 
       yield(key).tap { |value| write(key, value, **options) } if block_given?
     end

@@ -57,25 +57,32 @@ module AnyCache::Adapters
                    :flush
 
     # @param key [String]
-    # @param options [Hash]
+    # @option raw [Boolean]
     # @return [Object]
     #
     # @api private
     # @since 0.1.0
     def read(key, **options)
-      get(key)
+      raw = options.fetch(:raw, false)
+      value = get(key)
+
+      raw ? value : AnyCache::Dumper.load(value)
     end
 
     # @param keys [Array<String>]
-    # @param options [Hash]
+    # @option raw [Boolean]
     # @return [Hash]
     #
     # @api private
     # @since 0.3.0
     def read_multi(*keys, **options)
-      get_multi(*keys).tap do |res|
+      raw = options.fethc(:raw, false)
+
+      entries = get_multi(*keys).tap do |res|
         res.merge!(Hash[(keys - res.keys).zip(READ_MULTI_EMPTY_KEYS_SET)])
       end
+
+      raw ? entires : AnyCache::Dumper.detransform_hash(entries)
     end
 
     # @param key [String]
@@ -87,7 +94,8 @@ module AnyCache::Adapters
     # @since 0.1.0
     def write(key, value, **options)
       expires_in = options.fetch(:expires_in, NO_EXPIRATION_TTL)
-      raw = options.fetch(:raw, true)
+      raw = options.fetch(:raw, false)
+      value = AnyCache::Dumper.dump(value) unless raw
 
       set(key, value, expires_in, raw: raw)
     end
@@ -99,9 +107,7 @@ module AnyCache::Adapters
     # @api private
     # @since 0.3.0
     def write_multi(entries, **options)
-      raw = options.fetch(:raw, true)
-
-      entries.each_pair { |key, value| write(key, value, raw: raw) }
+      entries.each_pair { |key, value| write(key, value, **options) }
     end
 
     # @param key [String]
@@ -117,7 +123,7 @@ module AnyCache::Adapters
       force_rewrite = force_rewrite.call(key) if force_rewrite.respond_to?(:call)
 
       # NOTE: can conflict with :cache_nils Dalli::Client's config
-      read(key).tap { |value| return value if value } unless force_rewrite
+      read(key, **options).tap { |value| return value if value } unless force_rewrite
 
       yield(key).tap { |value| write(key, value, **options) } if block_given?
     end
