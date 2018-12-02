@@ -79,10 +79,13 @@ module AnyCache::Adapters
       raw = options.fetch(:raw, false)
 
       entries = get_multi(*keys).tap do |res|
+        # TODO: returned res.keys items should have consistent types with initial keys items
+        #   (at this moment you cant return requested symbolic keys -
+        #    your keys will be stringifed by dalli)
         res.merge!(Hash[(keys - res.keys).zip(READ_MULTI_EMPTY_KEYS_SET)])
       end
 
-      raw ? entires : detransform_pairset(entries)
+      raw ? entries : detransform_pairset(entries)
     end
 
     # @param key [String]
