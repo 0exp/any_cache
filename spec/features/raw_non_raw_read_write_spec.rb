@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'raw read/write / non-raw read/write', :focus do
+describe 'raw read/write / non-raw read/write' do
   include_context 'cache store'
 
   before { stub_const('SimpleRubyObject', Struct.new(:a, :b, :c)) }
