@@ -7,7 +7,7 @@ module AnyCache::Adapters
     # @since 0.1.0
     extend Forwardable
     # @since 0.4.0
-    include AnyCache::Dumper::Dumpable
+    include AnyCache::Dumper::InterfaceAccessMixin
 
     class << self
       # @param driver [Object]

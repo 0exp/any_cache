@@ -2,7 +2,7 @@
 
 # @api private
 # @since 0.4.0
-module AnyCache::Dumper::Dumpable
+module AnyCache::Dumper::InterfaceAccessMixin
   # @param value [Object]
   # @return [Object]
   #
