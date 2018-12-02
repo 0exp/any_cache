@@ -79,10 +79,16 @@ module AnyCache::Adapters
       raw = options.fetch(:raw, false)
 
       entries = get_multi(*keys).tap do |res|
-        # TODO: returned res.keys items should have consistent types with initial keys items
-        #   (at this moment you cant return requested symbolic keys -
-        #    your keys will be stringifed by dalli)
-        res.merge!(Hash[(keys - res.keys).zip(READ_MULTI_EMPTY_KEYS_SET)])
+        # NOTE:
+        #   dalli does not return nonexistent entries
+        #   but we want to be consistent with another cache storages
+        #   that returns nonexistent antries as { key => nil } pair
+        res.merge!(Hash[(keys.map(&:to_s) - res.keys).zip(READ_MULTI_EMPTY_KEYS_SET)])
+
+        # NOTE:
+        #   dalli stringifies requred keys but we want to be consistent with symbol keys
+        #   cuz another cache storages are already consistent
+        keys.each { |key| res.key?(key) ? next : (res[key] = res.delete(key.to_s)) }
       end
 
       raw ? entries : detransform_pairset(entries)

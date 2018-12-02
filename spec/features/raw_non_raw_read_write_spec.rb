@@ -52,9 +52,9 @@ describe 'raw read/write / non-raw read/write' do
       specify '#read_multi/#write_multi works correctly' do
         # worsk with any adequate type
         ruby_entries = {
-          'hash_ruby_obj' => { a: 1, b: 2, c: 3 },
-          'bool_ruby_obj' => true,
-          'real_ruby_obj' => SimpleRubyObject.new(1, 2, 3)
+          hash_ruby_obj: { a: 1, b: 2, c: 3 },
+          bool_ruby_obj: true,
+          real_ruby_obj: SimpleRubyObject.new(1, 2, 3)
         }
 
         cache_store.write_multi(ruby_entries, raw: false)
@@ -129,9 +129,9 @@ describe 'raw read/write / non-raw read/write' do
       specify '#read_multi/#write_multi works correctly' do
         # works with any adequate type
         ruby_entries = {
-          'hash_ruby_obj' => { a: 1, b: 2, c: 3 },
-          'bool_ruby_obj' => true,
-          'real_ruby_obj' => SimpleRubyObject.new(1, 2, 3)
+          hash_ruby_obj: { a: 1, b: 2, c: 3 },
+          bool_ruby_obj: true,
+          real_ruby_obj: SimpleRubyObject.new(1, 2, 3)
         }
 
         cache_store.write_multi(ruby_entries, raw: true)
