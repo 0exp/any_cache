@@ -45,7 +45,7 @@ module AnyCache::Adapters
     def_delegators :driver, :delete, :delete_matched, :clear
 
     # @param key [String]
-    # @param options [Hash]
+    # @option raw [Boolean]
     # @return [Object]
     #
     # @api private
@@ -57,7 +57,7 @@ module AnyCache::Adapters
     end
 
     # @param keys [Array<String>]
-    # @param options [Hash]
+    # @option raw [Boolean]
     # @return [Hash]
     #
     # @api private
@@ -73,6 +73,7 @@ module AnyCache::Adapters
     # @param key [String]
     # @param value [Object]
     # @option expires_in [NilClass, Integer] Time in seconds
+    # @option raw [Boolean]
     # @return [void]
     #
     # @api private
@@ -85,7 +86,7 @@ module AnyCache::Adapters
     end
 
     # @param entries [Hash]
-    # @param options [Hash]
+    # @option raw [Boolean]
     # @return [void]
     #
     # @api private
@@ -100,6 +101,7 @@ module AnyCache::Adapters
     # @param fallback [Proc]
     # @option expires_in [Integer]
     # @option force [Boolean, Proc]
+    # @option raw [Boolean]
     # @return [Object]
     #
     # @api private

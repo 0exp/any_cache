@@ -18,7 +18,7 @@ module AnyCache::Adapters
     def_delegators :driver, :mset
 
     # @param key [String]
-    # @param options [Hash]
+    # @option raw [Boolean]
     # @return [Object]
     #
     # @api private
@@ -44,6 +44,7 @@ module AnyCache::Adapters
     # @param key [String]
     # @param value [Object]
     # @option expires_in [NilClass, Integer] Time in seconds
+    # @option raw [Boolean]
     # @return [void]
     #
     # @api private
@@ -57,7 +58,7 @@ module AnyCache::Adapters
     end
 
     # @param entries [Hash]
-    # @param options [Hash]
+    # @option raw [Boolean]
     # @return [void]
     #
     # @api private

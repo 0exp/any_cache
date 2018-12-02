@@ -61,7 +61,7 @@ module AnyCache::Adapters
                    :scan
 
     # @param key [String]
-    # @param options [Hash]
+    # @option raw [Boolean]
     # @return [Object]
     #
     # @api private
@@ -74,7 +74,7 @@ module AnyCache::Adapters
     end
 
     # @param keys [Array<String>]
-    # @param options [Hash]
+    # @option raw [Boolean]
     # @return [Hash]
     #
     # @api private
@@ -88,6 +88,7 @@ module AnyCache::Adapters
 
     # @param key [String]
     # @param value [Object]
+    # @option raw [Boolean]
     # @option expires_in [NilClass, Integer] Time in seconds
     # @return [void]
     #
@@ -102,7 +103,7 @@ module AnyCache::Adapters
     end
 
     # @param entries [Hash]
-    # @param options [Hash]
+    # @option raw [Boolean]
     # @return [void]
     #
     # @api private

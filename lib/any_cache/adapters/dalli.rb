@@ -96,6 +96,7 @@ module AnyCache::Adapters
 
     # @param key [String]
     # @param value [Object]
+    # @option raw [Boolean]
     # @option expires_in [Integer]
     # @return [void]
     #

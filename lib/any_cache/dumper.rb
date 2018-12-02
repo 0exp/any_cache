@@ -3,7 +3,7 @@
 # @api private
 # @since 0.4.0
 module AnyCache::Dumper
-  require_relative 'dumper/dumpable'
+  require_relative 'dumper/interface_access_mixin'
 
   class << self
     # @param hash [Hash]
