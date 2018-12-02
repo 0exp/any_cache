@@ -40,7 +40,7 @@ module AnyCache::Delegation
             AnyCache::Logging::Activity.log(
               self, logger, activity: delegat, message:
                 "performed <#{delegat}> operation with " \
-                "params: #{args.inspect} and options: #{opts.inspect}."
+                "attributes: #{args.inspect} and options: #{opts.inspect}."
             ) if logger
           end
         end

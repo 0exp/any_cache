@@ -150,7 +150,6 @@ module AnyCache::Adapters
         #   use own #fetch_multi implementation cuz original #fetch_multi
         #   does not support :force option
         keys.each_with_object({}) do |key, dataset|
-          force = force_rewrite.respond_to?(:call) ? force_rewrite.call(key) : force_rewrite
           dataset[key] = driver.fetch(key, force: force, expires_in: expires_in, &fallback)
         end
       end

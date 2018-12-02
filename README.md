@@ -353,10 +353,10 @@ params: INSPECTED_ARGUMENTS and options: INSPECTED_OPTIONS
 
 ```ruby
 any_cache.write("data", 123, expires_in: 60)
-# I, [2018-09-07T10:04:56.649960 #15761]  INFO -- [AnyCache<AnyCache>/Activity<write>]: performed <write> operation with params: ["data", 123] and options: {:expires_in=>60}.
+# I, [2018-09-07T10:04:56.649960 #15761]  INFO -- [AnyCache<AnyCache>/Activity<write>]: performed <write> operation with attributes: ["data", 123] and options: {:expires_in=>60}.
 
 any_cache.clear
-# I, [2018-09-07T10:05:26.999847 #15761]  INFO -- [AnyCache<AnyCache>/Activity<clear>]: performed <clear> operation with params: [] and options: {}.
+# I, [2018-09-07T10:05:26.999847 #15761]  INFO -- [AnyCache<AnyCache>/Activity<clear>]: performed <clear> operation with attributes: [] and options: {}.
 ```
 
 ## Operations

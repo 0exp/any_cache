@@ -76,7 +76,7 @@ module AnyCache::Adapters
     # @api private
     # @since 0.3.0
     def read_multi(*keys, **options)
-      raw = options.fethc(:raw, false)
+      raw = options.fetch(:raw, false)
 
       entries = get_multi(*keys).tap do |res|
         res.merge!(Hash[(keys - res.keys).zip(READ_MULTI_EMPTY_KEYS_SET)])
