@@ -3,7 +3,7 @@
 module AnyCache::Adapters
   # @api private
   # @since 0.1.0
-  class Redis < Basic
+  class Redis < Basic # rubocop:disable Metrics/ClassLength
     class << self
       # @param driver [Object]
       # @return [Boolean]

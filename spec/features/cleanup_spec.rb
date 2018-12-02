@@ -15,7 +15,7 @@ describe 'Operation: #cleanup' do
       key_1: 'key_1_value',
       key_2: 'key_2_value',
       key_3: 'key_3_value',
-      key_4: 'key_4_value',
+      key_4: 'key_4_value'
     )
 
     sleep(3) # 4 seconds left
@@ -24,7 +24,7 @@ describe 'Operation: #cleanup' do
       key_1: nil, # expired
       key_2: 'key_2_value',
       key_3: 'key_3_value',
-      key_4: 'key_4_value',
+      key_4: 'key_4_value'
     )
 
     sleep(4) # 8 seconds left
@@ -33,7 +33,7 @@ describe 'Operation: #cleanup' do
       key_1: nil, # expired
       key_2: nil, # expired
       key_3: 'key_3_value',
-      key_4: 'key_4_value',
+      key_4: 'key_4_value'
     )
 
     sleep(4) # 12 seconds left
@@ -42,7 +42,7 @@ describe 'Operation: #cleanup' do
       key_1: nil, # expired
       key_2: nil, # expired
       key_3: nil, # expired
-      key_4: 'key_4_value',
+      key_4: 'key_4_value'
     )
 
     sleep(4) # 16 seconds left

@@ -41,10 +41,9 @@ describe 'raw read/write / non-raw read/write' do
 
         cached_ruby_object = cache_store.fetch(:non_raw, raw: false)
 
-        [cached_ruby_object, returned_ruby_object].each do |cached_object|
-          expect(cached_object).to be_a(SimpleRubyObject)
-          expect(cached_object).to have_attributes(a: :non_raw, b: 1, c: false)
-        end
+        expect([cached_ruby_object, returned_ruby_object]).to all(
+          be_a(SimpleRubyObject).and(have_attributes(a: :non_raw, b: 1, c: false))
+        )
       end
     end
 
@@ -96,7 +95,7 @@ describe 'raw read/write / non-raw read/write' do
 
     context 'single read/write' do
       specify '#read/#write works correctly' do
-        ruby_object = { a: 1, b: 2, c: 3}
+        ruby_object = { a: 1, b: 2, c: 3 }
         cache_store.write(:raw, ruby_object, raw: true)
         cached_ruby_object = cache_store.read(:raw, raw: true)
 
@@ -110,9 +109,11 @@ describe 'raw read/write / non-raw read/write' do
       end
 
       specify '#fetch works correctly' do
+        # rubocop:disable Lint/UselessAssignment
         returned_ruby_object = cache_store.fetch(:raw, raw: true) do |key|
           SimpleRubyObject.new(key, 1, false)
         end
+        # rubocop:enable Lint/UselessAssignment
 
         cached_ruby_object = cache_store.fetch(:raw, raw: true)
 
@@ -142,9 +143,11 @@ describe 'raw read/write / non-raw read/write' do
       end
 
       specify '#fetch_multi works correctly' do
+        # rubocop:disable Lint/UselessAssignment
         returned_ruby_entries = cache_store.fetch_multi(:a, :b, raw: true) do |key|
           SimpleRubyObject.new(key, true, false)
         end
+        # rubocop:enable Lint/UselessAssignment
 
         cached_ruby_entries = cache_store.fetch_multi(:a, :b, raw: true)
 
