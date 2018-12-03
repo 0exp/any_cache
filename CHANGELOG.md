@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.4.0] - 2018-12-04
 - `AnyCache#cleanup` - remove expired entries manually
   (make sence only for `:as_file_store` and `:as_memory_store` at this moment);
 - automatic object marshaling (used in `fetch`, `fetch_multi`, `write`, `write_multi`, `read`, `read_multi`):
