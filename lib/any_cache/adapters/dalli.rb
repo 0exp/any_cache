@@ -57,29 +57,46 @@ module AnyCache::Adapters
                    :flush
 
     # @param key [String]
-    # @param options [Hash]
+    # @option raw [Boolean]
     # @return [Object]
     #
     # @api private
     # @since 0.1.0
     def read(key, **options)
-      get(key)
+      raw = options.fetch(:raw, false)
+      value = get(key)
+
+      raw ? value : detransform_value(value)
     end
 
     # @param keys [Array<String>]
-    # @param options [Hash]
+    # @option raw [Boolean]
     # @return [Hash]
     #
     # @api private
     # @since 0.3.0
     def read_multi(*keys, **options)
-      get_multi(*keys).tap do |res|
-        res.merge!(Hash[(keys - res.keys).zip(READ_MULTI_EMPTY_KEYS_SET)])
+      raw = options.fetch(:raw, false)
+
+      entries = get_multi(*keys).tap do |res|
+        # NOTE:
+        #   dalli does not return nonexistent entries
+        #   but we want to be consistent with another cache storages
+        #   that returns nonexistent antries as { key => nil } pair
+        res.merge!(Hash[(keys.map(&:to_s) - res.keys).zip(READ_MULTI_EMPTY_KEYS_SET)])
+
+        # NOTE:
+        #   dalli stringifies requred keys but we want to be consistent with symbol keys
+        #   cuz another cache storages are already consistent
+        keys.each { |key| res.key?(key) ? next : (res[key] = res.delete(key.to_s)) }
       end
+
+      raw ? entries : detransform_pairset(entries)
     end
 
     # @param key [String]
     # @param value [Object]
+    # @option raw [Boolean]
     # @option expires_in [Integer]
     # @return [void]
     #
@@ -87,7 +104,8 @@ module AnyCache::Adapters
     # @since 0.1.0
     def write(key, value, **options)
       expires_in = options.fetch(:expires_in, NO_EXPIRATION_TTL)
-      raw = options.fetch(:raw, true)
+      raw = options.fetch(:raw, false)
+      value = transform_value(value) unless raw
 
       set(key, value, expires_in, raw: raw)
     end
@@ -99,9 +117,7 @@ module AnyCache::Adapters
     # @api private
     # @since 0.3.0
     def write_multi(entries, **options)
-      raw = options.fetch(:raw, true)
-
-      entries.each_pair { |key, value| write(key, value, raw: raw) }
+      entries.each_pair { |key, value| write(key, value, **options) }
     end
 
     # @param key [String]
@@ -117,7 +133,7 @@ module AnyCache::Adapters
       force_rewrite = force_rewrite.call(key) if force_rewrite.respond_to?(:call)
 
       # NOTE: can conflict with :cache_nils Dalli::Client's config
-      read(key).tap { |value| return value if value } unless force_rewrite
+      read(key, **options).tap { |value| return value if value } unless force_rewrite
 
       yield(key).tap { |value| write(key, value, **options) } if block_given?
     end

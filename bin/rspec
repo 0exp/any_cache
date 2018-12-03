@@ -56,7 +56,7 @@ module AnyCacheSpecRunner
       ) { run_as_memory_store_cache_specs! }
 
       opts.on(
-        '--test-as-mem-cache-store',
+        '--test-as-memcache-store',
         'Run specs with ActiveSupport::Cache::MemCacheStore cache storage'
       ) { run_as_mem_cache_store_cache_specs! }
 

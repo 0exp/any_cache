@@ -3,7 +3,7 @@
 module AnyCache::Adapters
   # @api private
   # @since 0.1.0
-  class Redis < Basic
+  class Redis < Basic # rubocop:disable Metrics/ClassLength
     class << self
       # @param driver [Object]
       # @return [Boolean]
@@ -61,45 +61,57 @@ module AnyCache::Adapters
                    :scan
 
     # @param key [String]
-    # @param options [Hash]
+    # @option raw [Boolean]
     # @return [Object]
     #
     # @api private
     # @since 0.1.0
     def read(key, **options)
-      get(key)
+      value = get(key)
+      raw = options.fetch(:raw, false)
+
+      raw ? value : detransform_value(value)
     end
 
     # @param keys [Array<String>]
-    # @param options [Hash]
+    # @option raw [Boolean]
     # @return [Hash]
     #
     # @api private
     # @since 0.3.0
     def read_multi(*keys, **options)
-      mapped_mget(*keys)
+      raw = options.fetch(:raw, false)
+      entries = mapped_mget(*keys)
+
+      raw ? entries : detransform_pairset(entries)
     end
 
     # @param key [String]
     # @param value [Object]
+    # @option raw [Boolean]
     # @option expires_in [NilClass, Integer] Time in seconds
     # @return [void]
     #
     # @api private
     # @since 0.1.0
     def write(key, value, **options)
+      raw = options.fetch(:raw, false)
       expires_in = options.fetch(:expires_in, NO_EXPIRATION_TTL)
+      value = transform_value(value) unless raw
 
       expires_in ? setex(key, expires_in, value) : set(key, value)
     end
 
     # @param entries [Hash]
-    # @param options [Hash]
+    # @option raw [Boolean]
     # @return [void]
     #
     # @api private
     # @since 0.3.0
     def write_multi(entries, **options)
+      raw = options.fetch(:raw, false)
+      entries = transform_pairset(entries) unless raw
+
       mapped_mset(entries)
     end
 
@@ -115,7 +127,7 @@ module AnyCache::Adapters
       force_rewrite = force_rewrite.call(key) if force_rewrite.respond_to?(:call)
 
       # NOTE: think about #pipelined
-      read(key).tap { |value| return value if value } unless force_rewrite
+      read(key, **options).tap { |value| return value if value } unless force_rewrite
 
       yield(key).tap { |value| write(key, value, **options) } if block_given?
     end

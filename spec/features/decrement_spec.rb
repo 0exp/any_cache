@@ -31,7 +31,14 @@ describe 'Operation: #decrement' do
   end
 
   context 'with previously defined temporal entry' do
-    before { cache_store.write(entry[:key], entry[:value], expires_in: expiration_time) }
+    before do
+      cache_store.write(
+        entry[:key],
+        entry[:value],
+        expires_in: expiration_time,
+        raw: true
+      )
+    end
 
     it_behaves_like 'decrementation'
 
@@ -43,10 +50,10 @@ describe 'Operation: #decrement' do
         cache_store.decrement(entry[:key], 2, expires_in: expiration_time)
         sleep(4) # NOTE: remaining time: 4 seconds again, current value: -2
 
-        expect(cache_store.read(entry[:key]).to_i).to eq(-2) | eq(0)
+        expect(cache_store.read(entry[:key], raw: true).to_i).to eq(-2) | eq(0)
         sleep(5) # NOTE: remaining time: -1 seconds
 
-        expect(cache_store.read(entry[:key])).to eq(nil)
+        expect(cache_store.read(entry[:key], raw: true)).to eq(nil)
       end
     end
 
@@ -59,13 +66,13 @@ describe 'Operation: #decrement' do
         # NOTE: new amount: -2, old entry is dead, new entry is permanent
         expect(new_amount).to eq(-2) | eq(0)
         sleep(expiration_time + 1) # NOTE: remaining time: -1 esconds, current value: -2
-        expect(cache_store.read(entry[:key]).to_i).to eq(-2) | eq(0)
+        expect(cache_store.read(entry[:key], raw: true).to_i).to eq(-2) | eq(0)
       end
     end
   end
 
   context 'with previously defined permanent entry' do
-    before { cache_store.write(entry[:key], entry[:value]) }
+    before { cache_store.write(entry[:key], entry[:value], raw: true) }
 
     it_behaves_like 'decrementation'
 
@@ -77,10 +84,10 @@ describe 'Operation: #decrement' do
         cache_store.decrement(entry[:key], 2, expires_in: expiration_time)
         sleep(4) # NOTE: remaining time: 4 seconds again, current value: -2
 
-        expect(cache_store.read(entry[:key]).to_i).to eq(-2) | eq(0)
+        expect(cache_store.read(entry[:key], raw: true).to_i).to eq(-2) | eq(0)
         sleep(5) # NOTE: remaining time: -1 seconds
 
-        expect(cache_store.read(entry[:key])).to eq(nil)
+        expect(cache_store.read(entry[:key], raw: true)).to eq(nil)
       end
     end
 

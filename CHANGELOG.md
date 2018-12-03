@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 - `AnyCache#cleanup` - remove expired entries manually
   (make sence only for `:as_file_store` and `:as_memory_store` at this moment);
+- automatic object marshaling (used in `fetch`, `fetch_multi`, `write`, `write_multi`, `read`, `read_multi`):
+  - used by default (`raw: false`);
+  - can be disabled via `raw: true` option;
+  - `raw: true` is required for incrementable/decrementable entries;
 
 ## [0.3.1] - 2018-10-08
 ### Added

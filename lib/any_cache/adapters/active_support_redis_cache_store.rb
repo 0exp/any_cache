@@ -45,25 +45,25 @@ module AnyCache::Adapters
     def_delegators :driver, :delete, :delete_matched, :clear
 
     # @param key [String]
-    # @param options [Hash]
+    # @option raw [Boolean]
     # @return [Object]
     #
     # @api private
     # @since 0.1.0
     def read(key, **options)
-      raw = options.fetch(:raw, true)
+      raw = options.fetch(:raw, false)
 
       driver.read(key, raw: raw)
     end
 
     # @param keys [Array<String>]
-    # @param options [Hash]
+    # @option raw [Boolean]
     # @return [Hash]
     #
     # @api private
     # @since 0.3.0
     def read_multi(*keys, **options)
-      raw = options.fetch(:raw, true)
+      raw = options.fetch(:raw, false)
 
       driver.read_multi(*keys, raw: raw).tap do |res|
         res.merge!(Hash[(keys - res.keys).zip(READ_MULTI_EMPTY_KEYS_SET)])
@@ -73,25 +73,26 @@ module AnyCache::Adapters
     # @param key [String]
     # @param value [Object]
     # @option expires_in [NilClass, Integer] Time in seconds
+    # @option raw [Boolean]
     # @return [void]
     #
     # @api private
     # @since 0.1.0
     def write(key, value, **options)
       expires_in = options.fetch(:expires_in, NO_EXPIRATION_TTL)
-      raw = options.fetch(:raw, true)
+      raw = options.fetch(:raw, false)
 
       driver.write(key, value, expires_in: expires_in, raw: raw)
     end
 
     # @param entries [Hash]
-    # @param options [Hash]
+    # @option raw [Boolean]
     # @return [void]
     #
     # @api private
     # @sicne 0.3.0
     def write_multi(entries, **options)
-      raw = options.fetch(:raw, true)
+      raw = options.fetch(:raw, false)
 
       driver.write_multi(entries, expires_in: NO_EXPIRATION_TTL, raw: raw)
     end
@@ -100,6 +101,7 @@ module AnyCache::Adapters
     # @param fallback [Proc]
     # @option expires_in [Integer]
     # @option force [Boolean, Proc]
+    # @option raw [Boolean]
     # @return [Object]
     #
     # @api private
@@ -108,7 +110,7 @@ module AnyCache::Adapters
       force_rewrite = options.fetch(:force, false)
       force_rewrite = force_rewrite.call(key) if force_rewrite.respond_to?(:call)
       expires_in    = options.fetch(:expires_in, NO_EXPIRATION_TTL)
-      raw           = options.fetch(:raw, true)
+      raw           = options.fetch(:raw, false)
 
       driver.fetch(key, force: force_rewrite, expires_in: expires_in, raw: raw, &fallback)
     end
@@ -141,7 +143,7 @@ module AnyCache::Adapters
       expires_in = options.fetch(:expires_in, NO_EXPIRATION_TTL)
 
       unless exist?(key)
-        write(key, amount, expires_in: expires_in) && amount
+        write(key, amount, expires_in: expires_in, raw: true) && amount
       else
         driver.increment(key, amount).tap do
           expire(key, expires_in: expires_in) if expires_in
@@ -160,7 +162,7 @@ module AnyCache::Adapters
       expires_in = options.fetch(:expires_in, NO_EXPIRATION_TTL)
 
       unless exist?(key)
-        write(key, -amount, expires_in: expires_in) && -amount
+        write(key, -amount, expires_in: expires_in, raw: true) && -amount
       else
         driver.decrement(key, amount).tap do
           expire(key, expires_in: expires_in) if expires_in
@@ -175,9 +177,12 @@ module AnyCache::Adapters
     # @api private
     # @since 0.1.0
     def expire(key, expires_in: DEAD_TTL)
-      read(key).tap do |value|
+      # NOTE:
+      #   raw is true cuz we want the raw cached value.
+      #   this raw value would be cached again if needed.
+      read(key, raw: true).tap do |value|
         is_alive = expires_in ? expires_in.positive? : false
-        is_alive ? write(key, value, expires_in: expires_in) : delete(key)
+        is_alive ? write(key, value, expires_in: expires_in, raw: true) : delete(key)
       end
     end
 

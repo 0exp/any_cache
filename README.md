@@ -353,10 +353,10 @@ params: INSPECTED_ARGUMENTS and options: INSPECTED_OPTIONS
 
 ```ruby
 any_cache.write("data", 123, expires_in: 60)
-# I, [2018-09-07T10:04:56.649960 #15761]  INFO -- [AnyCache<AnyCache>/Activity<write>]: performed <write> operation with params: ["data", 123] and options: {:expires_in=>60}.
+# I, [2018-09-07T10:04:56.649960 #15761]  INFO -- [AnyCache<AnyCache>/Activity<write>]: performed <write> operation with attributes: ["data", 123] and options: {:expires_in=>60}.
 
 any_cache.clear
-# I, [2018-09-07T10:05:26.999847 #15761]  INFO -- [AnyCache<AnyCache>/Activity<clear>]: performed <clear> operation with params: [] and options: {}.
+# I, [2018-09-07T10:05:26.999847 #15761]  INFO -- [AnyCache<AnyCache>/Activity<clear>]: performed <clear> operation with attributes: [] and options: {}.
 ```
 
 ## Operations
@@ -382,6 +382,7 @@ any_cache.clear
     - fetches data from the cache using the given key;
     - if a `fallback` block has been passed and data with the given key does not exist - that block
       will be called with the given key and the return value will be written to the cache;
+    - use `raw: true` if you want to fetch incrementable/decrementable entry;
 
 ```ruby
 # --- entry exists ---
@@ -416,6 +417,7 @@ cache_store.fetch("data") # => nil
     - get a set of entries in hash form from the cache storage using given keys;
     - works in `#fetch` manner but with a series of entries;
     - nonexistent entries will be fetched with `nil` values;
+    - use `raw: true` if you want to fetch incrementable/decrementable entries;
 
 ```ruby
 # --- fetch entries ---
@@ -451,6 +453,7 @@ cache_store.fetch_multi("data", "second_data", "last_data", force: true) { |key|
 ### Read
 
 - `AnyCache#read(key)` - get an entry value from the cache storage
+  - pass `raw: true` if you want to read incrementable/decrementable entries;
 
 ```ruby
 # --- entry exists ---
@@ -458,6 +461,9 @@ cache_store.read("data") # => "some_data"
 
 # --- entry doesnt exist ---
 cache_store.read("data") # => nil
+
+# --- read incrementable/decrementable entry ---
+cache_store.read("data", raw: true) # => "2" (for example)
 ```
 
 ---
@@ -467,6 +473,7 @@ cache_store.read("data") # => nil
 - `AnyCache#read_multi(*keys)`
     - get entries from the cache storage in hash form;
     - nonexistent entries will be fetched with `nil` values;
+    - pass `raw: true` if you want to read incrementable/decrementable entries;
 
 ```ruby
 cache_store.read_multi("data", "another_data", "last_data", "super_data")
@@ -477,13 +484,22 @@ cache_store.read_multi("data", "another_data", "last_data", "super_data")
   "last_data" => "some_data", # exisitng enry
   "super_data" => nil # existing entry
 }
+
+# --- read incrementable/decrementable entries ---
+cache_store.read_multi("data", "another_data", raw: true)
+# => returns
+{
+  "data" => "1",
+  "another_data" => "2",
+}
 ```
 
 ---
 
 ### Write
 
-- `AnyCache#write(key, value, [expires_in:])` - write a new entry to the cache storage
+- `AnyCache#write(key, value, [expires_in:])` - write a new entry to the cache storage;
+  - pass `raw: true` if you want to store incrementable/decrementable entries;
 
 ```ruby
 # --- permanent entry ---
@@ -491,23 +507,30 @@ cache_store.write("data", 123)
 
 # --- temporal entry (expires in 60 seconds) ---
 cache_store.write("data", 123, expires_in: 60)
+
+# --- incrementable/decrementable entry ---
+cache_store.write("data", 123, raw: true)
 ```
 
 ---
 
 ### Write Multi
 
-- `AnyCache#write_multi(**entries)` - write a set of permanent entries to the cache storage
+- `AnyCache#write_multi(**entries)` - write a set of permanent entries to the cache storage;
+  - pass `raw: true` if you want to store incrementable/decrementable entries;
 
 ```ruby
 cache_store.write_multi("data" => "test", "another_data" => 123)
+
+# --- incrementable/decrementable entries ---
+cache_store.write_multi("data" => 1, "another_data" => 2, raw: true)
 ```
 
 ---
 
 ### Delete
 
-- `AnyCache#delete(key)` - remove entry from the cache storage
+- `AnyCache#delete(key)` - remove entry from the cache storage;
 
 ```ruby
 cache_store.delete("data")
@@ -519,7 +542,7 @@ cache_store.delete("data")
 
 - `AnyCache#delete_matched(pattern)`
     - removes all entries with keys matching the pattern;
-    - currently unsupported: `:dalli`, `:as_mem_cache_store`, `:as_dalli_Store`;
+    - currently unsupported: `:dalli`, `:as_mem_cache_store`, `:as_dalli_store`;
 
 ```ruby
 # --- using a regepx ---
@@ -534,11 +557,12 @@ cache_store.delete_matched("data")
 ### Increment
 
 - `AnyCache#increment(key, amount = 1, [expires_in:])` - increment entry's value by the given amount
-  and set the new expiration time if needed
+  and set the new expiration time if needed;
+  - can increment only nonexistent entries OR entries that were written with `raw: true` option;
 
 ```ruby
 # --- increment existing entry ---
-cache_store.write("data", 1)
+cache_store.write("data", 1, raw: true) # you must provide :raw => true for incrementable entries
 
 # --- increment by default value (1) ---
 cache_store.increment("data") # => 2
@@ -551,6 +575,9 @@ cache_store.incrmeent("data", expires_in: 31) # => 15
 
 # --- increment nonexistent entry (create new entry) ---
 cache_store.increment("another_data", 5, expires_in: 5) # => 5
+
+# --- read incrementable entry ---
+cache_store.read("data", raw: true) # you must provide :raw => true for incrementable entries
 ```
 
 ---
@@ -558,11 +585,12 @@ cache_store.increment("another_data", 5, expires_in: 5) # => 5
 ### Decrement
 
 - `AnyCache#decrement(key, amount = 1, [expires_in:])` - decrement entry's value by the given amount
-  and set the new expiration time if needed
+  and set the new expiration time if needed;
+  - can decrement only nonexistent entries OR entries that were written with `raw: true` option;
 
 ```ruby
 # --- decrement existing entry ---
-cache_store.write("data", 15)
+cache_store.write("data", 15, raw: true) # you must provide :raw => true for decrementable entries
 
 # --- decrement by default value (1) ---
 cache_store.decrement("data") # => 14
@@ -575,13 +603,16 @@ cache_store.decrememnt("data", expirs_in: 5) # => 3
 
 # --- decrement nonexistent entry (create new entry) ---
 cache_store.decrememnt("another_data", 2, expires_in: 10) # => -2 (or 0 for Dalli::Client)
+
+# --- read decrementable entry ---
+cache_store.read("data", raw: true) # you must provide :raw => true for decrementable entries
 ```
 
 ---
 
 ### Expire
 
-- `AnyCache#expire(key, [expires_in:])` - expire entry immediately or set the new expiration time
+- `AnyCache#expire(key, [expires_in:])` - expire entry immediately or set the new expiration time;
 
 ```ruby
 # --- expire immediately ---
@@ -595,7 +626,7 @@ cache_store.expire("data", expires_in: 36)
 
 ### Persist
 
-- `AnyCache#persist(key)` - change entry's expiration time to permanent
+- `AnyCache#persist(key)` - change entry's expiration time to permanent;
 
 ```ruby
 # --- create temporal entry (30 seconds) ---
@@ -609,7 +640,7 @@ cache_store.persist("data")
 
 ### Existence
 
-- `AnyCache#exist?(key)` - determine if an entry exists
+- `AnyCache#exist?(key)` - determine if an entry exists;
 
 ```ruby
 # --- entry exists ---
@@ -623,7 +654,7 @@ cache_store.exist?("another-data") # => false
 
 ### Clear
 
-- `AnyCache#clear()` - clear cache database
+- `AnyCache#clear()` - clear cache database;
 
 ```ruby
 # --- prepare cache data ---
@@ -644,7 +675,8 @@ cache_store.read("another_data") # => nil
 
 ### Cleanup
 
-- `AnyCache#cleanup()` - remove expired entries from cache database (make sense only for `:as_file_store` and `:as_memory_store` cache clients)
+- `AnyCache#cleanup()` - remove expired entries from cache database
+  (make sense only for `:as_file_store` and `:as_memory_store` cache clients);
 
 ```ruby
 # --- prepare cache data ---
