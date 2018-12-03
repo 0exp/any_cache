@@ -711,7 +711,6 @@ bin/rspec --test-as-memory-store # run specs with ActiveSupport::Cache::MemorySt
 - instrumentation layer;
 - global and configurable default expiration time;
 - `#delete_matched` for memcached-based cache storages;
-- generic marshaling;
 
 ---
 
