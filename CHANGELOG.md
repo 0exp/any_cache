@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] - 2018-xx-xx
+### Added
+- Introduce Plugin Ecosystem (`AnyCache::Plugins`):
+  - load plugin: `AnyCache.plugin('plugin_name')` or `AnyCache.plugin(:plugin_name)`;
+  - get registered plugins: `AnyCache.plugins #=> array of strings`
+
 ## [0.4.0] - 2018-12-04
 - `AnyCache#cleanup` - remove expired entries manually
   (make sence only for `:as_file_store` and `:as_memory_store` at this moment);

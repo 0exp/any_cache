@@ -61,6 +61,7 @@ require 'any_cache'
     - [Existence](#existence)
     - [Clear](#clear)
     - [Cleanup](#cleanup)
+- [Plgugins](#plugins)
 - [Roadmap](#roadmap)
 
 ---
@@ -685,6 +686,20 @@ cache_store.write("another_data", "456", expires_in: 10)
 
 # --- waiting for cache exiration (10 seconds) ---
 cache_store.cleanup # remove expired entries from database (release disk space for example)
+```
+
+---
+
+## Plugins
+
+`AnyCache` provides a set of plugins and an interface for controllable plugin registering and loading.
+
+```ruby
+# --- show names of registered plugins ---
+AnyCache.plugins # => array of strings
+
+# --- load specific plugin ---
+AnyCache.plugin(:plugin_name) # or AnyCache.plugin('plugin_name')
 ```
 
 ---

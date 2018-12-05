@@ -16,6 +16,7 @@ class AnyCache
   require_relative 'any_cache/logging'
   require_relative 'any_cache/delegation'
   require_relative 'any_cache/patches'
+  require_relative 'any_cache/plugins'
 
   # @since 0.2.0
   include Qonfig::Configurable
@@ -23,6 +24,8 @@ class AnyCache
   include Delegation
   # @since 0.3.1
   extend Patches::InterfaceAccessMixin
+  # @since 0.5.0
+  extend Plugins::InterfaceAccessMixin
 
   # @since 0.2.0
   # rubocop:disable Metrics/BlockLength
