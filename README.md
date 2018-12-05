@@ -61,7 +61,7 @@ require 'any_cache'
     - [Existence](#existence)
     - [Clear](#clear)
     - [Cleanup](#cleanup)
-- [Plgugins](#plugins)
+- [Plugins](#plugins)
 - [Roadmap](#roadmap)
 
 ---
