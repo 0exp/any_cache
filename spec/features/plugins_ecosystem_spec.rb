@@ -23,8 +23,8 @@ describe 'Plugins ecosystem' do
       end
 
       # register new plugins
-      register_plugin(:internal_test_plugin, InternalTestPlugin)
-      register_plugin(:external_test_plugin, ExternalTestPlugin)
+      register(:internal_test_plugin, InternalTestPlugin)
+      register(:external_test_plugin, ExternalTestPlugin)
     end
 
     # plugins are registered
@@ -48,14 +48,14 @@ describe 'Plugins ecosystem' do
     # fails when there is an attempt to register a plugin with already used name
     expect do
       module AnyCache::Plugins
-        register_plugin(:internal_test_plugin, Object)
+        register(:internal_test_plugin, Object)
       end
     end.to raise_error(AnyCache::AlreadyRegisteredPluginError)
 
     # fails when there is an attempt to register a plugin with already used name
     expect do
       module AnyCache::Plugins
-        register_plugin(:external_test_plugin, Object)
+        register(:external_test_plugin, Object)
       end
     end.to raise_error(AnyCache::AlreadyRegisteredPluginError)
 

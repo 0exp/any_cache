@@ -35,7 +35,7 @@ module AnyCache::Plugins
     #
     # @api private
     # @since 0.5.0
-    def register_plugin(plugin_name, plugin_module)
+    def register(plugin_name, plugin_module)
       thread_safe { plugin_registry[plugin_name] = plugin_module }
     end
 
