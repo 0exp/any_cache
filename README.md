@@ -336,6 +336,11 @@ end
 AnyCache.configure do |conf|
   conf.logger = AnyCache::Logging::Logger.new(STDOUT)
 end
+
+# --- (your cache client inherited from AnyCache) ---
+YourCacheClient.configure do |conf|
+  # same configs as above
+end
 ```
 
 Log message format:
