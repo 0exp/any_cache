@@ -19,6 +19,9 @@ matrix:
   - rvm: 2.5.3
     gemfile: gemfiles/active_support.gemfile
     env: TEST_AS_MEMORY_STORE_CACHE=true
+  - rvm: 2.6.0
+    gemfile: gemfiles/active_support.gemfile
+    env: TEST_AS_MEMORY_STORE_CACHE=true
   - rvm: ruby-head
     gemfile: gemfiles/active_support.gemfile
     env: TEST_AS_MEMORY_STORE_CACHE=true
@@ -31,6 +34,9 @@ matrix:
   - rvm: 2.5.3
     gemfile: gemfiles/active_support.gemfile
     env: TEST_AS_FILE_STORE_CACHE=true
+  - rvm: 2.6.0
+    gemfile: gemfiles/active_support.gemfile
+    env: TEST_AS_FILE_STORE_CACHE=true
   - rvm: ruby-head
     gemfile: gemfiles/active_support.gemfile
     env: TEST_AS_FILE_STORE_CACHE=true
@@ -43,6 +49,9 @@ matrix:
   - rvm: 2.5.3
     gemfile: gemfiles/active_support_with_redis.gemfile
     env: TEST_AS_REDIS_CACHE_STORE_CACHE=true
+  - rvm: 2.6.0
+    gemfile: gemfiles/active_support_with_redis.gemfile
+    env: TEST_AS_REDIS_CACHE_STORE_CACHE=true
   - rvm: ruby-head
     gemfile: gemfiles/active_support_with_redis.gemfile
     env: TEST_AS_REDIS_CACHE_STORE_CACHE=true
@@ -55,6 +64,9 @@ matrix:
   - rvm: 2.5.3
     gemfile: gemfiles/dalli.gemfile
     env: TEST_DALLI_CACHE=true
+  - rvm: 2.6.0
+    gemfile: gemfiles/dalli.gemfile
+    env: TEST_DALLI_CACHE=true
   - rvm: ruby-head
     gemfile: gemfiles/dalli.gemfile
     env: TEST_DALLI_CACHE=true
@@ -67,6 +79,9 @@ matrix:
   - rvm: 2.5.3
     gemfile: gemfiles/redis_store.gemfile
     env: TEST_REDIS_STORE_CACHE=true
+  - rvm: 2.6.0
+    gemfile: gemfiles/redis_store.gemfile
+    env: TEST_REDIS_STORE_CACHE=true
   - rvm: ruby-head
     gemfile: gemfiles/redis_store.gemfile
     env: TEST_REDIS_STORE_CACHE=true
@@ -79,6 +94,9 @@ matrix:
   - rvm: 2.5.3
     gemfile: gemfiles/active_support_with_dalli.gemfile
     env: TEST_AS_DALLI_STORE=true
+  - rvm: 2.6.0
+    gemfile: gemfiles/active_support_with_dalli.gemfile
+    env: TEST_AS_DALLI_STORE=true
   - rvm: ruby-head
     gemfile: gemfiles/active_support_with_dalli.gemfile
     env: TEST_AS_DALLI_STORE=true
@@ -91,6 +109,9 @@ matrix:
   - rvm: 2.5.3
     gemfile: gemfiles/redis_store.gemfile
     env: TEST_REDIS_CACHE=true
+  - rvm: 2.6.0
+    gemfile: gemfiles/redis_store.gemfile
+    env: TEST_REDIS_CACHE=true
   - rvm: ruby-head
     gemfile: gemfiles/redis_store.gemfile
     env: TEST_REDIS_CACHE=true
@@ -101,6 +122,9 @@ matrix:
     gemfile: gemfiles/active_support_with_dalli.gemfile
     env: TEST_AS_MEM_CACHE_STORE_CACHE=true
   - rvm: 2.5.3
+    gemfile: gemfiles/active_support_with_dalli.gemfile
+    env: TEST_AS_MEM_CACHE_STORE_CACHE=true
+  - rvm: 2.6.0
     gemfile: gemfiles/active_support_with_dalli.gemfile
     env: TEST_AS_MEM_CACHE_STORE_CACHE=true
   - rvm: ruby-head
