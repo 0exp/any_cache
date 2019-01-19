@@ -51,7 +51,7 @@ describe 'Operation: #cleanup' do
       key_1: nil, # expired
       key_2: nil, # expired
       key_3: nil, # expired
-      key_4: nil, # expired
+      key_4: nil # expired
     )
   end
 end

@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-gem 'redis',         '~> 4.0'
+gem 'redis',         '~> 4.1'
 gem 'activesupport', '~> 5.2'
 
 gemspec path: '..'
