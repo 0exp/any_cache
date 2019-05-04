@@ -15,6 +15,7 @@ Supported clients:
 - `ActiveSupport::Cache::MemoryStore` ([gem activesupport](https://github.com/rails/rails/blob/master/activesupport/lib/active_support/cache/memory_store.rb)) ([in memory storage](https://api.rubyonrails.org/classes/ActiveSupport/Cache/MemoryStore.html))
 
 - [Coming Soon] Simple in-memory hash-based cache client
+- [Coming Soon] Simple key-value storage based on PostgreSQL
 
 ---
 
