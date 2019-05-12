@@ -1,11 +1,16 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [Unreleased] - 2018-xx-xx
+## [0.5.0] - 2019-05-12
 ### Added
 - Introduce Plugin Ecosystem (`AnyCache::Plugins`):
   - load plugin: `AnyCache.plugin('plugin_name')` or `AnyCache.plugin(:plugin_name)`;
   - get registered plugins: `AnyCache.plugins #=> array of strings`
+- Support for last ruby versions (`ruby@2.6.3`, `ruby@2.4.6`, `ruby@2.5.5`)
+
+### Changed
+- Actualized dependencies (`qonfig` - `~> 0.10`);
+- Actualized development dependencies;
 
 ## [0.4.0] - 2018-12-04
 - `AnyCache#cleanup` - remove expired entries manually
