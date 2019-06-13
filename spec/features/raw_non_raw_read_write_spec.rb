@@ -86,12 +86,14 @@ describe 'raw read/write / non-raw read/write' do
   #   ActiveSupport::Cache::FileStore and ActiveSupport::Cache::ReadStore does not support
   #   raw/non-raw optionality cuz under the hood these classes invokes #write_entry method
   #   that uses Marshal.dump before the write-to-disk and write-to-memory operations respectively.
+  # rubocop:disable Layout/EmptyLinesAroundBlockBody
   context(
     'write raw (:raw => true) (uses internal cache-related string-like object write operation)',
     exclude: %i[as_file_store as_memory_store]
   ) do
 
     before { stub_const('SimpleRubyObject', Struct.new(:a, :b, :c)) }
+    # rubocop:enable Layout/EmptyLinesAroundBlockBody
 
     context 'single read/write' do
       specify '#read/#write works correctly' do
