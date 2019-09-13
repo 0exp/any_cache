@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.6.0] - 2019-09-13
+### Changed
+- Actualized dependencies (`qonfig` - `~> 0.16.0`);
+- Actualized development dependnecies;
+
 ## [0.5.0] - 2019-05-12
 ### Added
 - Introduce Plugin Ecosystem (`AnyCache::Plugins`):
