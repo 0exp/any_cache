@@ -117,3 +117,6 @@ class AnyCache
     @adapter = adapter
   end
 end
+
+# NOTE: Suppot for <RubyOnRails>
+require_relative 'active_support/cache/any_cache'
