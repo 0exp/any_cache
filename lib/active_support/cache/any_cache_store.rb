@@ -8,7 +8,7 @@ module ActiveSupport
   module Cache
     # @api public
     # @since 0.7.0
-    class AnyCache
+    class AnyCacheStore
       # @api private
       # @since 0.7.0
       extend Forwardable

@@ -119,4 +119,5 @@ class AnyCache
 end
 
 # NOTE: Suppot for <RubyOnRails>
-require_relative 'active_support/cache/any_cache'
+require_relative 'active_support/cache/any_cache_store'
+require_relative 'any_cache/railtie' if defined?(::Rails::Railtie)
