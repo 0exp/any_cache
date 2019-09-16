@@ -37,9 +37,9 @@ module ActiveSupport
       #
       # @api private
       # @since 0.7.0
-      def initialize(driver:, **configs)
+      def initialize(driver:, config:, logger: AnyCache::Logging::Logger.new(STDOUT))
         @client_klass = Class.new(::AnyCache).tap do |klass|
-          klass.configure(driver: driver, **configs)
+          klass.configure(driver: driver, logger: logger, { driver => config })
         end
 
         @client = client_klass.build
