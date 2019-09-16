@@ -16,6 +16,8 @@ Supported clients:
 
 - [Coming Soon] Simple in-memory hash-based cache client
 - [Coming Soon] Simple key-value storage based on PostgreSQL
+- [Coming Soon] Support for `ActiveSupport::Cache::NullStore`
+- [Coming Soon] Naive `NullStore` implementation;
 
 ---
 
