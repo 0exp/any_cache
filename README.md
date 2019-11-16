@@ -734,10 +734,11 @@ bin/rspec --test-as-memory-store # run specs with ActiveSupport::Cache::MemorySt
 
 ## Roadmap
 
-- instrumentation layer;
-- global and configurable default expiration time;
-- `#delete_matched` for memcached-based cache storages;
-- rails integration;
+- instrumentation layer (public API);
+- more robust delegation API (core API);
+- global and configurable default expiration time (public API);
+- `#delete_matched` for memcached-based cache storages (core/public API);
+- rails integration (public API);
 
 ---
 
