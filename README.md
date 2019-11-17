@@ -734,6 +734,7 @@ bin/rspec --test-as-memory-store # run specs with ActiveSupport::Cache::MemorySt
 
 ## Roadmap
 
+- centralized Logging API (core API);
 - instrumentation layer (public API);
 - more robust delegation API (core API);
 - global and configurable default expiration time (public API);
