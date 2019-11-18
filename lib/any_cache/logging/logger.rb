@@ -7,6 +7,6 @@ class AnyCache::Logging::Logger < ::Logger
   # @since 0.3.0
   def initialize(*, **)
     super
-    self.level = ::Logger::INFO
+    self.level = ::Logger::INFO # TODO: use configuration from the adapter instance
   end
 end

@@ -34,6 +34,7 @@ module AnyCache::Delegation
     # @api private
     # @since 0.3.0
     def def_loggable_delegator(receiver, delegat)
+      # TODO: move to Instrumentation API
       define_method(delegat) do |*args, **opts, &block|
         send(receiver).send(delegat, *args, **opts, &block).tap do
           shared_config[:logger].tap do |logger|
