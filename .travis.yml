@@ -1,13 +1,14 @@
 language: ruby
-sudo: false
+os: linux
+dist: xenial
 before_install: gem install bundler
 cache: bundler
 script:
 - bundle exec rspec
 services:
-- redis-server
+- redis
 - memcached
-matrix:
+jobs:
   fast_finish: true
   include:
   - rvm: 2.3.8
