@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.7.0] - 2020-04-13
+### Added
+- Support for ruby@2.7.1, ruby@2.5.8, ruby@2.6.6, ruby@2.4.10;
+
+### Changed
+- Actualized dependnecies;
+- Actualized development dependencies;
+
 ## [0.6.0] - 2019-09-13
 ### Changed
 - Actualized dependencies (`qonfig` - `~> 0.16.0`);
