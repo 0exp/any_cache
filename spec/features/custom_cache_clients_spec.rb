@@ -54,6 +54,7 @@ describe 'Custom cache clients' do
       expect(AnyCache.build(dumb_client)).to be_a(AnyCache)
     end
 
+    # rubocop:disable RSpec/RepeatedDescription
     %i[
       read
       read_multi
@@ -76,7 +77,9 @@ describe 'Custom cache clients' do
         cache_store.send(operation, entry_key, **method_options)
       end
     end
+    # rubocop:enable RSpec/RepeatedDescription
 
+    # rubocop:disable RSpec/RepeatedDescription
     %i[
       write
       increment
@@ -93,7 +96,9 @@ describe 'Custom cache clients' do
         cache_store.send(operation, entry_key, method_value, **method_options)
       end
     end
+    # rubocop:enable RSpec/RepeatedDescription
 
+    # rubocop:disable RSpec/RepeatedDescription
     %i[
       write_multi
     ].each do |operation|
@@ -112,7 +117,9 @@ describe 'Custom cache clients' do
         cache_store.send(operation, entries, **method_options)
       end
     end
+    # rubocop:enable RSpec/RepeatedDescription
 
+    # rubocop:disable RSpec/RepeatedDescription
     %i[
       fetch_multi
     ].each do |operation|
@@ -126,6 +133,7 @@ describe 'Custom cache clients' do
         cache_store.send(operation, *entry_keys, **method_options)
       end
     end
+    # rubocop:enable RSpec/RepeatedDescription
   end
 
   context 'when custom cache client supports a part of required methods' do

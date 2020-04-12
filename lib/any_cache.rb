@@ -4,6 +4,7 @@ require 'logger'
 require 'qonfig'
 require 'securerandom'
 require 'concurrent/atomic/reentrant_read_write_lock'
+require 'zlib'
 
 # @api public
 # @since 0.1.0
