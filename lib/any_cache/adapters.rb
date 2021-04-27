@@ -36,7 +36,12 @@ module AnyCache::Adapters
       when ActiveSupportDalliStore.supported_driver?(driver)      then ActiveSupportDalliStore.new(driver)
       when Delegator.supported_driver?(driver)                    then Delegator.new(driver)
       else
-        raise AnyCache::UnsupportedDriverError
+        # Explicit check because NullStore isn't loaded by default
+        if defined?(::AnyCache::Adapters::NullStore) && ::AnyCache::Adapters::NullStore.supported_driver?(driver)
+          NullStore.new(driver)
+        else
+          raise AnyCache::UnsupportedDriverError
+        end
       end
     end
     # rubocop:enable Metrics/LineLength, Metrics/AbcSize
